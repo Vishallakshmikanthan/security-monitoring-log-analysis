@@ -27,21 +27,24 @@ body {
    #D00000 / #4A0000: Alert Red | #4de38a: Healthy Green | #000000 / #E8E8E8: Terminal
 */
 
-/* ---------------- Top Frame & Menus ---------------- */
+/* ---------------- Top Frame & Menus (Refactored & Visible) ---------------- */
 #top {
   position: absolute;
   left: 0; right: 0; top: 0;
-  height: 90px;
+  height: 118px;
   background: #C0C0C0;
   border-bottom: 2px solid #000;
   box-shadow: inset 0 -1px 0 #808080;
   z-index: 5000;
   display: flex;
   flex-direction: column;
+  overflow: visible;
 }
 
 #top-tb {
-  height: 22px;
+  height: 24px;
+  min-height: 24px;
+  flex-shrink: 0;
   background: linear-gradient(90deg, #000080, #1084D0);
   color: #FFF;
   font-weight: bold;
@@ -65,9 +68,13 @@ body {
 }
 
 #menu {
+  height: 24px;
+  min-height: 24px;
+  flex-shrink: 0;
   display: flex;
+  align-items: center;
   gap: 4px;
-  padding: 2px 6px;
+  padding: 1px 6px;
   border-bottom: 1px solid #808080;
   background: #C0C0C0;
   font-size: 12px;
@@ -83,58 +90,95 @@ body {
 
 /* Persistent Visual Security Pipeline Ribbon (Section 22) */
 #pipeline-ribbon {
+  height: 32px;
+  min-height: 32px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 3px;
-  padding: 2px 6px;
-  background: #181E24;
+  gap: 4px;
+  padding: 2px 8px;
+  background: #11171E;
+  border-top: 1px solid #808080;
   border-bottom: 1px solid #404040;
+  box-shadow: inset 0 1px 0 #000;
   overflow-x: auto;
-  font: 11px "Courier New", monospace;
+  font: bold 11.5px "Courier New", monospace;
   white-space: nowrap;
+  scrollbar-width: none;
+}
+#pipeline-ribbon::-webkit-scrollbar {
+  display: none;
 }
 .pipe-step {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 2px 7px;
-  background: #101418;
-  color: #8898A8;
-  border: 1px solid #303840;
+  padding: 3px 8px;
+  background: #16202A;
+  color: #8E9EAE;
+  border: 1px solid #2B3B4B;
+  border-radius: 2px;
   cursor: pointer;
   transition: all 0.2s;
-  font-size: 11px;
+  font-size: 11.5px;
+  font-weight: bold;
+  flex-shrink: 0;
+  line-height: 1.2;
 }
 .pipe-step:hover {
-  background: #182028;
+  background: #202E3D;
   color: #FFB000;
+  border-color: #FFB000;
 }
 .pipe-step.done {
   color: #4de38a;
   border-color: #205030;
+  background: #0E1D16;
 }
 .pipe-step.current {
-  background: #332400;
+  background: #3B2800;
   color: #FFB000;
   border-color: #FFB000;
   font-weight: bold;
-  box-shadow: inset 0 0 5px rgba(255, 176, 0, 0.45);
+  box-shadow: inset 0 0 6px rgba(255, 176, 0, 0.45);
 }
 .pipe-step .arrow {
-  color: #505860;
-  font-size: 10px;
+  color: #556677;
+  font-size: 11px;
   pointer-events: none;
+  flex-shrink: 0;
 }
 
 /* Control Toolbar */
 #tool {
+  height: 38px;
+  min-height: 38px;
+  flex-shrink: 0;
   display: flex;
-  gap: 8px;
+  gap: 5px;
   align-items: center;
-  padding: 3px 6px;
+  padding: 2px 8px;
   background: #C0C0C0;
+  border-top: 1px solid #FFF;
   font-size: 12px;
-  flex: 1;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+#tool::-webkit-scrollbar {
+  display: none;
+}
+#tool button, #tool .btn {
+  padding: 3px 8px;
+  font-size: 11.5px;
+  flex-shrink: 0;
+}
+#tool .btn.big {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+#tool button, #tool .btn, #tool .tag, #tool .pb, #tool b {
+  flex-shrink: 0;
 }
 
 /* Dropdown Menu Popup */
@@ -170,7 +214,7 @@ body {
 #desk {
   position: absolute;
   left: 0; right: 0;
-  top: 90px; bottom: 32px;
+  top: 118px; bottom: 32px;
   background: #071018;
   background-image:
     linear-gradient(#0c1b28 1px, transparent 1px),
@@ -490,12 +534,7 @@ body {
   padding: 1px 0 0 1px;
 }
 .sim-tag {
-  font: 10px "Courier New", monospace;
-  color: #FFB000;
-  margin-left: auto;
-  font-weight: bold;
-  padding: 1px 5px;
-  background: rgba(0,0,0,0.35);
+  display: none;
 }
 
 .win-menu {
@@ -946,7 +985,10 @@ tr:hover td {
   padding: 4px 8px !important;
 }
 .pres #top {
-  height: 94px;
+  height: 124px;
+}
+.pres #desk {
+  top: 124px;
 }
 
 /* Custom Retro Scrollbars */
@@ -1009,13 +1051,13 @@ tr:hover td {
     
     <div style="height:20px;width:1px;background:#808080;border-right:1px solid #FFF;margin:0 4px"></div>
 
-    <b style="font-size:13px">STAGE: <span id="tst" style="font-family:'Courier New',monospace;font-size:14px;color:#000080">00 / 10</span> — <span id="tnm" class="am" style="font-size:13px">SYSTEM READY</span></b>
+    <b style="font-size:12px">STAGE: <span id="tst" style="font-family:'Courier New',monospace;font-size:13px;color:#000080">00 / 10</span> — <span id="tnm" class="am" style="font-size:12px">SYSTEM READY</span></b>
     
-    <div class="pb" style="width:200px" title="Pipeline Progress Indicator"><i id="tpb"></i></div>
+    <div class="pb" style="width:130px" title="Pipeline Progress Indicator"><i id="tpb"></i></div>
 
     <button class="btn" id="presBtn" onclick="togglePres()">PRESENTATION MODE</button>
     <button class="btn" id="sndBtn" onclick="toggleSound()">SOUND: OFF</button>
-    <span class="tag a" style="margin-left:auto">SYNTHETIC DATA — LOCAL ONLY — NO NETWORK ACCESS</span>
+    <span class="tag a" style="margin-left:auto;font-size:10.5px;padding:2px 6px">SYNTHETIC DATA — LOCAL ONLY</span>
   </div>
 </div>
 
@@ -1511,7 +1553,7 @@ const fields = e => `
 function updatePipelineRibbon() {
   const pr = $('pipeline-ribbon');
   if (!pr) return;
-  pr.innerHTML = PIPE_LABELS.map((name, i) => {
+  pr.innerHTML = `<span style="color:#FFB000;font-family:Tahoma,sans-serif;font-size:11px;font-weight:bold;margin-right:6px;letter-spacing:0.5px;flex-shrink:0;">SOC LIFECYCLE:</span>` + PIPE_LABELS.map((name, i) => {
     let cls = '';
     let marker = `[${String(i).padStart(2,'0')}]`;
     if (i < stage) {
@@ -2849,8 +2891,9 @@ function openMenu(k, el, ev) {
     if (m[0] === '---') return '<hr>';
     return `<div onclick="MN['${k}'].find(x => x[0] === '${m[0]}')[1](); $('dd').style.display='none';">${m[0]}</div>`;
   }).join('');
-  d.style.left = el.offsetLeft + 4 + 'px';
-  d.style.top = '45px';
+  const rect = el.getBoundingClientRect();
+  d.style.left = rect.left + 'px';
+  d.style.top = rect.bottom + 'px';
   d.style.display = 'block';
 }
 
