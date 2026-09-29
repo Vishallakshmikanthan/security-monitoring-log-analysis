@@ -1,189 +1,2878 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SECURITY MONITORING & LOG ANALYSIS — LIVE SOC SIMULATOR</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#08121B;font:12px Tahoma,"MS Sans Serif",Arial,sans-serif;color:#000;overflow:hidden}
-#top{position:absolute;left:0;right:0;top:0;height:74px;background:#c0c0c0;border-bottom:2px solid #404040;z-index:5000}
-#top .tb{cursor:default}
-#menu{display:flex;gap:2px;padding:1px 4px;border-bottom:1px solid #808080}
-#menu span{padding:1px 8px;cursor:pointer}#menu span:hover{background:#000080;color:#fff}
-#tool{display:flex;gap:10px;align-items:center;padding:3px 6px}
-#dd{position:absolute;z-index:6000;background:#c0c0c0;border:2px solid;border-color:#fff #404040 #404040 #fff;display:none}
-#dd div{padding:3px 22px 3px 14px;cursor:pointer}#dd div:hover{background:#000080;color:#fff}
-#desk{position:absolute;left:0;right:0;top:74px;bottom:28px;background:#071018;background-image:linear-gradient(#0c1b28 1px,transparent 1px),linear-gradient(90deg,#0c1b28 1px,transparent 1px);background-size:8px 8px;overflow:hidden}
-#crt{position:fixed;inset:0;pointer-events:none;z-index:9000;background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0,rgba(0,0,0,.18) 1px,transparent 1px,transparent 3px);box-shadow:inset 0 0 120px rgba(0,0,0,.55)}
-#task{position:absolute;left:0;right:0;bottom:0;height:28px;background:#c0c0c0;border-top:2px solid #fff;display:flex;gap:6px;align-items:center;padding:2px 4px;z-index:5000}
-.sb{border:2px solid;border-color:#808080 #fff #fff #808080;padding:1px 8px}
-.win{position:absolute;background:#c0c0c0;border:2px solid;border-color:#dfdfdf #000 #000 #dfdfdf;box-shadow:inset 1px 1px #fff,inset -1px -1px #808080,5px 5px 0 rgba(0,0,0,.5);display:flex;flex-direction:column;min-width:200px}
-.tb{background:linear-gradient(90deg,#000080,#1084d0);color:#fff;font-weight:bold;padding:2px 3px;display:flex;justify-content:space-between;align-items:center;cursor:move;user-select:none;gap:6px}
-.win.red .tb{background:linear-gradient(90deg,#4A0000,#D00000)}.win.red{border-color:#f88 #400 #400 #f88}
-.sim{font:9px "Courier New",monospace;color:#00D7FF;margin-left:auto;font-weight:normal}
-.tb b.x{display:inline-block;width:16px;height:14px;background:#c0c0c0;color:#000;text-align:center;line-height:11px;border:2px solid;border-color:#fff #404040 #404040 #fff;cursor:pointer;font-size:11px}
-.body{flex:1;overflow:auto;padding:6px;min-height:0}
-.term{background:#000;color:#00D7FF;font:12px/1.35 "Courier New",monospace;padding:6px;border:2px solid;border-color:#404040 #fff #fff #404040;overflow:auto}
-.btn{background:#c0c0c0;border:2px solid;border-color:#fff #404040 #404040 #fff;padding:4px 8px;font:bold 11px Tahoma,sans-serif;cursor:pointer;color:#000}
-.btn:active{border-color:#404040 #fff #fff #404040;padding:5px 7px 3px 9px}
-.btn.big{font-size:14px;padding:6px 10px;outline:1px dotted #000;outline-offset:-5px}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:4px}
-.row{display:flex;gap:6px;margin:2px 0}.row b{min-width:92px}
-.val{flex:1;border:2px solid;border-color:#808080 #fff #fff #808080;background:#fff;padding:0 4px;font-family:"Courier New",monospace}
-table{border-collapse:collapse;width:100%;font:11px "Courier New",monospace;background:#000;color:#E8E8E8}
-th{background:#c0c0c0;color:#000;border:1px solid;border-color:#fff #404040 #404040 #fff;text-align:left;padding:1px 4px;position:sticky;top:0}
-td{padding:1px 5px;white-space:nowrap;cursor:pointer}tr.sel td{background:#000080}
-.cy{color:#00D7FF}.am{color:#FFB000}.rd{color:#ff3030}.gn{color:#4de38a}.mu{color:#8a9aa8}
-.tag{background:#000;color:#00D7FF;font:10px "Courier New",monospace;padding:0 4px;border:1px solid #00A6A6}
-.tag.a{color:#FFB000;border-color:#FFB000}
-.pb{height:16px;border:2px solid;border-color:#808080 #fff #fff #808080;background:#fff}
-.pb i{display:block;height:100%;width:0;background:repeating-linear-gradient(90deg,#000080 0 8px,transparent 8px 10px);transition:width .5s}
-.led{display:inline-block;width:8px;height:8px;background:#404040;border:1px solid #000}.led.on{background:#00D7FF;box-shadow:0 0 4px #00D7FF}
-.hl{outline:1px solid #FFB000;background:#332400}.dim{opacity:.28}
-.fl{animation:fl .4s 3}@keyframes fl{50%{outline:4px solid #FFB000}}
-.cur{display:inline-block;width:8px;height:13px;background:#00D7FF;vertical-align:middle;animation:bl 1s steps(2) infinite}@keyframes bl{50%{opacity:0}}
-.tab{display:inline-block;padding:2px 10px;border:2px solid;border-color:#fff #404040 #404040 #fff;cursor:pointer;margin-right:2px}.tab.on{background:#fff;font-weight:bold}
-.st{display:flex;flex-wrap:wrap;gap:2px;margin:4px 0}.st div{background:#000;color:#8a9aa8;border:1px solid #404040;padding:3px 6px;font:11px "Courier New",monospace;opacity:.5}.st div.on{color:#FFB000;border-color:#FFB000;opacity:1}
-.box{background:#000;border:1px solid #00A6A6;color:#00D7FF;padding:3px 6px;margin:1px 0;font:12px "Courier New",monospace;opacity:.35;transition:.3s}.box.on{opacity:1;border-color:#FFB000;color:#FFB000}
-.ar{text-align:center;color:#00A6A6;font-size:10px;line-height:10px}
-.fac{background:#c0c0c0;border:2px solid;border-color:#fff #404040 #404040 #fff;padding:3px;cursor:pointer}.fac:hover{background:#dcdcdc}.fac b{display:block;font-size:10px}
-.tli{background:#000;color:#E8E8E8;border:1px solid #00A6A6;padding:3px 6px;cursor:pointer;font:12px "Courier New",monospace}.tli.sel{background:#000080}
-.pres .win:not(.act):not(#console){display:none}.pres #tools{display:none}.pres .win{font-size:15px}.pres .term,.pres table,.pres .box,.pres .tli{font-size:15px}
-#ovl{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:8000;display:none;align-items:center;justify-content:center}
-</style></head><body>
+/* ==========================================================================
+   AUTHENTIC WINDOWS 98 / SOC WORKSTATION DESIGN SYSTEM
+   ========================================================================== */
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #08121B;
+  font: 11px Tahoma, "MS Sans Serif", Arial, sans-serif;
+  color: #000;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  user-select: none;
+}
+
+/* Color Semantics:
+   #C0C0C0: Win98 Surface | #FFFFFF: Highlight | #808080: Mid Grey | #404040: Dark Bevel
+   #000080 -> #1084D0: Active Navy Title | #808080: Inactive Title
+   #00D7FF: Telemetry Cyan | #00A6A6: Connection Teal | #FFB000: Detection Amber
+   #D00000 / #4A0000: Alert Red | #4de38a: Healthy Green | #000000 / #E8E8E8: Terminal
+*/
+
+/* ---------------- Top Frame & Menus ---------------- */
+#top {
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 84px;
+  background: #C0C0C0;
+  border-bottom: 2px solid #000;
+  box-shadow: inset 0 -1px 0 #808080;
+  z-index: 5000;
+  display: flex;
+  flex-direction: column;
+}
+
+#top-tb {
+  height: 20px;
+  background: linear-gradient(90deg, #000080, #1084D0);
+  color: #FFF;
+  font-weight: bold;
+  font-size: 11px;
+  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+#top-tb .title-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+#top-tb .icon-shield {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+}
+
+#menu {
+  display: flex;
+  gap: 2px;
+  padding: 1px 4px;
+  border-bottom: 1px solid #808080;
+  background: #C0C0C0;
+  font-size: 11px;
+}
+#menu span {
+  padding: 2px 8px;
+  cursor: pointer;
+}
+#menu span:hover {
+  background: #000080;
+  color: #FFF;
+}
+
+/* Persistent Visual Security Pipeline Ribbon (Section 22) */
+#pipeline-ribbon {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 6px;
+  background: #181E24;
+  border-bottom: 1px solid #404040;
+  overflow-x: auto;
+  font: 10px "Courier New", monospace;
+  white-space: nowrap;
+}
+.pipe-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 6px;
+  background: #101418;
+  color: #708090;
+  border: 1px solid #303840;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.pipe-step:hover {
+  background: #182028;
+  color: #00D7FF;
+}
+.pipe-step.done {
+  color: #4de38a;
+  border-color: #205030;
+}
+.pipe-step.current {
+  background: #332400;
+  color: #FFB000;
+  border-color: #FFB000;
+  font-weight: bold;
+  box-shadow: inset 0 0 4px rgba(255, 176, 0, 0.4);
+}
+.pipe-step .arrow {
+  color: #404850;
+  font-size: 9px;
+  pointer-events: none;
+}
+
+/* Control Toolbar */
+#tool {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 3px 6px;
+  background: #C0C0C0;
+  font-size: 11px;
+  flex: 1;
+}
+
+/* Dropdown Menu Popup */
+#dd {
+  position: absolute;
+  z-index: 9999;
+  background: #C0C0C0;
+  border-top: 2px solid #FFF;
+  border-left: 2px solid #FFF;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  box-shadow: inset 1px 1px 0 #DFDFDF, inset -1px -1px 0 #808080, 4px 4px 0 rgba(0,0,0,0.5);
+  display: none;
+  font-size: 11px;
+}
+#dd div {
+  padding: 4px 24px 4px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+#dd div:hover {
+  background: #000080;
+  color: #FFF;
+}
+#dd hr {
+  margin: 2px 0;
+  border: 0;
+  border-top: 1px solid #808080;
+  border-bottom: 1px solid #FFF;
+}
+
+/* ---------------- Desktop Environment (Section 4) ---------------- */
+#desk {
+  position: absolute;
+  left: 0; right: 0;
+  top: 84px; bottom: 30px;
+  background: #071018;
+  background-image:
+    linear-gradient(#0c1b28 1px, transparent 1px),
+    linear-gradient(90deg, #0c1b28 1px, transparent 1px);
+  background-size: 16px 16px;
+  overflow: hidden;
+}
+
+/* Subtle Technical SVG Network Topology in Desktop Background */
+#desk-topo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.14;
+}
+
+/* Workstation Telemetry Badge in Desktop Corner */
+#desk-badge {
+  position: absolute;
+  right: 12px;
+  bottom: 8px;
+  background: rgba(10, 20, 30, 0.75);
+  border: 1px solid #1a334a;
+  padding: 4px 8px;
+  color: #4a6a8a;
+  font: 10px "Courier New", monospace;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Retro Desktop Icons (Section 4) */
+#desktop-icons {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 2;
+}
+.d-icon {
+  width: 76px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  text-align: center;
+  padding: 2px;
+}
+.d-icon:hover {
+  outline: 1px dotted #00D7FF;
+}
+.d-icon.selected {
+  outline: 1px dotted #FFF;
+  background: rgba(0, 0, 128, 0.45);
+}
+.d-icon svg {
+  width: 32px;
+  height: 32px;
+  filter: drop-shadow(1px 1px 0 #000);
+}
+.d-icon span {
+  margin-top: 4px;
+  color: #FFF;
+  font-size: 10px;
+  line-height: 1.2;
+  text-shadow: 1px 1px 1px #000, -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000;
+  word-break: break-all;
+}
+
+/* ---------------- Taskbar (Section 5) ---------------- */
+#task {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 30px;
+  background: #C0C0C0;
+  border-top: 2px solid #FFF;
+  box-shadow: inset 0 1px 0 #DFDFDF;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 2px 4px;
+  z-index: 5000;
+}
+
+#start-btn {
+  height: 24px;
+  background: #C0C0C0;
+  border-top: 2px solid #FFF;
+  border-left: 2px solid #FFF;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  box-shadow: inset 1px 1px 0 #DFDFDF, inset -1px -1px 0 #808080;
+  padding: 1px 6px;
+  font: bold 12px Tahoma, sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+#start-btn:active, #start-btn.pressed {
+  border-top: 2px solid #000;
+  border-left: 2px solid #000;
+  border-right: 2px solid #FFF;
+  border-bottom: 2px solid #FFF;
+  box-shadow: inset 1px 1px 0 #808080;
+  padding: 2px 5px 0 7px;
+}
+#start-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.task-divider {
+  width: 2px;
+  height: 20px;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #FFF;
+  margin: 0 2px;
+}
+
+#task-wins {
+  display: flex;
+  gap: 3px;
+  flex: 1;
+  overflow-x: auto;
+  height: 24px;
+}
+.twin-btn {
+  height: 22px;
+  max-width: 170px;
+  min-width: 90px;
+  background: #C0C0C0;
+  border-top: 2px solid #FFF;
+  border-left: 2px solid #FFF;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  box-shadow: inset 1px 1px 0 #DFDFDF, inset -1px -1px 0 #808080;
+  padding: 1px 6px;
+  font: 11px Tahoma, sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.twin-btn.active {
+  background: #E0E0E0;
+  border-top: 2px solid #000;
+  border-left: 2px solid #000;
+  border-right: 2px solid #FFF;
+  border-bottom: 2px solid #FFF;
+  box-shadow: inset 1px 1px 0 #808080;
+  font-weight: bold;
+}
+
+/* System Tray */
+#task-tray {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #FFF;
+  border-bottom: 1px solid #FFF;
+  padding: 1px 6px;
+  font: 11px "Courier New", monospace;
+  background: #C0C0C0;
+}
+.tray-badge {
+  padding: 1px 4px;
+  font-size: 10px;
+  border: 1px solid #808080;
+  background: #000;
+  color: #00D7FF;
+  cursor: pointer;
+}
+.tray-badge.green { color: #4de38a; }
+.tray-badge.amber { color: #FFB000; border-color: #FFB000; }
+
+/* Start Menu Popup */
+#start-menu {
+  position: absolute;
+  left: 2px;
+  bottom: 30px;
+  width: 220px;
+  background: #C0C0C0;
+  border-top: 2px solid #FFF;
+  border-left: 2px solid #FFF;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  box-shadow: inset 1px 1px 0 #DFDFDF, inset -1px -1px 0 #808080, 4px 4px 0 rgba(0,0,0,0.5);
+  display: none;
+  z-index: 6000;
+  flex-direction: row;
+}
+#sm-side {
+  width: 28px;
+  background: linear-gradient(180deg, #000080, #1084D0);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  color: #FFF;
+  font-weight: bold;
+  font-size: 14px;
+  letter-spacing: 2px;
+  padding: 8px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+#sm-items {
+  flex: 1;
+  padding: 2px;
+}
+.sm-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  cursor: pointer;
+  font-size: 11px;
+}
+.sm-item:hover {
+  background: #000080;
+  color: #FFF;
+}
+
+/* ---------------- Window System (Section 3) ---------------- */
+.win {
+  position: absolute;
+  background: #C0C0C0;
+  border-top: 2px solid #FFFFFF;
+  border-left: 2px solid #FFFFFF;
+  border-right: 2px solid #000000;
+  border-bottom: 2px solid #000000;
+  box-shadow: inset 1px 1px 0 #DFDFDF, inset -1px -1px 0 #808080, 5px 5px 0 rgba(0,0,0,0.55);
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  user-select: none;
+}
+.win.red {
+  border-color: #FFA0A0 #400000 #400000 #FFA0A0;
+}
+.tb {
+  background: linear-gradient(90deg, #000080, #1084D0);
+  color: #FFF;
+  font-weight: bold;
+  font-size: 11px;
+  padding: 2px 3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  cursor: move;
+  user-select: none;
+  height: 22px;
+}
+.win.inactive .tb {
+  background: #808080;
+  color: #D4D0C8;
+}
+.win.red .tb {
+  background: linear-gradient(90deg, #4A0000, #D00000);
+}
+.tb-title {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tb-title svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+.tb-btns {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.wb {
+  width: 16px;
+  height: 14px;
+  background: #C0C0C0;
+  color: #000;
+  font-family: Tahoma, sans-serif;
+  font-size: 9px;
+  font-weight: bold;
+  border-top: 1px solid #FFF;
+  border-left: 1px solid #FFF;
+  border-right: 1px solid #404040;
+  border-bottom: 1px solid #404040;
+  box-shadow: inset 1px 1px 0 #DFDFDF, inset -1px -1px 0 #808080;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+}
+.wb:active {
+  border-top: 1px solid #404040;
+  border-left: 1px solid #404040;
+  border-right: 1px solid #FFF;
+  border-bottom: 1px solid #FFF;
+  box-shadow: inset 1px 1px 0 #808080;
+  padding: 1px 0 0 1px;
+}
+.sim-tag {
+  font: 9px "Courier New", monospace;
+  color: #00D7FF;
+  margin-left: auto;
+  font-weight: normal;
+  padding: 0 4px;
+  background: rgba(0,0,0,0.3);
+}
+
+.win-menu {
+  display: flex;
+  gap: 2px;
+  padding: 1px 4px;
+  border-bottom: 1px solid #808080;
+  background: #C0C0C0;
+  font-size: 11px;
+}
+.win-menu span {
+  padding: 1px 6px;
+  cursor: pointer;
+}
+.win-menu span:hover {
+  background: #000080;
+  color: #FFF;
+}
+
+.body {
+  flex: 1;
+  overflow: auto;
+  padding: 6px;
+  min-height: 0;
+  background: #C0C0C0;
+}
+
+/* Inset Sunken Panels / Terminals */
+.term {
+  background: #000000;
+  color: #00D7FF;
+  font: 11px/1.35 "Courier New", monospace;
+  padding: 6px;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #FFFFFF;
+  border-bottom: 2px solid #FFFFFF;
+  box-shadow: inset 1px 1px 0 #000000;
+  overflow: auto;
+}
+
+/* Windows 98 Status Bar */
+.sb-bar {
+  display: flex;
+  gap: 3px;
+  background: #C0C0C0;
+  padding: 2px;
+  border-top: 1px solid #808080;
+  font-size: 10px;
+  font-family: Tahoma, sans-serif;
+  color: #000;
+}
+.sb-pane {
+  border-top: 1px solid #808080;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #FFFFFF;
+  border-bottom: 1px solid #FFFFFF;
+  padding: 1px 5px;
+  white-space: nowrap;
+}
+
+/* Buttons */
+.btn {
+  background: #C0C0C0;
+  border-top: 2px solid #FFFFFF;
+  border-left: 2px solid #FFFFFF;
+  border-right: 2px solid #000000;
+  border-bottom: 2px solid #000000;
+  box-shadow: inset 1px 1px 0 #DFDFDF, inset -1px -1px 0 #808080;
+  padding: 3px 8px;
+  font: bold 11px Tahoma, sans-serif;
+  cursor: pointer;
+  color: #000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.btn:active, .btn.pressed {
+  border-top: 2px solid #000000;
+  border-left: 2px solid #000000;
+  border-right: 2px solid #FFFFFF;
+  border-bottom: 2px solid #FFFFFF;
+  box-shadow: inset 1px 1px 0 #808080;
+  padding: 4px 7px 2px 9px;
+}
+.btn.big {
+  font-size: 12px;
+  padding: 5px 12px;
+  outline: 1px dotted #000;
+  outline-offset: -5px;
+}
+.btn.act-blue {
+  background: #000080;
+  color: #FFF;
+  border-color: #4040FF #000040 #000040 #4040FF;
+}
+
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
+
+.row { display: flex; gap: 6px; margin: 2px 0; align-items: center; }
+.row b { min-width: 96px; font-size: 11px; }
+
+/* Inset Value Box */
+.val {
+  flex: 1;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #FFFFFF;
+  border-bottom: 2px solid #FFFFFF;
+  background: #FFF;
+  padding: 1px 4px;
+  font-family: "Courier New", monospace;
+  font-size: 11px;
+}
+.val.dark {
+  background: #000;
+  color: #00D7FF;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font: 11px "Courier New", monospace;
+  background: #000;
+  color: #E8E8E8;
+}
+th {
+  background: #C0C0C0;
+  color: #000;
+  border-top: 1px solid #FFF;
+  border-left: 1px solid #FFF;
+  border-right: 1px solid #404040;
+  border-bottom: 1px solid #404040;
+  text-align: left;
+  padding: 2px 5px;
+  position: sticky;
+  top: 0;
+  font-family: Tahoma, sans-serif;
+  font-size: 10px;
+  font-weight: bold;
+}
+td {
+  padding: 2px 6px;
+  white-space: nowrap;
+  cursor: pointer;
+  border-bottom: 1px solid #202020;
+}
+tr.sel td {
+  background: #000080 !important;
+  color: #FFF !important;
+}
+tr:hover td {
+  background: #101c28;
+}
+
+/* Semantics */
+.cy { color: #00D7FF; }
+.am { color: #FFB000; }
+.rd { color: #ff4040; }
+.gn { color: #4de38a; }
+.mu { color: #8a9aa8; }
+
+.tag {
+  background: #000;
+  color: #00D7FF;
+  font: 10px "Courier New", monospace;
+  padding: 1px 5px;
+  border: 1px solid #00A6A6;
+  display: inline-block;
+}
+.tag.a { color: #FFB000; border-color: #FFB000; }
+.tag.r { color: #ff4040; border-color: #ff4040; }
+.tag.g { color: #4de38a; border-color: #4de38a; }
+
+/* Segmented Progress Bar */
+.pb {
+  height: 16px;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #FFFFFF;
+  border-bottom: 2px solid #FFFFFF;
+  background: #FFF;
+  padding: 1px;
+  overflow: hidden;
+}
+.pb i {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: repeating-linear-gradient(90deg, #000080 0px 8px, #FFF 8px 10px);
+  transition: width 0.3s ease;
+}
+
+.led {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  background: #303030;
+  border: 1px solid #000;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+.led.on {
+  background: #00D7FF;
+  box-shadow: 0 0 6px #00D7FF;
+}
+
+/* Highlights & Selection */
+.hl {
+  outline: 2px solid #FFB000 !important;
+  background: #332400 !important;
+}
+.dim { opacity: 0.28; }
+.fl { animation: winFlash 0.4s 3; }
+@keyframes winFlash { 50% { outline: 4px solid #FFB000; } }
+
+.cur {
+  display: inline-block;
+  width: 8px;
+  height: 13px;
+  background: #00D7FF;
+  vertical-align: middle;
+  animation: curBlink 1s steps(2) infinite;
+}
+@keyframes curBlink { 50% { opacity: 0; } }
+
+/* Classic Property Sheet Tabs */
+.tabs-header {
+  display: flex;
+  gap: 2px;
+  margin-bottom: -2px;
+  z-index: 1;
+  position: relative;
+}
+.tab {
+  display: inline-block;
+  padding: 3px 10px;
+  border-top: 2px solid #FFF;
+  border-left: 2px solid #FFF;
+  border-right: 2px solid #000;
+  border-bottom: none;
+  background: #B0B0B0;
+  cursor: pointer;
+  font: 11px Tahoma, sans-serif;
+  border-radius: 2px 2px 0 0;
+}
+.tab.on {
+  background: #C0C0C0;
+  font-weight: bold;
+  padding-bottom: 5px;
+  border-bottom: 2px solid #C0C0C0;
+}
+.tab-content {
+  border-top: 2px solid #FFF;
+  border-left: 2px solid #FFF;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  background: #C0C0C0;
+  padding: 6px;
+}
+
+.st {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin: 4px 0;
+}
+.st div {
+  background: #000;
+  color: #8a9aa8;
+  border: 1px solid #404040;
+  padding: 3px 8px;
+  font: 11px "Courier New", monospace;
+  opacity: 0.6;
+}
+.st div.on {
+  color: #FFB000;
+  border-color: #FFB000;
+  opacity: 1;
+  font-weight: bold;
+}
+
+/* Correlation & Timeline Items */
+.box {
+  background: #000;
+  border: 1px solid #00A6A6;
+  color: #00D7FF;
+  padding: 4px 8px;
+  margin: 2px 0;
+  font: 11px "Courier New", monospace;
+  opacity: 0.4;
+  transition: all 0.3s;
+}
+.box.on {
+  opacity: 1;
+  border-color: #FFB000;
+  color: #FFB000;
+}
+.ar {
+  text-align: center;
+  color: #00A6A6;
+  font-size: 10px;
+  line-height: 10px;
+}
+.fac {
+  background: #C0C0C0;
+  border-top: 2px solid #FFF;
+  border-left: 2px solid #FFF;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  box-shadow: inset 1px 1px 0 #DFDFDF, inset -1px -1px 0 #808080;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+.fac:hover { background: #D0D0D0; }
+.fac.active {
+  border-top: 2px solid #000;
+  border-left: 2px solid #000;
+  border-right: 2px solid #FFF;
+  border-bottom: 2px solid #FFF;
+  background: #D8D8D8;
+}
+.fac b {
+  display: block;
+  font-size: 10px;
+  color: #000080;
+}
+
+.tli {
+  background: #000;
+  color: #E8E8E8;
+  border: 1px solid #00A6A6;
+  padding: 4px 8px;
+  cursor: pointer;
+  font: 11px "Courier New", monospace;
+}
+.tli.sel {
+  background: #000080 !important;
+  color: #FFF !important;
+}
+
+/* ---------------- HERO STAGE: Event Correlation Centerpiece ---------------- */
+#corr-diagram-container {
+  background: #000;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #FFF;
+  border-bottom: 2px solid #FFF;
+  padding: 4px;
+  height: 310px;
+  position: relative;
+  overflow: hidden;
+}
+.corr-node {
+  position: absolute;
+  padding: 3px 6px;
+  background: #081420;
+  border: 1px solid #00A6A6;
+  color: #00D7FF;
+  font: 10px "Courier New", monospace;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  z-index: 2;
+  cursor: pointer;
+}
+.corr-node:hover {
+  border-color: #00D7FF;
+  box-shadow: 0 0 6px #00D7FF;
+}
+.corr-node.active {
+  border-color: #FFB000;
+  color: #FFB000;
+  background: #251a00;
+  box-shadow: 0 0 8px rgba(255, 176, 0, 0.4);
+}
+.corr-node.hub {
+  font-weight: bold;
+  border-width: 2px;
+}
+.corr-node.hub.active {
+  border-color: #FFB000;
+  color: #FFF;
+  background: #804000;
+}
+#corr-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+.corr-line {
+  stroke: #004455;
+  stroke-width: 1.5;
+  stroke-dasharray: 4, 3;
+  transition: stroke 0.4s ease, stroke-width 0.4s ease;
+}
+.corr-line.active {
+  stroke: #FFB000;
+  stroke-width: 2;
+  stroke-dasharray: none;
+}
+
+/* ---------------- CRT Scanline Effect Overlay ---------------- */
+#crt {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9000;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,0.12) 0, rgba(0,0,0,0.12) 1px, transparent 1px, transparent 3px);
+  box-shadow: inset 0 0 100px rgba(0,0,0,0.45);
+}
+
+/* ---------------- Modal Dialog Overlay ---------------- */
+#ovl {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 8000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------------- Presentation Mode (Section 23) ---------------- */
+.pres .win:not(.act):not(#console):not(#casefile) { display: none !important; }
+.pres #tools { display: none !important; }
+.pres #desk-badge { display: none !important; }
+.pres #desktop-icons { display: none !important; }
+.pres .win {
+  font-size: 13px !important;
+}
+.pres .term, .pres table, .pres .box, .pres .tli, .pres .val {
+  font-size: 13px !important;
+}
+.pres #top {
+  height: 88px;
+}
+
+/* Custom Retro Scrollbars */
+::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+  background: #DFDFDF;
+}
+::-webkit-scrollbar-thumb {
+  background: #C0C0C0;
+  border-top: 1px solid #FFF;
+  border-left: 1px solid #FFF;
+  border-right: 1px solid #404040;
+  border-bottom: 1px solid #404040;
+}
+::-webkit-scrollbar-button {
+  background: #C0C0C0;
+  width: 16px;
+  height: 16px;
+  border-top: 1px solid #FFF;
+  border-left: 1px solid #FFF;
+  border-right: 1px solid #404040;
+  border-bottom: 1px solid #404040;
+}
+</style>
+</head>
+<body>
+
+<!-- TOP FRAMEWORK (Window Bar, Menus, Persistent Pipeline Ribbon, Controls) -->
 <div id="top">
- <div class="tb"><span>Security Monitoring &amp; Log Analysis — Live SOC Simulator</span><span><b class="x" onclick="msg('Minimize is disabled during the demonstration.')">_</b> <b class="x" onclick="togglePres()">□</b> <b class="x" onclick="msg('This simulator cannot be closed during a live demonstration.')">x</b></span></div>
- <div id="menu"></div>
- <div id="tool"><button class="btn" onclick="togglePres()">PRESENTATION MODE</button><b>CURRENT STAGE: <span id="tst">00 / 10</span> — <span id="tnm" class="am">SYSTEM READY</span></b><div class="pb" style="width:260px"><i id="tpb"></i></div><span class="tag a">SYNTHETIC DATA — LOCAL ONLY — NO NETWORK ACCESS</span></div>
+  <!-- Windows Title Bar -->
+  <div id="top-tb">
+    <div class="title-left">
+      <svg class="icon-shield" viewBox="0 0 16 16" fill="none">
+        <path d="M8 1L2 3V7C2 11 5 14 8 15C11 14 14 11 14 7V3L8 1Z" fill="#00D7FF" stroke="#FFF" stroke-width="1"/>
+      </svg>
+      <span>SECURITY MONITORING &amp; LOG ANALYSIS — LIVE SOC SIMULATOR</span>
+    </div>
+    <div class="tb-btns">
+      <button class="wb" onclick="msg('Minimize is disabled during the live demonstration.')">_</button>
+      <button class="wb" onclick="togglePres()">□</button>
+      <button class="wb" onclick="msg('This workstation session cannot be terminated during an active seminar demonstration.')">X</button>
+    </div>
+  </div>
+
+  <!-- Menu Bar -->
+  <div id="menu"></div>
+
+  <!-- Persistent Visual Security Pipeline Ribbon (Section 22) -->
+  <div id="pipeline-ribbon"></div>
+
+  <!-- Simulation Control Toolbar -->
+  <div id="tool">
+    <button class="btn" onclick="startSim()" title="Begin receiving security telemetry">START SIMULATION</button>
+    <button class="btn" onclick="prevStep()" title="Go back to previous stage">◀ PREV</button>
+    <button class="btn big act-blue" onclick="nextStep()" title="Step to next stage">NEXT STEP ▶</button>
+    <button class="btn" onclick="autoPlay()" title="Play stages 1-6 automatically">AUTO PLAY ⏯</button>
+    <button class="btn" onclick="pauseSim()" title="Pause automated playback">PAUSE ⏸</button>
+    <button class="btn" onclick="resetSim()" title="Restore initial clean workstation state">RESET ↺</button>
+    
+    <div style="height:18px;width:1px;background:#808080;border-right:1px solid #FFF;margin:0 4px"></div>
+
+    <b>STAGE: <span id="tst" style="font-family:'Courier New',monospace">00 / 10</span> — <span id="tnm" class="am">SYSTEM READY</span></b>
+    
+    <div class="pb" style="width:190px" title="Pipeline Progress Indicator"><i id="tpb"></i></div>
+
+    <button class="btn" id="presBtn" onclick="togglePres()">PRESENTATION MODE</button>
+    <button class="btn" id="sndBtn" onclick="toggleSound()">SOUND: OFF</button>
+    <span class="tag a" style="margin-left:auto">SYNTHETIC DATA — LOCAL ONLY — NO NETWORK ACCESS</span>
+  </div>
 </div>
-<div id="dd"></div><div id="desk"></div>
-<div id="task"><button class="btn" style="font-size:12px">Start</button><span class="sb" id="tk1">Case SOC-DEMO-2026-001</span><span class="sb" id="tk2">READY</span><span style="flex:1"></span><span class="sb" id="clk"></span></div>
-<div id="ovl"></div><div id="crt"></div>
+
+<!-- DROPDOWN MENU CONTAINER -->
+<div id="dd"></div>
+
+<!-- DESKTOP WORKSPACE (Section 4) -->
+<div id="desk">
+  <!-- Subtle Network Topology Canvas in Background -->
+  <svg id="desk-topo" viewBox="0 0 1200 700">
+    <g stroke="#00D7FF" stroke-width="1" fill="none">
+      <path d="M 120 180 L 260 180" stroke-dasharray="4,4"/>
+      <rect x="260" y="160" width="100" height="40" stroke="#00A6A6"/>
+      <text x="310" y="184" fill="#00A6A6" font-family="Courier New" font-size="10" text-anchor="middle">FIREWALL</text>
+      <path d="M 360 180 L 460 180"/>
+      <rect x="460" y="160" width="110" height="40" stroke="#00A6A6"/>
+      <text x="515" y="184" fill="#00A6A6" font-family="Courier New" font-size="10" text-anchor="middle">VPN GATEWAY</text>
+      <path d="M 570 180 L 680 180"/>
+      <rect x="680" y="160" width="100" height="40" stroke="#00A6A6"/>
+      <text x="730" y="184" fill="#00A6A6" font-family="Courier New" font-size="10" text-anchor="middle">CORE SWITCH</text>
+      <path d="M 730 200 L 730 280 L 840 280"/>
+      <rect x="840" y="260" width="120" height="40" stroke="#00D7FF"/>
+      <text x="900" y="284" fill="#00D7FF" font-family="Courier New" font-size="10" text-anchor="middle">HOST: WS-01</text>
+      <path d="M 730 200 L 730 360 L 840 360"/>
+      <rect x="840" y="340" width="120" height="40" stroke="#00A6A6"/>
+      <text x="900" y="364" fill="#00A6A6" font-family="Courier New" font-size="10" text-anchor="middle">ACTIVE DIRECTORY</text>
+      <path d="M 730 200 L 730 440 L 840 440"/>
+      <rect x="840" y="420" width="120" height="40" stroke="#FFB000"/>
+      <text x="900" y="444" fill="#FFB000" font-family="Courier New" font-size="10" text-anchor="middle">SIEM COLLECTOR</text>
+      <circle cx="80" cy="180" r="24" stroke="#ff4040"/>
+      <text x="80" y="184" fill="#ff4040" font-family="Courier New" font-size="9" text-anchor="middle">203.0.113.45</text>
+    </g>
+  </svg>
+
+  <!-- Workstation Telemetry Badge -->
+  <div id="desk-badge">
+    WORKSTATION: SOC-NODE-04 [VLAN 10.10.1.0/24] | SIEM AGENT: ACTIVE | WIN-NT-SEC-4.0
+  </div>
+
+  <!-- Retro Desktop Icons (Section 4) -->
+  <div id="desktop-icons">
+    <div class="d-icon" onclick="bringToFront($('console'))" ondblclick="bringToFront($('console'))">
+      <svg viewBox="0 0 32 32">
+        <rect x="2" y="3" width="28" height="20" fill="#C0C0C0" stroke="#000" stroke-width="1.5"/>
+        <rect x="5" y="6" width="22" height="14" fill="#000080"/>
+        <path d="M10 24 L22 24 L24 28 L8 28 Z" fill="#808080" stroke="#000"/>
+        <path d="M12 9 L15 13 L20 8" stroke="#00D7FF" stroke-width="1.5" fill="none"/>
+      </svg>
+      <span>SECURITY_MONITORING.EXE</span>
+    </div>
+
+    <div class="d-icon" onclick="openCasefile()" ondblclick="openCasefile()">
+      <svg viewBox="0 0 32 32">
+        <path d="M3 7 L12 7 L15 10 L29 10 L29 27 L3 27 Z" fill="#E0C060" stroke="#000" stroke-width="1.5"/>
+        <rect x="7" y="13" width="18" height="11" fill="#FFF" stroke="#808080"/>
+        <line x1="10" y1="16" x2="22" y2="16" stroke="#000"/>
+        <line x1="10" y1="19" x2="20" y2="19" stroke="#D00000"/>
+      </svg>
+      <span>CASEFILE.EXE</span>
+    </div>
+
+    <div class="d-icon" onclick="openArchiveDialog()" ondblclick="openArchiveDialog()">
+      <svg viewBox="0 0 32 32">
+        <ellipse cx="16" cy="7" rx="12" ry="4" fill="#C0C0C0" stroke="#000" stroke-width="1.5"/>
+        <path d="M4 7 V15 C4 18 28 18 28 15 V7" fill="#808080" stroke="#000" stroke-width="1.5"/>
+        <path d="M4 15 V23 C4 26 28 26 28 23 V15" fill="#808080" stroke="#000" stroke-width="1.5"/>
+        <ellipse cx="16" cy="15" rx="12" ry="4" fill="#C0C0C0" stroke="#000"/>
+        <ellipse cx="16" cy="23" rx="12" ry="4" fill="#C0C0C0" stroke="#000"/>
+      </svg>
+      <span>LOG_ARCHIVE</span>
+    </div>
+
+    <div class="d-icon" onclick="openNetToolsDialog()" ondblclick="openNetToolsDialog()">
+      <svg viewBox="0 0 32 32">
+        <circle cx="8" cy="8" r="5" fill="#00D7FF" stroke="#000"/>
+        <circle cx="24" cy="8" r="5" fill="#00D7FF" stroke="#000"/>
+        <circle cx="16" cy="24" r="5" fill="#FFB000" stroke="#000"/>
+        <line x1="8" y1="8" x2="16" y2="24" stroke="#FFF" stroke-width="1.5"/>
+        <line x1="24" y1="8" x2="16" y2="24" stroke="#FFF" stroke-width="1.5"/>
+      </svg>
+      <span>NETWORK_TOOLS</span>
+    </div>
+
+    <div class="d-icon" onclick="openIncidentsDialog()" ondblclick="openIncidentsDialog()">
+      <svg viewBox="0 0 32 32">
+        <path d="M16 3 L3 27 L29 27 Z" fill="#D00000" stroke="#000" stroke-width="1.5"/>
+        <rect x="15" y="11" width="2" height="8" fill="#FFF"/>
+        <rect x="15" y="21" width="2" height="2" fill="#FFF"/>
+      </svg>
+      <span>INCIDENTS</span>
+    </div>
+  </div>
+</div>
+
+<!-- START MENU POPUP (Section 5) -->
+<div id="start-menu">
+  <div id="sm-side">WINDOWS 98 SOC</div>
+  <div id="sm-items">
+    <div class="sm-item" onclick="startSim();toggleStartMenu()"><span class="am">▶</span> Start Simulation</div>
+    <div class="sm-item" onclick="nextStep();toggleStartMenu()"><span class="gn">⏭</span> Next Pipeline Step</div>
+    <div class="sm-item" onclick="autoPlay();toggleStartMenu()"><span>⏯</span> Auto Play (1-6)</div>
+    <div class="sm-item" onclick="pauseSim();toggleStartMenu()"><span>⏸</span> Pause Simulation</div>
+    <div class="sm-item" onclick="resetSim();toggleStartMenu()"><span>↺</span> Reset Workstation</div>
+    <hr style="border:0;border-top:1px solid #808080;border-bottom:1px solid #FFF;margin:3px 0">
+    <div class="sm-item" onclick="showEv();toggleStartMenu()"><span>📁</span> Show Evidence Windows</div>
+    <div class="sm-item" onclick="investigate();toggleStartMenu()"><span>🔍</span> Open SOC Investigation</div>
+    <div class="sm-item" onclick="openCasefile();toggleStartMenu()"><span>📋</span> Casefile Manager</div>
+    <div class="sm-item" onclick="togglePres();toggleStartMenu()"><span>🖥</span> Presentation Mode</div>
+    <hr style="border:0;border-top:1px solid #808080;border-bottom:1px solid #FFF;margin:3px 0">
+    <div class="sm-item" onclick="openAboutDialog();toggleStartMenu()"><span>ℹ</span> About SOC Simulator</div>
+  </div>
+</div>
+
+<!-- TASKBAR (Section 5) -->
+<div id="task">
+  <button id="start-btn" onclick="toggleStartMenu()">
+    <svg viewBox="0 0 16 16">
+      <rect x="1" y="1" width="6" height="6" fill="#F25022"/>
+      <rect x="8" y="1" width="6" height="6" fill="#7FBA00"/>
+      <rect x="1" y="8" width="6" height="6" fill="#00A4EF"/>
+      <rect x="8" y="8" width="6" height="6" fill="#FFB900"/>
+    </svg>
+    Start
+  </button>
+  <div class="task-divider"></div>
+  <div id="task-wins"></div>
+  <div class="task-divider"></div>
+  <!-- System Tray -->
+  <div id="task-tray">
+    <span class="tray-badge" id="sndTray" onclick="toggleSound()">SND: OFF</span>
+    <span class="tray-badge green">NET: ON</span>
+    <span class="tray-badge amber" id="tk2">READY</span>
+    <span style="font-size:10px" id="tk1">CASE: 2026-001</span>
+    <span style="font-weight:bold;margin-left:4px" id="clk">10:00:00</span>
+  </div>
+</div>
+
+<!-- MODAL OVERLAY & CRT EFFECT -->
+<div id="ovl"></div>
+<div id="crt"></div>
+
 <script>
-const E=[
-{id:1,t:'10:01',ts:'2026-09-29 10:01:12',type:'authentication_failure',src:'Identity / VPN',user:'demo.user',host:'WS-01',ip:'203.0.113.45',status:'FAILED',desc:'15 failed login attempts',x:{ACTION:'LOGIN',ATTEMPTS:15,LOG:'VPN-AUTH'},raw:'VPN-AUTH src_ip=203.0.113.45 user=demo.user action=LOGIN result=FAILED n=15'},
-{id:2,t:'10:03',ts:'2026-09-29 10:03:27',type:'authentication_success',src:'Identity / VPN',user:'demo.user',host:'WS-01',ip:'203.0.113.45',status:'SUCCESS',desc:'Successful login from same source',x:{ACTION:'LOGIN',LOG:'VPN-AUTH'},raw:'VPN-AUTH SRC_IP=203.0.113.45 username=demo.user action=LOGIN result=OK'},
-{id:3,t:'10:04',ts:'2026-09-29 10:04:55',type:'privilege_change',src:'Active Directory',user:'demo.user',host:'WS-01',ip:'203.0.113.45',status:'MODIFIED',desc:'Privilege change',x:{ACTION:'GROUP_MEMBER_ADDED',GROUP:'Administrators (synthetic)'},raw:'EventID=4728 account=demo.user computer=WS-01 group=Administrators'},
-{id:4,t:'10:06',ts:'2026-09-29 10:06:41',type:'process_creation',src:'Sysmon / EDR',user:'demo.user',host:'WS-01',ip:'203.0.113.45',status:'SUSPICIOUS',desc:'Suspicious PowerShell execution',x:{PROCESS:'powershell.exe',EVENT:'PROCESS_CREATION',MARKER:'Suspicious command pattern'},raw:'EventID=1 hostname=WS-01 User=demo.user Image=powershell.exe'},
-{id:5,t:'10:08',ts:'2026-09-29 10:08:51',type:'network_connection',src:'Firewall / DNS',user:'demo.user',host:'WS-01',ip:'203.0.113.45',status:'UNUSUAL',desc:'Unusual outbound connection',x:{DESTINATION:'198.51.100.25 (SYNTHETIC DESTINATION)',PORT:443,PROTO:'TCP/TLS'},raw:'FW ALLOW host=WS-01 sess_ip=203.0.113.45 dst=198.51.100.25 dport=443'}];
-const SRC=['Identity / VPN','Active Directory','Sysmon / EDR','Firewall / DNS'];
-const NM=['SYSTEM READY','LOG COLLECTION','NORMALIZATION','SIEM INGESTION','DETECTION','EVENT CORRELATION','HIGH-PRIORITY ALERT','INVESTIGATION','TIMELINE RECONSTRUCTION','ANALYST CONCLUSION','RESPONSE / NEXT ACTION'];
-const ST=['READY','RECEIVING','NORMALIZING','INDEXED','ANALYZING','CORRELATED','ALERTING','INVESTIGATING','RECONSTRUCTED','ASSESSED','RESPONDING'];
-const $=i=>document.getElementById(i),desk=$('desk');
-let stage=0,tok=0,timers=[],autoT=null,auto=false,paused=false,z=10,hlst=null,siemTab=0,sel=1,q='';
-const later=(f,ms)=>{const k=tok;timers.push(setTimeout(()=>{if(k===tok)f()},ms))};
-const clearT=()=>{tok++;timers.forEach(clearTimeout);timers=[]};
-const sc=s=>({FAILED:'am',SUCCESS:'cy',MODIFIED:'am',SUSPICIOUS:'rd',UNUSUAL:'am'})[s];
-const cnt=s=>E.filter(e=>e.src==s).length;
-/* ---------- window manager ---------- */
-function W(id,title,body,x,y,w,h,cls){let el=$(id);
- if(!el){el=document.createElement('div');el.className='win'+(cls?' '+cls:'');el.id=id;
-  el.innerHTML=`<div class="tb"><span></span><span class="sim">SIMULATED INTERFACE</span><b class="x" onclick="closeW('${id}')">x</b></div><div class="body"></div>`;
-  el.style.cssText=`left:${x}%;top:${y}%;width:${w}%;height:${h}%`;desk.appendChild(el);drag(el)}
- el.querySelector('.tb span').textContent=title;el.querySelector('.body').innerHTML=body;el.classList.add('act');el.style.zIndex=++z;apply();return el}
-const closeW=id=>{const e=$(id);if(e)e.remove()};
-const closeAll=()=>[...desk.querySelectorAll('.win')].forEach(w=>{if(w.id!='console'&&w.id!='tools')w.remove()});
-function drag(el){const h=el.querySelector('.tb');el.onmousedown=()=>el.style.zIndex=++z;
- h.onmousedown=ev=>{if(ev.target.tagName=='B')return;const r=el.getBoundingClientRect(),d=desk.getBoundingClientRect(),ox=ev.clientX-r.left,oy=ev.clientY-r.top;
-  document.onmousemove=m=>{el.style.left=(m.clientX-ox-d.left)+'px';el.style.top=(m.clientY-oy-d.top)+'px'};document.onmouseup=()=>document.onmousemove=null}}
-const flash=id=>{const e=$(id);if(!e)return;e.style.zIndex=++z;e.classList.remove('fl');void e.offsetWidth;e.classList.add('fl')};
-function msg(t){const o=$('ovl');o.style.display='flex';o.innerHTML=`<div class="win" style="position:relative;width:400px"><div class="tb"><span>Security Monitoring &amp; Log Analysis</span></div><div class="body" style="display:flex;gap:12px;align-items:center;padding:14px"><b style="font-size:26px;background:#FFB000;padding:0 12px;border:2px solid #000">!</b><span style="flex:1">${t}</span></div><div style="text-align:center;padding:6px"><button class="btn" style="width:80px" onclick="$('ovl').style.display='none'">OK</button></div></div>`}
-function apply(){document.querySelectorAll('[data-e]').forEach(el=>{const e=E[el.dataset.e-1],on=!hlst||e[hlst.k]==hlst.v;el.classList.toggle('dim',!on);el.classList.toggle('hl',!!hlst&&on)})}
-function hl(k,v){hlst=hlst&&hlst.k==k&&hlst.v==v?null:{k,v};$('siemT')?tblUp():apply()}
-const fields=e=>`<table>${[['TIMESTAMP',e.ts],['USER',e.user],['SOURCE_IP',e.ip],['HOST',e.host],['SOURCE',e.src],['EVENT',e.type.toUpperCase()],['STATUS',e.status],...Object.entries(e.x)].map(([k,v])=>`<tr><td class="cy">${k}<td>${v}</tr>`).join('')}</table>`;
-/* ---------- console / controls ---------- */
-const consBody=()=>`<div class="row"><b>CASE ID:</b><span class="val">SOC-DEMO-2026-001</span></div><div class="row"><b>CASE:</b><span class="val">Suspicious Account Activity</span></div><div class="row"><b>STATUS:</b><span class="val am" style="background:#000" id="cs">READY</span></div><div class="row"><b>SOURCE:</b><span class="val">Synthetic Demonstration Logs</span></div>
-<div class="g2" style="margin:6px 0"><button class="btn" onclick="startSim()">START SIMULATION</button><button class="btn big" onclick="nextStep()">NEXT STEP</button><button class="btn" onclick="autoPlay()">AUTO PLAY</button><button class="btn" onclick="pauseSim()">PAUSE</button><button class="btn" onclick="resetSim()">RESET</button><button class="btn" onclick="showEv()">SHOW EVIDENCE</button><button class="btn" onclick="investigate()">INVESTIGATE</button><button class="btn" onclick="genConc()">GENERATE CONCLUSION</button></div>
-<div class="term" id="cl" style="height:calc(100% - 190px);min-height:150px"></div>`;
-function status(){$('cs').textContent=paused?'PAUSED':ST[stage];
- $('cl').innerHTML=NM.map((n,i)=>`<div class="${i==stage?'am':i<stage?'mu':''}">${i<stage?'[x]':i==stage?'[>]':'[ ]'} STAGE ${String(i).padStart(2,'0')} ${n}</div>`).join('');
- $('tst').textContent=String(stage).padStart(2,'0')+' / 10';$('tnm').textContent=NM[stage];$('tpb').style.width=stage*10+'%';$('tk2').textContent=ST[stage]}
-function go(n){clearT();stage=n;paused=false;closeAll();hlst=null;status();[S0,S1,S2,S3,S4,S5,S6,S7,S8,S9,S10][n]();status()}
-function startSim(){stage>0?msg('The simulation is already running. Use NEXT STEP to continue.'):go(1)}
-function nextStep(){stage==0?msg('Press START SIMULATION to begin receiving telemetry.'):stage>=10?msg('The simulation is complete. Use RESET or RUN AGAIN to replay it.'):go(stage+1)}
-const D=[0,3,3,3,4,5,4];
-function autoNext(){if(!auto)return;const n=stage+1;go(n);if(n<6)autoT=setTimeout(autoNext,D[n]*1000);else{auto=false;paused=true;status()}}
-function autoPlay(){if(stage>=6)return msg('AUTO PLAY covers stages 1-6 and pauses before investigation. Use NEXT STEP or RESET.');
- if(auto)return;auto=true;paused=false;stage==0?autoNext():autoT=setTimeout(autoNext,D[stage]*1000)}
-function pauseSim(){if(!auto)return msg('Nothing to pause — AUTO PLAY is not running.');auto=false;paused=true;clearTimeout(autoT);status()}
-function resetSim(){clearT();clearTimeout(autoT);auto=false;paused=false;hlst=null;sel=1;q='';siemTab=0;$('ovl').style.display='none';go(0)}
-function showEv(){stage<3?msg('Evidence is not available until events have reached the SIEM.'):evidence()}
-function investigate(){stage<6?msg('Investigation is not available until correlation has completed and an alert is raised.'):stage==6?go(7):msg('Investigation is already open.')}
-function genConc(){stage<8?msg('Conclusion is not available until the timeline has been reconstructed.'):stage==8?go(9):msg('The conclusion has already been generated.')}
-function togglePres(){document.body.classList.toggle('pres')}
-/* ---------- evidence bodies ---------- */
-const evAuth=()=>`<b class="cy">Authentication Monitor</b><div class="term"><div data-e="1">10:01 FAILED LOGIN x15 user=demo.user src=203.0.113.45</div><div data-e="2">10:03 SUCCESS LOGIN user=demo.user src=203.0.113.45</div></div><b class="cy">Directory Audit</b><div class="term"><div data-e="3">10:04 GROUP_MEMBER_ADDED demo.user -> Administrators (synthetic) host=WS-01</div></div>`;
-const evEdr=()=>`<b class="cy">Endpoint Detection &amp; Response</b><div class="term">HOST: WS-01  USER: demo.user<br><span data-e="4">10:06 PROCESS CREATION<br>explorer.exe<br> └─ <span class="rd">powershell.exe</span>  [SUSPICIOUS ACTIVITY MARKER]</span></div><b class="cy">Sysmon Event Viewer</b><table data-e="4"><tr><td class="cy">EventID<td>1 (Process Create)<tr><td class="cy">UtcTime<td>2026-09-29 10:06:41<tr><td class="cy">Image<td>C:\\Windows\\System32\\...\\powershell.exe<tr><td class="cy">User<td>demo.user<tr><td class="cy">CommandLine<td class="am">[synthetic — pattern marker only, never executed]</table>`;
-const evNet=()=>`<b class="cy">Zeek-style conn.log</b><table data-e="5"><tr><th>ts<th>orig_h<th>resp_h<th>port<th>proto<th>service<tr><td>10:08:51<td>10.10.1.21 (WS-01)<td>198.51.100.25<td>443<td>tcp<td>ssl</table><span class="am">SYNTHETIC DESTINATION</span> — not contacted.<br><b class="cy">Zeek-style dns.log</b><table><tr><td>10:08:50<td>WS-01<td>update-check.example.test<td>A<td>198.51.100.25</table><b class="cy">Packet view (Wireshark-inspired)</b><table data-e="5"><tr><th>No<th>Time<th>Source<th>Dest<th>Proto<th>Info<tr><td>1<td>10:08:50<td>10.10.1.21<td>DNS srv<td>DNS<td>Standard query A<tr><td>2<td>10:08:50<td>DNS srv<td>10.10.1.21<td>DNS<td>Response 198.51.100.25<tr><td>3<td>10:08:51<td>10.10.1.21<td>198.51.100.25<td>TCP<td>SYN → 443<tr><td>4<td>10:08:51<td>10.10.1.21<td>198.51.100.25<td>TLS<td>Client Hello</table><div class="mu">No packets are captured or sent.</div>`;
-const EVB={auth:evAuth,edr:evEdr,net:evNet},TT={auth:'AUTH_LOG.exe',edr:'EDR_VIEW.exe',net:'NETWORK_VIEW.exe'},EVK={1:'auth',2:'auth',3:'auth',4:'edr',5:'net'};
-const CTX={1:'Repeated failures against one identity from one source.',2:'Success from the same source that just failed 15 times.',3:'Privilege change on the same identity shortly after login.',4:'Endpoint activity on the same host and user.',5:'Outbound traffic from the same host, minutes later.'};
-function evidence(){[['auth',29,54],['edr',52.5,54],['net',76,54]].forEach(([k,x,y])=>W(k,TT[k],EVB[k](),x,y,23,43))}
-const attBody=()=>`<div class="term">${[['Credential Access','15 failed logins'],['Privilege Escalation','group membership change'],['Execution / Command and Scripting Interpreter','PowerShell marker'],['Command and Control','unusual outbound connection']].map(([a,b])=>`<div><span class="am">${a}</span> <span class="mu">← ${b}</span></div>`).join('')}<div class="mu">Discovery: no supporting event in this case.</div></div><div class="tag a" style="margin-top:4px;display:block">Conceptual ATT&amp;CK context for demonstration — no technique is confirmed.</div>`;
-const attWin=()=>W('att','ATT&CK Context',attBody(),29,2,23,46);
-/* ---------- stages ---------- */
-function S0(){W('sys','SECURITY MONITORING SYSTEM',`<div class="term" style="height:100%;font-size:14px;line-height:1.7">SYSTEM STATUS: <span class="gn">READY</span><br>TELEMETRY SOURCES: <span class="gn">ONLINE</span><br>LOG COLLECTOR: <span class="gn">READY</span><br>SIEM: <span class="gn">READY</span><br>DETECTION ENGINE: <span class="gn">READY</span><br>CORRELATION ENGINE: <span class="gn">READY</span><br>SOC ANALYST: <span class="gn">READY</span><br>CASE: SOC-DEMO-2026-001<br><br>Waiting for security telemetry...<span class="cur"></span></div>`,32,10,34,50)}
-function mon(n){const ev=E.slice(0,n),R=(ids,t,id,y)=>W(id,t,`<div class="term" style="height:100%">${ev.filter(e=>ids.includes(e.id)).map(e=>`<div data-e="${e.id}">${e.t} <span class="${sc(e.status)}">${e.status}</span> ${e.desc}</div>`).join('')||'<span class="mu">waiting...</span>'}</div>`,75,y,24,16);
- R([1,2,3],'Authentication Log','mAuth',2);R([4],'Endpoint Monitor','mEnd',20);R([5],'Network Monitor','mNet',38)}
-function S1(){W('coll','Event Collector',`<div>COLLECTOR STATUS: <b id="cst" class="cy">RECEIVING TELEMETRY...</b></div><div style="margin:4px 0">${SRC.map((s,i)=>`<span style="margin-right:10px"><span class="led" id="led${i}"></span> ${s.toUpperCase()}</span>`).join('')}</div><div class="pb"><i id="pbar"></i></div><div id="evl" class="term" style="height:calc(100% - 70px);margin-top:4px"></div>`,29,2,45,52);mon(0);
- E.forEach((e,i)=>later(()=>{$('evl').insertAdjacentHTML('beforeend',`<div data-e="${e.id}" style="cursor:pointer;margin-bottom:3px" onclick="evD(${e.id})">EVENT 0${e.id}  ${e.t}  <b>${e.desc}</b> <span class="mu">[${e.src}]</span> <span class="tag a">SYNTHETIC DEMONSTRATION EVENT</span></div>`);$('led'+SRC.indexOf(e.src)).classList.add('on');$('pbar').style.width=(i+1)*20+'%';mon(i+1)},500+i*450));
- later(()=>{$('cst').textContent='5 EVENTS COLLECTED — EACH STILL ISOLATED'},500+5*450)}
-function evD(id){W('evd','Event Details — EVENT 0'+id,fields(E[id-1]),29,58,45,38)}
-function S2(){const P=['RAW LOGS','PARSER','FIELD EXTRACTION','NORMALIZATION','ENRICHMENT'];
- W('norm','Log Normalizer',`<div class="st" id="pipe">${P.map(p=>`<div>${p}</div>`).join('')}</div><table><tr><th>RAW FIELD<th>NORMALIZED</tr><tr><td>src_ip / SRC_IP / source.ip<td class="cy">source.ip<tr><td>user / username / account<td class="cy">user.name<tr><td>host / hostname / computer<td class="cy">host.name<tr><td>ts / EventTime / UtcTime<td class="cy">@timestamp</table><p>Different sources speak different log formats.</p><p id="nm" class="cy" style="visibility:hidden"><b>Normalization creates common fields so correlation can operate across sources.</b></p>`,29,2,45,52);
- W('rawn','Raw → Normalized',`<div class="term" id="rn" style="height:100%"></div>`,75,2,24,52);
- P.forEach((p,i)=>later(()=>$('pipe').children[i].classList.add('on'),300+i*550));later(()=>$('nm').style.visibility='visible',3000);
- E.forEach((e,i)=>later(()=>$('rn').insertAdjacentHTML('beforeend',`<div class="mu">${e.raw}</div><div>{user.name:"${e.user}", host.name:"${e.host}", source.ip:"${e.ip}", event.action:"${e.type}"}</div><br>`),500+i*450))}
-function siemBody(){const tabs=['EVENTS','SPL (Splunk-style)','KQL (Sentinel-style)'].map((t,i)=>`<span class="tab${i==siemTab?' on':''}" onclick="siemTab=${i};siem()">${t}</span>`).join('');
- const head=`<div>${tabs}<span style="float:right" class="am">ALERT QUEUE: ${stage>=6?1:0}</span></div><div style="margin:4px 0">${SRC.map(s=>`${s} ........ ${cnt(s)}`).join(' | ')} | <b>TOTAL EVENTS: ${E.length}</b></div>`;
- if(siemTab==0)return head+`<input id="q" value="${q}" placeholder="Search: demo.user / WS-01 / 203.0.113.45 ..." style="width:100%;font:12px 'Courier New',monospace;margin-bottom:4px" oninput="q=this.value;tblUp()"><div id="siemT" style="max-height:150px;overflow:auto"></div><div id="siemD" style="margin-top:4px"></div><div class="mu">Click USER / HOST / SOURCE IP to highlight across windows; click SOURCE to filter.</div>`;
- const bars=`<table><tr><th>source<th>count<th></tr>${SRC.map(s=>`<tr><td>${s}<td>${cnt(s)}<td><div style="background:#00D7FF;height:8px;width:${cnt(s)*70}px"></div></tr>`).join('')}</table>`;
- if(siemTab==1)return head+`<div class="term am">index=security_demo user="demo.user" earliest="2026-09-29T10:00:00" latest="2026-09-29T10:15:00"<br>| stats count by source<br>| sort _time</div><b>RESULTS (aggregation)</b>`+bars;
- return head+`<div class="term am">SecurityEvents<br>| where TimeGenerated between (datetime(2026-09-29 10:00) .. datetime(2026-09-29 10:15))<br>| where user_name == "demo.user"<br>| summarize Events=count(), Sources=dcount(source) by host_name</div><b>OUTPUT</b><table><tr><th>host_name<th>Events<th>Sources<tr><td>WS-01<td>5<td>4</table><b>Correlated rows</b><table>${E.map(e=>`<tr><td>${e.ts}<td>${e.src}<td>${e.type}</tr>`).join('')}</table>`}
-function siem(){W('siem','SIEM Console',siemBody(),29,2,70,56);$('siem').querySelector('.body').innerHTML=siemBody();if(siemTab==0)tblUp()}
-function tblUp(){const t=$('siemT');if(!t)return;const rows=E.filter(e=>(!hlst||hlst.k!='src'||e.src==hlst.v)&&JSON.stringify(e).toLowerCase().includes(q.toLowerCase())),c=(k,v)=>`onclick="event.stopPropagation();hl('${k}','${v}')"`;
- t.innerHTML=`<table><tr><th>TIME<th>USER<th>HOST<th>SOURCE IP<th>SOURCE<th>EVENT<th>STATUS</tr>${rows.map(e=>`<tr data-e="${e.id}" class="${sel==e.id?'sel':''}" onclick="sel=${e.id};tblUp()"><td>${e.t}<td ${c('user',e.user)}>${e.user}<td ${c('host',e.host)}>${e.host}<td ${c('ip',e.ip)}>${e.ip}<td ${c('src',e.src)}>${e.src}<td>${e.type}<td class="${sc(e.status)}">${e.status}</tr>`).join('')}</table>`;
- $('siemD').innerHTML=fields(E[sel-1]);apply()}
-function S3(){siem()}
-function S4(){const SG=`title: Suspicious Account Activity Sequence\nid: demo-0001-synthetic\nstatus: experimental\nlogsource:\n  category: authentication, process_creation\n  product: windows (simulated)\ndetection:\n  failed_logins: {outcome: failure, count: '>10'}\n  success: {outcome: success}\n  priv: {action: group-member-added}\n  proc: {name: powershell.exe, marker: suspicious}\n  net: {category: network, dest: unusual}\n  condition: failed_logins and success and priv and proc and net\nlevel: high`;
- W('sigma','Sigma-style Rule Editor',`<div class="term" style="height:100%;white-space:pre;color:#E8E8E8">${SG}<span class="cur"></span></div>`,29,2,34,58);
- const C=['Failed login threshold','Successful login','Privilege change','Suspicious process','Unusual outbound connection'];
- W('det','Detection Rules',`<b>RULE: Suspicious Account Activity</b><div id="chk" class="term" style="margin-top:4px;line-height:1.9"></div><div id="dres" class="am" style="margin-top:6px;font-weight:bold"></div>`,64,2,35,58);
- C.forEach((c,i)=>{later(()=>$('chk').insertAdjacentHTML('beforeend',`<div id="c${i}">CHECK 0${i+1} ${c} ........ <span class="mu">EVALUATING...</span></div>`),300+i*700);later(()=>$('c'+i).lastElementChild.outerHTML='<span class="am">DETECTED</span>',700+i*700)});
- later(()=>$('dres').innerHTML='Potentially suspicious sequence identified.<br>Detection condition satisfied — analyst investigation required.<br><span class="mu">(Detection is not proof.)</span>',4100)}
-function S5(){const F=[['SAME IDENTITY','demo.user'],['SAME HOST','WS-01'],['SAME SOURCE IP','203.0.113.45'],['TEMPORAL PROXIMITY','10:01 → 10:08'],['ORDERED SEQUENCE','AUTH → PRIVILEGE → PROCESS → NETWORK'],['CROSS-SOURCE CONTEXT','VPN + AD + EDR + FIREWALL/DNS']],L=['15 FAILED LOGINS','SUCCESSFUL LOGIN','PRIVILEGE CHANGE','POWERSHELL EXECUTION','OUTBOUND CONNECTION'];
- W('corr','Correlation Engine',`<div>${L.map((l,i)=>`<div class="box" id="b${i}" data-e="${i+1}">${l}</div>${i<4?'<div class="ar">▼</div>':''}`).join('')}</div><div class="g2" style="margin-top:6px" id="facs"></div><div id="facx" class="mu" style="margin:3px 0">Click a correlation factor to see why the events are related.</div><div id="cres" class="term" style="visibility:hidden"><b>CORRELATION RESULT</b><br>Related events form a coherent suspicious sequence.<br><span class="mu">Correlation increases investigative confidence and provides context for analyst review.</span></div>`,29,2,45,68);
- $('facs').innerHTML=F.map(([a,b],i)=>`<div class="fac" onclick="fac(${i})"><b>${a}</b>${b}</div>`).join('');
- const R=[['GROUP BY','user, host, source_ip'],['WITHIN','15 MINUTES'],['IF','failed_logins > threshold'],['AND','successful_login == true'],['AND','privilege_change == true'],['AND','suspicious_process == true'],['THEN','raise high-priority alert'],['FOR','analyst investigation']];
- W('rule','correlation_rule.txt',`<div class="term" style="height:calc(100% - 34px)" id="rl"></div><div class="mu" style="margin-top:3px">Illustrative correlation logic — not a production-ready rule.</div>`,75,2,24,68);
- L.forEach((l,i)=>later(()=>$('b'+i).classList.add('on'),300+i*500));
- R.forEach(([k,v],i)=>later(()=>$('rl').insertAdjacentHTML('beforeend',`<div><span class="am">${k}</span> ${v} ${i>1&&i<6?'<span class="gn">... TRUE</span>':''}</div>`),400+i*450));
- later(()=>$('cres').style.visibility='visible',3800)}
-function fac(i){const X=['All five events carry user.name = demo.user.','All five events map to host WS-01.','Session source IP 203.0.113.45 appears on every event after enrichment.','All events fall within 7 minutes, inside the 15-minute window.','Order matches AUTH → PRIVILEGE → PROCESS → NETWORK.','Four independent telemetry sources agree.'];
- $('facx').textContent=X[i];hlst=i<3?{k:['user','host','ip'][i],v:E[0][['user','host','ip'][i]]}:null;apply()}
-function S6(){W('alert','SECURITY ALERT',`<div style="display:flex;gap:10px"><b style="font-size:26px;background:#D00000;color:#fff;padding:0 12px;height:38px">!</b><div><b>RELATED SECURITY EVENTS DETECTED</b></div></div><div style="margin:8px 0"><div class="row"><b>USER:</b><span class="val">demo.user</span></div><div class="row"><b>HOST:</b><span class="val">WS-01</span></div><div class="row"><b>SOURCE:</b><span class="val">203.0.113.45</span></div><div class="row"><b>TIME WINDOW:</b><span class="val">10:01 — 10:08</span></div><div class="row"><b>EVENTS:</b><span class="val">5</span></div><div class="row"><b>PRIORITY:</b><span class="val rd" style="background:#000">HIGH</span></div><div class="row"><b>STATUS:</b><span class="val">Investigation required</span></div></div><div class="mu">An alert is not a confirmed incident.</div><div style="text-align:center;margin-top:8px"><button class="btn" onclick="evidence()">VIEW EVIDENCE</button> <button class="btn" onclick="investigate()">INVESTIGATE</button> <button class="btn" onclick="closeW('alert');msg('Alert dismissed. It stays in the SIEM alert queue; press INVESTIGATE to review it.')">DISMISS</button></div>`,36,6,34,44,'red')}
-const tlBody=()=>`<div>${E.map(e=>`<div class="tli" data-e="${e.id}" onclick="tlClick(${e.id})"><b class="am">${e.t}</b> ${e.desc}<br><span class="mu">${e.src}</span></div>`).join('<div class="ar">▼</div>')}</div><div id="tld" class="term" style="margin-top:4px;min-height:100px">Click an event to open its evidence.</div><div class="mu">Investigation is the process of connecting evidence, not merely reading one log.</div>`;
-function tlClick(id){sel=id;const e=E[id-1];$('tld').innerHTML=`EVENT: ${e.desc}<br>SOURCE: ${e.src}<br>USER: ${e.user}<br>HOST: ${e.host}<br>SOURCE IP: ${e.ip}<br>CONTEXT: ${CTX[id]}`;
- document.querySelectorAll('.tli').forEach(x=>x.classList.toggle('sel',x.dataset.e==id));const k=EVK[id];$('evi')?W('evi',TT[k],EVB[k](),29,64,35,33):flash(k)}
-function S7(){const X=[29,52.5,76],Y=[2,50];
- W('tl','SIEM_TIMELINE.exe',tlBody(),X[0],Y[0],23,46);W('edr',TT.edr,evEdr(),X[1],Y[0],23,46);W('net',TT.net,evNet(),X[2],Y[0],23,46);
- W('auth',TT.auth,evAuth(),X[0],Y[1],23,46);
- W('notes','CASE_NOTES.exe',`<textarea style="width:100%;height:100%;font:12px 'Courier New',monospace;resize:none">CASE SOC-DEMO-2026-001\n- 15 failures then success, same source\n- Privilege change on same account\n- PowerShell marker on WS-01\n- Outbound connection to synthetic dest\nOpen: intent? legitimate admin work?</textarea>`,X[1],Y[1],23,46);
- attWin();$('att').style.left=X[2]+'%';$('att').style.top=Y[1]+'%';$('att').style.height='46%'}
-const QS=[['Are the events associated with the same identity?','Yes — user.name = demo.user in VPN, AD, Sysmon and firewall records.'],['Do they involve the same host?','Yes — WS-01 appears in the endpoint, directory and network records.'],['Do they share a source IP?','Yes — 203.0.113.45 is on the authentication events and enriched onto later ones.'],['Did they occur within a meaningful time window?','Yes — 10:01 to 10:08, inside the 15-minute window.'],['Is the event sequence suspicious enough to investigate?','Yes — but "worth investigating" is not "confirmed malicious".'],['What evidence supports the hypothesis?','15 failures then success, privilege change, PowerShell marker, unusual outbound connection.'],['What remains uncertain?','Intent, whether the admin change was legitimate, whether the destination is malicious. Data is synthetic.']];
-function qc(i){$('qa'+i).innerHTML=QS[i][1];$('qa'+i).style.display='block';if(i<3)hl(['user','host','ip'][i],E[0][['user','host','ip'][i]]);else{hlst=null;apply()}}
-function S8(){W('tl','SIEM_TIMELINE.exe',tlBody(),29,2,32,60);
- W('qd','Analyst Investigation',QS.map((s,i)=>`<div style="margin-bottom:4px"><b>${i+1}. ${s[0]}</b> <button class="btn" onclick="qc(${i})">CHECK</button><div id="qa${i}" class="term" style="display:none;margin-top:2px">${s[1]}</div></div>`).join(''),62,2,37,60);
- W('evi',TT.auth,evAuth(),29,64,35,33);tlClick(1)}
-function S9(){W('assess','Incident Assessment',`<div class="row"><b>CASE:</b><span class="val">SOC-DEMO-2026-001</span></div><b>ASSESSMENT:</b><div class="term am">SUSPICIOUS ACTIVITY REQUIRES INVESTIGATION</div><b>CONFIRMED FROM SIMULATION:</b><div class="term">✓ Multiple failed authentication attempts<br>✓ Successful authentication from same source<br>✓ Privilege change<br>✓ Suspicious process execution marker<br>✓ Unusual outbound connection</div><b>CORRELATED CONTEXT:</b><div class="term am">Identity + Host + Source IP + Time + Sequence + Multiple telemetry sources</div><b>UNCERTAINTIES:</b><div class="term">- Synthetic data<br>- No real endpoint compromise<br>- No real network connection<br>- Correlation alone does not establish malicious intent<br>- Additional evidence needed in a real investigation</div>`,29,2,36,94);
- W('concl','CASE CONCLUSION',`<div class="term" style="font-size:16px;color:#FFB000;text-align:center;padding:14px"><b>THE OBSERVED EVENTS FORM A COHERENT SUSPICIOUS SEQUENCE AND WARRANT FURTHER INVESTIGATION.</b></div><p>This simulation demonstrates how:</p><div class="term" style="text-align:center;line-height:1.6">RAW EVENTS<br><span class="mu">become</span><br>SEARCHABLE SECURITY DATA<br><span class="mu">which becomes</span><br>DETECTION<br><span class="mu">which becomes</span><br>CORRELATED CONTEXT<br><span class="mu">which enables</span><br>INVESTIGATION<br><span class="mu">which supports</span><br>ANALYST DECISION</div><p class="mu">LOG ≠ ALERT ≠ INCIDENT · DETECTION ≠ PROOF · CORRELATION ≠ PROOF OF COMPROMISE</p>`,66,2,33,94)}
-const RA={'PRESERVE EVIDENCE':'[SIM] Evidence snapshot marked for retention.','REVIEW ACCOUNT ACTIVITY':'[SIM] Reviewing demo.user sign-in history.','VALIDATE PRIVILEGE CHANGE':'[SIM] Asking directory owner to confirm the group change.','CHECK ENDPOINT TELEMETRY':'[SIM] Pulling additional WS-01 process telemetry.','REVIEW NETWORK ACTIVITY':'[SIM] Reviewing other traffic to the synthetic destination.','ESCALATE FOR CONTAINMENT':'[SIM] Escalation ticket drafted. No system was isolated.'};
-function S10(){W('resp','Incident Response Recommendation',`<div class="g2">${Object.keys(RA).map(k=>`<button class="btn" onclick="$('rlog').insertAdjacentHTML('beforeend','<div>'+RA['${k}']+'</div>')">${k}</button>`).join('')}</div><div id="rlog" class="term" style="height:calc(100% - 100px);margin-top:6px">Simulated actions only — nothing on this computer is changed.<br></div>`,29,2,40,60);
- W('fin','SECURITY INVESTIGATION COMPLETE',`<div class="term" style="line-height:1.7">CASE: SOC-DEMO-2026-001<br>EVENTS ANALYZED: 5<br>TELEMETRY SOURCES: 4<br>CORRELATED: <span class="am">YES</span><br>INVESTIGATION: <span class="gn">COMPLETED</span><br>ASSESSMENT: SUSPICIOUS ACTIVITY REQUIRES FURTHER INVESTIGATION</div><div style="text-align:center;margin:8px 0"><button class="btn" onclick="resetSim()">RESET CASE</button> <button class="btn" onclick="resetSim();startSim()">RUN AGAIN</button> <button class="btn" onclick="togglePres()">PRESENTATION MODE</button></div><div class="mu">Synthetic demonstration — no real systems accessed.</div>`,70,2,29,60)}
-/* ---------- menus & init ---------- */
-const MN={File:[['Reset Case',resetSim],['Run Again',()=>{resetSim();startSim()}],['Exit',()=>msg('This simulator cannot be closed during a live demonstration.')]],Edit:[['Clear Highlight',()=>{hlst=null;$('siemT')?tblUp():apply()}]],View:[['Presentation Mode',togglePres],['Show Evidence',showEv]],Tools:[['ATT&CK Context',attWin],['Tools Used',()=>flash('tools')]],Help:[['About',()=>msg('Simulated educational interfaces with synthetic data. Nothing here runs Splunk, Sentinel, Sysmon, EDR, Zeek or Wireshark, and nothing touches the network.')]]};
-$('menu').innerHTML=Object.keys(MN).map(k=>`<span onclick="openMenu('${k}',this,event)">${k}</span>`).join('');
-function openMenu(k,el,ev){ev.stopPropagation();const d=$('dd');d.innerHTML=MN[k].map((m,i)=>`<div onclick="MN['${k}'][${i}][1]()">${m[0]}</div>`).join('');d.style.left=el.offsetLeft+4+'px';d.style.top='42px';d.style.display='block'}
-document.onclick=()=>$('dd').style.display='none';
-setInterval(()=>$('clk').textContent=new Date().toLocaleTimeString(),1000);
-W('console','SOC Investigation Console',consBody(),1,2,27,60);
-W('tools','TOOLS USED IN THIS DEMO',`<div class="term" style="height:100%;font-size:11px"><span class="am">TELEMETRY</span> Sysmon · EDR · VPN · Active Directory · Firewall / DNS<br><span class="am">SIEM</span> Splunk / Microsoft Sentinel / Elastic Security (simulated)<br><span class="am">DETECTION</span> Sigma · SPL · KQL · SIEM rules (simulated)<br><span class="am">NETWORK</span> Zeek · Wireshark (simulated views)<br><span class="am">FRAMEWORK</span> MITRE ATT&amp;CK (conceptual)<br><span class="mu">Not all of these run underneath this simulation.</span></div>`,1,64,27,33);
+/* ==========================================================================
+   SIMULATOR CORE DATA & STATE MACHINE
+   ========================================================================== */
+const E = [
+  {id:1, t:'10:01', ts:'2026-09-29 10:01:12', type:'authentication_failure', src:'Identity / VPN', user:'demo.user', host:'WS-01', ip:'203.0.113.45', status:'FAILED', desc:'15 failed login attempts', x:{ACTION:'LOGIN', ATTEMPTS:15, LOG:'VPN-AUTH'}, raw:'VPN-AUTH src_ip=203.0.113.45 user=demo.user action=LOGIN result=FAILED n=15'},
+  {id:2, t:'10:03', ts:'2026-09-29 10:03:27', type:'authentication_success', src:'Identity / VPN', user:'demo.user', host:'WS-01', ip:'203.0.113.45', status:'SUCCESS', desc:'Successful login from same source', x:{ACTION:'LOGIN', LOG:'VPN-AUTH'}, raw:'VPN-AUTH SRC_IP=203.0.113.45 username=demo.user action=LOGIN result=OK'},
+  {id:3, t:'10:04', ts:'2026-09-29 10:04:55', type:'privilege_change', src:'Active Directory', user:'demo.user', host:'WS-01', ip:'203.0.113.45', status:'MODIFIED', desc:'Privilege change', x:{ACTION:'GROUP_MEMBER_ADDED', GROUP:'Administrators (synthetic)'}, raw:'EventID=4728 account=demo.user computer=WS-01 group=Administrators'},
+  {id:4, t:'10:06', ts:'2026-09-29 10:06:41', type:'process_creation', src:'Sysmon / EDR', user:'demo.user', host:'WS-01', ip:'203.0.113.45', status:'SUSPICIOUS', desc:'Suspicious PowerShell execution', x:{PROCESS:'powershell.exe', EVENT:'PROCESS_CREATION', MARKER:'Suspicious command pattern'}, raw:'EventID=1 hostname=WS-01 User=demo.user Image=powershell.exe'},
+  {id:5, t:'10:08', ts:'2026-09-29 10:08:51', type:'network_connection', src:'Firewall / DNS', user:'demo.user', host:'WS-01', ip:'203.0.113.45', status:'UNUSUAL', desc:'Unusual outbound connection', x:{DESTINATION:'198.51.100.25 (SYNTHETIC DESTINATION)', PORT:443, PROTO:'TCP/TLS'}, raw:'FW ALLOW host=WS-01 sess_ip=203.0.113.45 dst=198.51.100.25 dport=443'}
+];
+
+const SRC = ['Identity / VPN', 'Active Directory', 'Sysmon / EDR', 'Firewall / DNS'];
+const NM = [
+  'SYSTEM READY',
+  'LOG COLLECTION',
+  'NORMALIZATION',
+  'SIEM INGESTION',
+  'DETECTION',
+  'EVENT CORRELATION',
+  'HIGH-PRIORITY ALERT',
+  'INVESTIGATION',
+  'TIMELINE RECONSTRUCTION',
+  'ANALYST CONCLUSION',
+  'RESPONSE / NEXT ACTION'
+];
+const ST = ['READY', 'RECEIVING', 'NORMALIZING', 'INDEXED', 'ANALYZING', 'CORRELATED', 'ALERTED', 'INVESTIGATING', 'RECONSTRUCTED', 'ASSESSED', 'RESPONDING'];
+const PIPE_LABELS = ['READY', 'COLLECT', 'NORMALIZE', 'SIEM', 'DETECT', 'CORRELATE', 'ALERT', 'INVESTIGATE', 'RECONSTRUCT', 'ASSESS', 'RESPOND'];
+
+const $ = id => document.getElementById(id);
+const desk = $('desk');
+
+let stage = 0;
+let tok = 0;
+let timers = [];
+let autoT = null;
+let auto = false;
+let paused = false;
+let z = 10;
+let hlst = null;
+let siemTab = 0;
+let sel = 1;
+let q = '';
+let activeWinId = 'console';
+let windowStateMap = {};
+
+/* ---------------- Audio System (Section 26) ---------------- */
+let sndOn = false;
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (AC) audioCtx = new AC();
+  }
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+function toggleSound() {
+  sndOn = !sndOn;
+  if (sndOn) getAudioCtx();
+  $('sndBtn').textContent = sndOn ? 'SOUND: ON' : 'SOUND: OFF';
+  $('sndTray').textContent = sndOn ? 'SND: ON' : 'SND: OFF';
+  $('sndTray').className = 'tray-badge ' + (sndOn ? 'green' : '');
+  if (sndOn) playSnd('click');
+}
+function playSnd(type) {
+  if (!sndOn) return;
+  try {
+    const ctx = getAudioCtx();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    if (type === 'click') {
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(800, now);
+      osc.frequency.exponentialRampToValueAtTime(150, now + 0.015);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.015);
+      osc.start(now); osc.stop(now + 0.015);
+    } else if (type === 'beep') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(520, now);
+      gain.gain.setValueAtTime(0.07, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+      osc.start(now); osc.stop(now + 0.05);
+    } else if (type === 'alert') {
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(440, now);
+      osc.frequency.setValueAtTime(880, now + 0.07);
+      gain.gain.setValueAtTime(0.09, now);
+      gain.gain.setValueAtTime(0.09, now + 0.07);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+      osc.start(now); osc.stop(now + 0.22);
+    } else if (type === 'chirp') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(900, now);
+      osc.frequency.exponentialRampToValueAtTime(1400, now + 0.04);
+      gain.gain.setValueAtTime(0.05, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+      osc.start(now); osc.stop(now + 0.04);
+    }
+  } catch(e) {}
+}
+
+/* ---------------- Timers & Execution Safety ---------------- */
+const later = (f, ms) => {
+  const k = tok;
+  timers.push(setTimeout(() => { if (k === tok) f(); }, ms));
+};
+const clearT = () => {
+  tok++;
+  timers.forEach(clearTimeout);
+  timers = [];
+};
+const sc = s => ({FAILED:'am', SUCCESS:'cy', MODIFIED:'am', SUSPICIOUS:'rd', UNUSUAL:'am'})[s] || 'cy';
+const cnt = s => E.filter(e => e.src === s).length;
+
+/* ---------------- Window Manager (Section 3) ---------------- */
+function W(id, title, body, x, y, w, h, cls, menuHtml, sbText) {
+  let el = $(id);
+  if (!el) {
+    el = document.createElement('div');
+    el.className = 'win' + (cls ? ' ' + cls : '');
+    el.id = id;
+    el.innerHTML = `
+      <div class="tb">
+        <div class="tb-title">
+          <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="2" width="14" height="12" fill="#00D7FF" stroke="#FFF"/></svg>
+          <span class="win-title-text">${title}</span>
+        </div>
+        <span class="sim-tag">SIMULATED INTERFACE</span>
+        <div class="tb-btns">
+          <button class="wb" onclick="minimizeW('${id}')" title="Minimize">_</button>
+          <button class="wb" onclick="maximizeW('${id}')" title="Maximize">□</button>
+          <button class="wb" onclick="closeW('${id}')" title="Close">X</button>
+        </div>
+      </div>
+      ${menuHtml ? `<div class="win-menu">${menuHtml}</div>` : ''}
+      <div class="body"></div>
+      <div class="sb-bar">
+        <span class="sb-pane" id="${id}-sb">${sbText || 'READY | CASE: SOC-DEMO-2026-001'}</span>
+        <span class="sb-pane" style="margin-left:auto">LOCAL</span>
+      </div>
+    `;
+    el.style.cssText = `left:${x}%;top:${y}%;width:${w}%;height:${h}%`;
+    desk.appendChild(el);
+    drag(el);
+  }
+  
+  el.querySelector('.win-title-text').textContent = title;
+  el.querySelector('.body').innerHTML = body;
+  if (sbText && $(`${id}-sb`)) $(`${id}-sb`).textContent = sbText;
+  
+  el.style.display = 'flex';
+  el.classList.add('act');
+  bringToFront(el);
+  syncTaskbar();
+  apply();
+  playSnd('beep');
+  return el;
+}
+
+function bringToFront(el) {
+  if (!el) return;
+  activeWinId = el.id;
+  el.style.zIndex = ++z;
+  document.querySelectorAll('.win').forEach(w => w.classList.add('inactive'));
+  el.classList.remove('inactive');
+  syncTaskbar();
+}
+
+function closeW(id) {
+  const e = $(id);
+  if (!e) return;
+  if (id === 'console') {
+    msg('The SOC Investigation Console is required for seminar navigation.');
+    return;
+  }
+  e.remove();
+  syncTaskbar();
+  playSnd('click');
+}
+
+function minimizeW(id) {
+  const e = $(id);
+  if (!e) return;
+  e.style.display = 'none';
+  syncTaskbar();
+  playSnd('click');
+}
+
+function maximizeW(id) {
+  const e = $(id);
+  if (!e) return;
+  if (windowStateMap[id]) {
+    e.style.left = windowStateMap[id].left;
+    e.style.top = windowStateMap[id].top;
+    e.style.width = windowStateMap[id].width;
+    e.style.height = windowStateMap[id].height;
+    delete windowStateMap[id];
+  } else {
+    windowStateMap[id] = {
+      left: e.style.left,
+      top: e.style.top,
+      width: e.style.width,
+      height: e.style.height
+    };
+    e.style.left = '0%';
+    e.style.top = '0%';
+    e.style.width = '100%';
+    e.style.height = '100%';
+  }
+  bringToFront(e);
+  playSnd('click');
+}
+
+const closeAll = () => {
+  [...desk.querySelectorAll('.win')].forEach(w => {
+    if (w.id !== 'console' && w.id !== 'tools' && w.id !== 'casefile') w.remove();
+  });
+  syncTaskbar();
+};
+
+/* Dragging with Clamping so title bars are never lost (Section 31) */
+function drag(el) {
+  const h = el.querySelector('.tb');
+  if (!h) return;
+  el.onmousedown = () => bringToFront(el);
+  h.onmousedown = ev => {
+    if (ev.target.classList.contains('wb')) return;
+    bringToFront(el);
+    const r = el.getBoundingClientRect();
+    const d = desk.getBoundingClientRect();
+    const ox = ev.clientX - r.left;
+    const oy = ev.clientY - r.top;
+    
+    document.onmousemove = m => {
+      let nx = m.clientX - ox - d.left;
+      let ny = m.clientY - oy - d.top;
+      nx = Math.max(0, Math.min(d.width - 60, nx));
+      ny = Math.max(0, Math.min(d.height - 24, ny));
+      el.style.left = nx + 'px';
+      el.style.top = ny + 'px';
+    };
+    document.onmouseup = () => {
+      document.onmousemove = null;
+    };
+  };
+}
+
+const flash = id => {
+  const e = $(id);
+  if (!e) return;
+  e.style.display = 'flex';
+  bringToFront(e);
+  e.classList.remove('fl');
+  void e.offsetWidth;
+  e.classList.add('fl');
+  playSnd('chirp');
+};
+
+/* Retro Windows 98 Dialog */
+function msg(t, title = 'Security Monitoring & Log Analysis') {
+  const o = $('ovl');
+  o.style.display = 'flex';
+  o.innerHTML = `
+    <div class="win" style="position:relative;width:420px;max-width:90%">
+      <div class="tb"><span>${title}</span></div>
+      <div class="body" style="display:flex;gap:14px;align-items:center;padding:16px">
+        <b style="font-size:24px;background:#FFB000;color:#000;padding:2px 12px;border:2px solid #000;line-height:1.2">!</b>
+        <span style="flex:1;font-size:12px;line-height:1.4">${t}</span>
+      </div>
+      <div style="text-align:center;padding:8px;background:#C0C0C0;border-top:1px solid #808080">
+        <button class="btn" style="width:84px" onclick="$('ovl').style.display='none';playSnd('click')">OK</button>
+      </div>
+    </div>
+  `;
+  playSnd('alert');
+}
+
+/* ---------------- Taskbar Window Buttons Synchronization (Section 5) ---------------- */
+function syncTaskbar() {
+  const tw = $('task-wins');
+  if (!tw) return;
+  const wins = [...desk.querySelectorAll('.win')];
+  tw.innerHTML = wins.map(w => {
+    const isAct = w.id === activeWinId && w.style.display !== 'none';
+    const title = w.querySelector('.win-title-text') ? w.querySelector('.win-title-text').textContent : w.id;
+    return `
+      <button class="twin-btn ${isAct ? 'active' : ''}" onclick="taskbarWinClick('${w.id}')" title="${title}">
+        <span style="color:${isAct ? '#000080' : '#404040'}">■</span>
+        <span>${title}</span>
+      </button>
+    `;
+  }).join('');
+}
+
+function taskbarWinClick(id) {
+  const w = $(id);
+  if (!w) return;
+  playSnd('click');
+  if (w.style.display === 'none') {
+    w.style.display = 'flex';
+    bringToFront(w);
+  } else if (activeWinId === id) {
+    minimizeW(id);
+  } else {
+    bringToFront(w);
+  }
+}
+
+function toggleStartMenu() {
+  const sm = $('start-menu');
+  const btn = $('start-btn');
+  const isOpen = sm.style.display === 'flex';
+  sm.style.display = isOpen ? 'none' : 'flex';
+  btn.classList.toggle('pressed', !isOpen);
+  playSnd('click');
+}
+
+/* ---------------- Cross-Window Filtering & Highlighting ---------------- */
+function apply() {
+  document.querySelectorAll('[data-e]').forEach(el => {
+    const e = E[el.dataset.e - 1];
+    if (!e) return;
+    const on = !hlst || e[hlst.k] === hlst.v;
+    el.classList.toggle('dim', !on);
+    el.classList.toggle('hl', !!hlst && on);
+  });
+}
+
+function hl(k, v) {
+  hlst = hlst && hlst.k === k && hlst.v === v ? null : { k, v };
+  playSnd('click');
+  if ($('siemT')) tblUp();
+  apply();
+  if (stage === 5) updateCorrVisualHighlights();
+}
+
+const fields = e => `
+  <table>
+    ${[['TIMESTAMP', e.ts], ['USER', e.user], ['SOURCE_IP', e.ip], ['HOST', e.host], ['SOURCE', e.src], ['EVENT', e.type.toUpperCase()], ['STATUS', e.status], ...Object.entries(e.x)].map(([k,v]) => `
+      <tr><td class="cy">${k}</td><td>${v}</td></tr>
+    `).join('')}
+  </table>
+`;
+
+/* ---------------- Pipeline Ribbon Synchronization (Section 22) ---------------- */
+function updatePipelineRibbon() {
+  const pr = $('pipeline-ribbon');
+  if (!pr) return;
+  pr.innerHTML = PIPE_LABELS.map((name, i) => {
+    let cls = '';
+    let marker = `[${String(i).padStart(2,'0')}]`;
+    if (i < stage) {
+      cls = 'done';
+      marker = `✓ ${String(i).padStart(2,'0')}`;
+    } else if (i === stage) {
+      cls = 'current';
+      marker = `▶ ${String(i).padStart(2,'0')}`;
+    }
+    const arrow = i < PIPE_LABELS.length - 1 ? '<span class="arrow">→</span>' : '';
+    return `<div class="pipe-step ${cls}" onclick="go(${i})" title="Jump to Stage ${i}: ${NM[i]}">${marker} ${name}</div>${arrow}`;
+  }).join('');
+}
+
+/* ---------------- SOC Console & Controls (Left Pane) ---------------- */
+const consBody = () => `
+  <div class="row"><b>CASE ID:</b><span class="val">SOC-DEMO-2026-001</span></div>
+  <div class="row"><b>CASE TITLE:</b><span class="val">Suspicious Account Activity</span></div>
+  <div class="row"><b>STAGE STATUS:</b><span class="val dark am" id="cs">READY</span></div>
+  <div class="row"><b>TELEMETRY:</b><span class="val">4 Heterogeneous Log Feeds</span></div>
+  
+  <div class="g2" style="margin:6px 0">
+    <button class="btn" onclick="startSim()">START SIMULATION</button>
+    <button class="btn big act-blue" onclick="nextStep()">NEXT STEP ▶</button>
+    <button class="btn" onclick="autoPlay()">AUTO PLAY ⏯</button>
+    <button class="btn" onclick="pauseSim()">PAUSE ⏸</button>
+    <button class="btn" onclick="resetSim()">RESET ↺</button>
+    <button class="btn" onclick="showEv()">SHOW EVIDENCE</button>
+    <button class="btn" onclick="investigate()">INVESTIGATE 🔍</button>
+    <button class="btn" onclick="genConc()">CONCLUSION 📋</button>
+  </div>
+  
+  <div class="term" id="cl" style="height:calc(100% - 200px);min-height:150px"></div>
+`;
+
+function status() {
+  if ($('cs')) $('cs').textContent = paused ? 'PAUSED' : ST[stage];
+  if ($('cl')) {
+    $('cl').innerHTML = NM.map((n, i) => `
+      <div class="${i === stage ? 'am' : i < stage ? 'mu' : ''}" style="cursor:pointer;padding:1px 0" onclick="go(${i})">
+        ${i < stage ? '[✓]' : i === stage ? '[▶]' : '[ ]'} STAGE ${String(i).padStart(2, '0')} ${n}
+      </div>
+    `).join('');
+  }
+  
+  $('tst').textContent = String(stage).padStart(2, '0') + ' / 10';
+  $('tnm').textContent = NM[stage];
+  $('tpb').style.width = (stage * 10) + '%';
+  $('tk2').textContent = ST[stage];
+  
+  updatePipelineRibbon();
+  updateCasefile();
+}
+
+/* ---------------- Persistent CASEFILE.EXE (Section 19) ---------------- */
+function casefileBody() {
+  return `
+    <div style="font-size:11px">
+      <div class="row"><b>CASE ID:</b><span class="val cy" style="background:#000">SOC-DEMO-2026-001</span></div>
+      <div class="row"><b>SUBJECT:</b><span class="val" onclick="hl('user','demo.user')" style="cursor:pointer">demo.user</span></div>
+      <div class="row"><b>TARGET HOST:</b><span class="val" onclick="hl('host','WS-01')" style="cursor:pointer">WS-01</span></div>
+      <div class="row"><b>ORIGIN IP:</b><span class="val" onclick="hl('ip','203.0.113.45')" style="cursor:pointer">203.0.113.45</span></div>
+      <div class="row"><b>EVENTS COUNT:</b><span class="val">5 Correlated</span></div>
+      <div class="row"><b>SOURCES:</b><span class="val">VPN, AD, Sysmon, FW</span></div>
+      <div class="row"><b>TIME WINDOW:</b><span class="val">10:01 → 10:08 (7 min)</span></div>
+      <div class="row"><b>CASE STATUS:</b><span class="val am" id="cf-status" style="background:#000">${ST[stage]}</span></div>
+      <div class="mu" style="margin-top:6px;font-size:10px">Click attributes above to highlight across all open monitors.</div>
+    </div>
+  `;
+}
+
+function openCasefile() {
+  W('casefile', 'CASEFILE.EXE — [SOC-DEMO-2026-001]', casefileBody(), 1, 64, 27, 33, '', '<span>File</span><span>Edit</span><span>Audit</span>', 'STATUS: ' + ST[stage]);
+}
+
+function updateCasefile() {
+  const el = $('cf-status');
+  if (el) el.textContent = ST[stage];
+  if ($('casefile-sb')) $('casefile-sb').textContent = 'STATUS: ' + ST[stage] + ' | EVENTS: 5';
+}
+
+/* ---------------- Master State Machine Navigation ---------------- */
+function go(n) {
+  clearT();
+  stage = Math.max(0, Math.min(10, n));
+  paused = false;
+  closeAll();
+  hlst = null;
+  status();
+  
+  [S0, S1, S2, S3, S4, S5, S6, S7, S8, S9, S10][stage]();
+  status();
+  playSnd('beep');
+}
+
+function startSim() {
+  if (stage > 0) {
+    msg('The simulation is already in progress. Use NEXT STEP to advance through the security workflow.');
+  } else {
+    go(1);
+  }
+}
+
+function nextStep() {
+  if (stage === 0) {
+    startSim();
+  } else if (stage >= 10) {
+    msg('The SOC investigation lifecycle is complete. Use RESET or RUN AGAIN to restart.');
+  } else {
+    go(stage + 1);
+  }
+}
+
+function prevStep() {
+  if (stage <= 0) {
+    msg('Already at the initial state.');
+  } else {
+    go(stage - 1);
+  }
+}
+
+const D = [0, 3, 3, 3, 4, 5, 4];
+function autoNext() {
+  if (!auto) return;
+  const n = stage + 1;
+  go(n);
+  if (n < 6) {
+    autoT = setTimeout(autoNext, D[n] * 1000);
+  } else {
+    auto = false;
+    paused = true;
+    status();
+    msg('AUTO PLAY completed through Stage 06 (Alert). Pausing now for interactive analyst investigation.', 'Simulation Paused for Analyst');
+  }
+}
+
+function autoPlay() {
+  if (stage >= 6) {
+    return msg('AUTO PLAY covers automated ingestion & correlation (Stages 1-6) and pauses before analyst investigation. Use NEXT STEP or INVESTIGATE.');
+  }
+  if (auto) return;
+  auto = true;
+  paused = false;
+  playSnd('click');
+  stage === 0 ? autoNext() : (autoT = setTimeout(autoNext, D[stage] * 1000));
+}
+
+function pauseSim() {
+  if (!auto) return msg('Nothing to pause — automated playback is not currently running.');
+  auto = false;
+  paused = true;
+  clearTimeout(autoT);
+  status();
+  playSnd('click');
+}
+
+function resetSim() {
+  clearT();
+  clearTimeout(autoT);
+  auto = false;
+  paused = false;
+  hlst = null;
+  sel = 1;
+  q = '';
+  siemTab = 0;
+  $('ovl').style.display = 'none';
+  go(0);
+}
+
+function showEv() {
+  if (stage < 3) {
+    msg('Telemetry evidence is indexed and accessible once events reach the SIEM stage (Stage 03).');
+  } else {
+    evidence();
+  }
+}
+
+function investigate() {
+  if (stage < 6) {
+    msg('Investigation workbench becomes active after event correlation generates a high-priority alert (Stage 06).');
+  } else if (stage === 6) {
+    go(7);
+  } else {
+    msg('The SOC investigation workspace is currently open.');
+  }
+}
+
+function genConc() {
+  if (stage < 8) {
+    msg('Case conclusion requires completing evidence analysis and timeline reconstruction (Stage 08).');
+  } else if (stage === 8) {
+    go(9);
+  } else {
+    msg('Incident assessment and case conclusion have already been generated.');
+  }
+}
+
+function togglePres() {
+  document.body.classList.toggle('pres');
+  const isP = document.body.classList.contains('pres');
+  $('presBtn').classList.toggle('act-blue', isP);
+  playSnd('click');
+}
+
+/* ---------------- Evidence Windows & MITRE ATT&CK (Sections 15, 16, 17, 20) ---------------- */
+const evAuth = () => `
+  <div style="font-size:11px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+      <b class="cy">Authentication Monitor [VPN-AUTH]</b>
+      <span class="tag">UDP/500 IPsec</span>
+    </div>
+    <div class="term" style="margin-bottom:6px">
+      <div data-e="1" onclick="evD(1)" style="cursor:pointer">10:01:12 <span class="am">FAILED LOGIN x15</span> user=<span class="cy">demo.user</span> src=<span class="am">203.0.113.45</span></div>
+      <div data-e="2" onclick="evD(2)" style="cursor:pointer;margin-top:2px">10:03:27 <span class="gn">SUCCESS LOGIN</span> user=<span class="cy">demo.user</span> src=<span class="am">203.0.113.45</span></div>
+    </div>
+    
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+      <b class="cy">Directory Audit [Active Directory]</b>
+      <span class="tag">EventID 4728</span>
+    </div>
+    <div class="term">
+      <div data-e="3" onclick="evD(3)" style="cursor:pointer">
+        10:04:55 <span class="am">GROUP_MEMBER_ADDED</span><br>
+        Target Account: <span class="cy">demo.user</span><br>
+        Target Group: <span class="rd">Administrators (synthetic)</span><br>
+        Domain Controller: <span class="mu">AD-DC01</span> | Host: <span class="cy">WS-01</span>
+      </div>
+    </div>
+    <div class="mu" style="margin-top:4px;font-size:10px">Synthetic directory telemetry — no real domain accessed.</div>
+  </div>
+`;
+
+const evEdr = () => `
+  <div style="font-size:11px">
+    <b class="cy">Endpoint Detection &amp; Response (Process Tree)</b>
+    <div class="term" style="margin:3px 0 6px 0">
+      <div>HOST: <span class="cy">WS-01</span> | USER: <span class="cy">demo.user</span></div>
+      <div data-e="4" style="margin-top:4px">
+        10:06:41 <span class="rd">PROCESS CREATION</span><br>
+        explorer.exe (PID: 1420)<br>
+        &nbsp;│<br>
+        &nbsp;└── <span class="rd" style="font-weight:bold">powershell.exe (PID: 3892)</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="am">[SUSPICIOUS ACTIVITY MARKER]</span>
+      </div>
+    </div>
+    
+    <b class="cy">Sysmon Event Viewer (Simulated)</b>
+    <table data-e="4" style="margin-top:3px">
+      <tr><td class="cy">EventID</td><td>1 (Process Create)</td></tr>
+      <tr><td class="cy">UtcTime</td><td>2026-09-29 10:06:41.312</td></tr>
+      <tr><td class="cy">ProcessId</td><td>3892</td></tr>
+      <tr><td class="cy">Image</td><td>C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe</td></tr>
+      <tr><td class="cy">User</td><td>WS-01\\demo.user</td></tr>
+      <tr><td class="cy">CommandLine</td><td class="am">[synthetic — pattern marker only, never executed]</td></tr>
+    </table>
+  </div>
+`;
+
+const evNet = () => `
+  <div style="font-size:11px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <b class="cy">Zeek-style conn.log</b>
+      <span class="tag">NETWORK TELEMETRY</span>
+    </div>
+    <table data-e="5" style="margin:2px 0 4px 0">
+      <tr><th>ts</th><th>orig_h</th><th>resp_h</th><th>port</th><th>proto</th><th>service</th></tr>
+      <tr><td>10:08:51</td><td>10.10.1.21 (WS-01)</td><td>198.51.100.25</td><td>443</td><td>tcp</td><td>ssl</td></tr>
+    </table>
+    <div class="mu" style="font-size:10px">SYNTHETIC DESTINATION (RFC 5737 documentation prefix) — not contacted.</div>
+
+    <b class="cy" style="margin-top:4px;display:block">Zeek-style dns.log</b>
+    <table style="margin:2px 0 4px 0">
+      <tr><th>ts</th><th>query</th><th>qtype</th><th>answer</th></tr>
+      <tr><td>10:08:50</td><td>update-check.example.test</td><td>A</td><td>198.51.100.25</td></tr>
+    </table>
+
+    <b class="cy">Wireshark-inspired Packet View</b>
+    <table data-e="5" style="margin-top:2px">
+      <tr><th>No</th><th>Time</th><th>Source</th><th>Destination</th><th>Proto</th><th>Info</th></tr>
+      <tr><td>1</td><td>10:08:50</td><td>10.10.1.21</td><td>10.10.1.2 (DNS)</td><td>DNS</td><td>Standard query A update-check.example.test</td></tr>
+      <tr><td>2</td><td>10:08:50</td><td>10.10.1.2 (DNS)</td><td>10.10.1.21</td><td>DNS</td><td>Response: 198.51.100.25</td></tr>
+      <tr><td>3</td><td>10:08:51</td><td>10.10.1.21</td><td>198.51.100.25</td><td>TCP</td><td>52140 → 443 [SYN] Seq=0 Win=64240</td></tr>
+      <tr><td>4</td><td>10:08:51</td><td>198.51.100.25</td><td>10.10.1.21</td><td>TCP</td><td>443 → 52140 [SYN, ACK]</td></tr>
+      <tr><td>5</td><td>10:08:51</td><td>10.10.1.21</td><td>198.51.100.25</td><td>TLS</td><td>Client Hello (TLS 1.3)</td></tr>
+    </table>
+    <div class="mu" style="margin-top:3px;font-size:10px">No packets are captured or sent over any physical interface.</div>
+  </div>
+`;
+
+const EVB = { auth: evAuth, edr: evEdr, net: evNet };
+const TT = { auth: 'AUTH_LOG.exe — Authentication & Directory', edr: 'EDR_VIEW.exe — Process & Endpoint Activity', net: 'NETWORK_VIEW.exe — Zeek & Wireshark Viewers' };
+const EVK = { 1: 'auth', 2: 'auth', 3: 'auth', 4: 'edr', 5: 'net' };
+const CTX = {
+  1: 'Repeated failures (15 attempts) targeting demo.user from remote address 203.0.113.45.',
+  2: 'Successful authentication from the exact same source IP (203.0.113.45) 2 minutes after brute-force pattern.',
+  3: 'Privilege change: demo.user account added to Administrators group shortly following authentication.',
+  4: 'Suspicious PowerShell execution spawned by explorer.exe on target workstation WS-01 under demo.user identity.',
+  5: 'Outbound TCP/443 connection initiated from WS-01 to synthetic external destination 198.51.100.25.'
+};
+
+function evidence() {
+  [['auth', 29, 50, 23, 47], ['edr', 52.5, 50, 23, 47], ['net', 76, 50, 23, 47]].forEach(([k, x, y, w, h]) => {
+    W(k, TT[k], EVB[k](), x, y, w, h, '', '<span>File</span><span>Filter</span>', 'STATUS: LOG RECORD LOADED');
+  });
+}
+
+const attBody = () => `
+  <div class="term" style="font-size:11px">
+    ${[
+      ['Credential Access', 'T1110 - Brute Force', '15 failed logins followed by success'],
+      ['Privilege Escalation', 'T1078 - Valid Accounts / T1098 - Account Manipulation', 'Group membership change to Administrators'],
+      ['Execution / Command and Scripting Interpreter', 'T1059.001 - PowerShell', 'PowerShell process creation pattern marker'],
+      ['Command and Control', 'T1071.001 - Web Protocols', 'Outbound connection over TCP 443 to unusual destination']
+    ].map(([tac, tech, ev]) => `
+      <div style="margin-bottom:6px">
+        <span class="am" style="font-weight:bold">${tac}</span><br>
+        <span class="cy">${tech}</span><br>
+        <span class="mu">Evidence: ${ev}</span>
+      </div>
+    `).join('')}
+    <div class="mu" style="border-top:1px solid #303030;padding-top:4px">Discovery / Lateral Movement: No supporting telemetry observed in this sequence.</div>
+  </div>
+  <div class="tag a" style="margin-top:4px;display:block">Conceptual ATT&amp;CK context for demonstration — no technique is confirmed.</div>
+`;
+
+const attWin = () => W('att', 'MITRE ATT&CK Context Matrix', attBody(), 29, 2, 23, 48, '', '<span>View</span><span>Matrix</span>', 'MAPPING: 4 TACTICS ALIGNED');
+
+/* ---------------- STAGE IMPLEMENTATIONS (Stages 00 - 10) ---------------- */
+
+/* Stage 00 — SYSTEM READY (Section 7) */
+function S0() {
+  W('sys', 'SECURITY MONITORING SYSTEM', `
+    <div class="term" style="height:100%;font-size:13px;line-height:1.75">
+      SYSTEM STATUS ................ <span class="gn">[READY]</span><br>
+      TELEMETRY SOURCES ............ <span class="gn">[ONLINE]</span> (VPN, AD, Sysmon, FW)<br>
+      LOG COLLECTOR ................ <span class="gn">[READY]</span><br>
+      SIEM INGESTION ENGINE ........ <span class="gn">[READY]</span><br>
+      DETECTION ENGINE ............. <span class="gn">[READY]</span><br>
+      CORRELATION ENGINE ........... <span class="gn">[READY]</span><br>
+      SOC ANALYST WORKSTATION ...... <span class="gn">[READY]</span><br>
+      ACTIVE CASE .................. SOC-DEMO-2026-001<br><br>
+      <span class="am">WAITING FOR SECURITY TELEMETRY</span><span class="cur"></span><br><br>
+      <div class="mu" style="font-size:11px">
+        Press <b>START SIMULATION</b> or <b>NEXT STEP</b> to begin receiving telemetry streams.
+      </div>
+    </div>
+  `, 32, 8, 38, 56, '', '<span>System</span><span>Diagnostics</span><span>Help</span>', 'SYSTEM ONLINE | READY FOR TELEMETRY');
+}
+
+/* Stage 01 — LOG COLLECTION (Section 7: EVENT COLLECTOR atop 3 SOURCE MONITORS) */
+function mon(n) {
+  const ev = E.slice(0, n);
+  const R = (ids, t, id, x) => W(id, t, `
+    <div class="term" style="height:100%">
+      ${ev.filter(e => ids.includes(e.id)).map(e => `
+        <div data-e="${e.id}" style="cursor:pointer;padding:1px 0" onclick="evD(${e.id})">
+          ${e.t} <span class="${sc(e.status)}">[${e.status}]</span> <b>${e.desc}</b>
+        </div>
+      `).join('') || '<span class="mu">Waiting for source events...</span>'}
+    </div>
+  `, x, 50, 23, 47, '', null, `ACTIVE: ${ev.filter(e=>ids.includes(e.id)).length} EVENTS`);
+
+  R([1, 2, 3], 'Authentication Log', 'mAuth', 29);
+  R([4], 'Endpoint Monitor', 'mEnd', 52.5);
+  R([5], 'Network Monitor', 'mNet', 76);
+}
+
+function S1() {
+  W('coll', 'Event Collector — Ingestion Stream', `
+    <div>COLLECTOR STATUS: <b id="cst" class="cy">RECEIVING INCOMING TELEMETRY...</b></div>
+    <div style="margin:6px 0;display:flex;gap:12px;align-items:center">
+      ${SRC.map((s, i) => `
+        <span style="font-size:10px"><span class="led" id="led${i}"></span> ${s.toUpperCase()}</span>
+      `).join('')}
+    </div>
+    <div class="pb"><i id="pbar"></i></div>
+    <div id="evl" class="term" style="height:calc(100% - 84px);margin-top:6px"></div>
+  `, 29, 2, 70, 46, '', '<span>File</span><span>Stream</span>', 'INGESTING TELEMETRY (0/5)');
+  
+  mon(0);
+  
+  E.forEach((e, i) => {
+    later(() => {
+      $('evl').insertAdjacentHTML('beforeend', `
+        <div data-e="${e.id}" style="cursor:pointer;margin-bottom:3px;padding:2px 0" onclick="evD(${e.id})">
+          <span class="am">[EVENT 0${e.id}]</span> ${e.t} <b>${e.desc}</b> 
+          <span class="mu">[${e.src}]</span> <span class="tag a">SYNTHETIC</span>
+        </div>
+      `);
+      $('led' + SRC.indexOf(e.src)).classList.add('on');
+      $('pbar').style.width = ((i + 1) * 20) + '%';
+      if ($('coll-sb')) $('coll-sb').textContent = `INGESTING TELEMETRY (${i+1}/5 EVENTS)`;
+      mon(i + 1);
+      playSnd('chirp');
+    }, 400 + i * 450);
+  });
+  
+  later(() => {
+    $('cst').textContent = '5 EVENTS COLLECTED — EACH STILL ISOLATED';
+    if ($('coll-sb')) $('coll-sb').textContent = 'INGESTION COMPLETE | 5 ISOLATED LOGS';
+  }, 400 + 5 * 450);
+}
+
+function evD(id) {
+  W('evd', 'Event Details — EVENT 0' + id, fields(E[id - 1]), 29, 62, 45, 36, '', '<span>View</span><span>Raw</span>', 'EVENT ID: ' + id + ' | ' + E[id-1].ts);
+  playSnd('click');
+}
+
+/* Stage 02 — NORMALIZATION (Section 7) */
+function S2() {
+  const P = ['RAW LOGS', 'PARSER', 'FIELD EXTRACTION', 'NORMALIZATION', 'ENRICHMENT'];
+  W('norm', 'Log Normalizer — Schema Transformer', `
+    <div class="st" id="pipe">${P.map(p => `<div>${p}</div>`).join('')}</div>
+    <div style="margin:6px 0;font-weight:bold" class="cy">SCHEMA MAPPING MATRIX:</div>
+    <table>
+      <tr><th>RAW FIELD</th><th>NORMALIZED</th><th>SAMPLE VALUE</th></tr>
+      <tr id="tr-ip"><td>src_ip / SRC_IP / source_ip</td><td class="cy">source.ip</td><td>203.0.113.45</td></tr>
+      <tr id="tr-usr"><td>user / username / account</td><td class="cy">user.name</td><td>demo.user</td></tr>
+      <tr id="tr-hst"><td>host / hostname / computer</td><td class="cy">host.name</td><td>WS-01</td></tr>
+      <tr id="tr-ts"><td>ts / EventTime / UtcTime</td><td class="cy">@timestamp</td><td>2026-09-29 10:xx:xx</td></tr>
+    </table>
+    <p style="margin:6px 0">Different sources speak different log formats.</p>
+    <div id="nm" class="term" style="margin-top:6px;visibility:hidden;color:#FFB000">
+      <b>KEY SECURITY LESSON:</b> Normalization creates common fields so correlation can operate across disparate sources.
+    </div>
+  `, 29, 2, 45, 58, '', '<span>Schema</span><span>Parsers</span>', 'PIPELINE: NORMALIZING 5 TELEMETRY SOURCES');
+  
+  W('rawn', 'Raw → Normalized Stream', `
+    <div class="term" id="rn" style="height:100%;font-size:10px"></div>
+  `, 75, 2, 24, 58, '', '<span>Stream</span>', 'PARSING LIVE STREAM');
+  
+  P.forEach((p, i) => later(() => {
+    $('pipe').children[i].classList.add('on');
+    playSnd('chirp');
+  }, 250 + i * 500));
+  
+  later(() => {
+    $('nm').style.visibility = 'visible';
+    $('norm-sb').textContent = 'NORMALIZATION COMPLETE | SCHEMA ALIGNED';
+  }, 2800);
+  
+  E.forEach((e, i) => later(() => {
+    $('rn').insertAdjacentHTML('beforeend', `
+      <div class="mu" style="margin-bottom:2px">[RAW LOG] ${e.raw}</div>
+      <div class="cy" style="margin-bottom:6px">→ { "@timestamp": "${e.ts}", "user.name": "${e.user}", "host.name": "${e.host}", "source.ip": "${e.ip}", "event.type": "${e.type}" }</div>
+    `);
+    playSnd('beep');
+  }, 400 + i * 450));
+}
+
+/* Stage 03 — SIEM INGESTION & QUERY EXECUTION (Sections 7, 8) */
+function siemBody() {
+  const tabs = ['EVENTS', 'SPL (Splunk-style)', 'KQL (Sentinel-style)'].map((t, i) => `
+    <span class="tab ${i === siemTab ? 'on' : ''}" onclick="switchSiemTab(${i})">${t}</span>
+  `).join('');
+  
+  const head = `
+    <div class="tabs-header">${tabs}</div>
+    <div class="tab-content" style="margin-bottom:4px">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:10px">
+        <span><b>INDEX:</b> security_demo | <b>RETENTION:</b> 30 DAYS</span>
+        <span class="tag ${stage >= 6 ? 'r' : 'g'}">ALERT QUEUE: ${stage >= 6 ? '1 CRITICAL' : '0 PENDING'}</span>
+      </div>
+      <div style="margin:4px 0;font-size:10px">
+        ${SRC.map(s => `${s}: <b class="cy">${cnt(s)}</b>`).join(' | ')} | TOTAL INDEXED: <b class="am">${E.length}</b>
+      </div>
+    </div>
+  `;
+  
+  if (siemTab === 0) {
+    return head + `
+      <div style="display:flex;gap:4px;margin-bottom:4px">
+        <input id="q" value="${q}" placeholder="Filter: demo.user / WS-01 / 203.0.113.45 / FAILED..." 
+               style="flex:1;font:11px 'Courier New',monospace;padding:2px 4px;border:2px solid;border-color:#808080 #FFF #FFF #808080" 
+               oninput="q=this.value;tblUp()">
+        <button class="btn" onclick="q='';$('q').value='';tblUp()">CLEAR</button>
+      </div>
+      <div id="siemT" style="max-height:160px;overflow:auto"></div>
+      <div id="siemD" style="margin-top:6px"></div>
+      <div class="mu" style="margin-top:4px;font-size:10px">
+        Click USER, HOST, or SOURCE IP to highlight matches across all open monitors; click SOURCE to filter.
+      </div>
+    `;
+  }
+  
+  const bars = `
+    <table>
+      <tr><th>source</th><th>count</th><th>visual distribution</th></tr>
+      ${SRC.map(s => `
+        <tr>
+          <td>${s}</td><td>${cnt(s)}</td>
+          <td><div style="background:#00D7FF;height:9px;width:${cnt(s) * 65}px;border:1px solid #000"></div></td>
+        </tr>
+      `).join('')}
+    </table>
+  `;
+  
+  if (siemTab === 1) {
+    return head + `
+      <div class="tag a" style="margin-bottom:4px">SIMULATED / EDUCATIONAL QUERY VIEW — SPL (Splunk-style)</div>
+      <div class="term am" id="query-term" style="margin-bottom:4px">
+        index=security_demo user="demo.user" earliest="2026-09-29T10:00:00" latest="2026-09-29T10:15:00"<br>
+        | stats count by source<br>
+        | sort - count
+      </div>
+      <div id="query-exec-anim" class="term" style="margin-bottom:4px;color:#4de38a;font-size:10px"></div>
+      <div id="query-res">
+        <b class="cy">AGGREGATION RESULTS:</b>
+        ${bars}
+      </div>
+    `;
+  }
+  
+  return head + `
+    <div class="tag a" style="margin-bottom:4px">SIMULATED / EDUCATIONAL QUERY VIEW — KQL (Sentinel-style)</div>
+    <div class="term am" id="query-term" style="margin-bottom:4px">
+      SecurityEvents<br>
+      | where TimeGenerated between (datetime(2026-09-29 10:00) .. datetime(2026-09-29 10:15))<br>
+      | where user_name == "demo.user"<br>
+      | summarize TotalEvents=count(), DistinctSources=dcount(source) by host_name
+    </div>
+    <div id="query-exec-anim" class="term" style="margin-bottom:4px;color:#4de38a;font-size:10px"></div>
+    <div id="query-res">
+      <b class="cy">AGGREGATION SUMMARY:</b>
+      <table>
+        <tr><th>host_name</th><th>TotalEvents</th><th>DistinctSources</th><th>Status</th></tr>
+        <tr><td>WS-01</td><td>5</td><td>4</td><td class="am">CORRELATED ANOMALY</td></tr>
+      </table>
+      <b class="cy" style="margin-top:6px;display:block">CORRELATED ROWS IN TIME WINDOW:</b>
+      <table>
+        <tr><th>Timestamp</th><th>Source</th><th>Event Action</th></tr>
+        ${E.map(e => `<tr><td>${e.ts}</td><td>${e.src}</td><td>${e.type}</td></tr>`).join('')}
+      </table>
+    </div>
+  `;
+}
+
+function switchSiemTab(tabIdx) {
+  siemTab = tabIdx;
+  playSnd('click');
+  siem();
+  if (tabIdx > 0) simulateQueryExecution();
+}
+
+function simulateQueryExecution() {
+  const el = $('query-exec-anim');
+  const res = $('query-res');
+  if (!el || !res) return;
+  res.style.opacity = '0.2';
+  el.innerHTML = `&gt; parsing query...<br>`;
+  
+  const steps = [
+    '&gt; applying time range...',
+    '&gt; searching security_demo...',
+    '&gt; matching events...',
+    '&gt; aggregation complete.',
+    '&gt; 5 events returned.'
+  ];
+  
+  steps.forEach((s, i) => later(() => {
+    el.insertAdjacentHTML('beforeend', s + '<br>');
+    el.scrollTop = el.scrollHeight;
+    playSnd('beep');
+    if (i === steps.length - 1) {
+      res.style.opacity = '1';
+      playSnd('chirp');
+    }
+  }, 200 + i * 250));
+}
+
+function siem() {
+  W('siem', 'SIEM Console — Enterprise Security Telemetry', siemBody(), 29, 2, 70, 60, '', '<span>File</span><span>Search</span><span>Views</span><span>Export</span>', 'INDEX: security_demo | 5 EVENTS');
+  if (siemTab === 0) tblUp();
+}
+
+function tblUp() {
+  const t = $('siemT');
+  if (!t) return;
+  const rows = E.filter(e => (!hlst || hlst.k !== 'src' || e.src === hlst.v) && JSON.stringify(e).toLowerCase().includes(q.toLowerCase()));
+  const c = (k, v) => `onclick="event.stopPropagation();hl('${k}','${v}')"`;
+  
+  t.innerHTML = `
+    <table>
+      <tr><th>TIME</th><th>USER</th><th>HOST</th><th>SOURCE IP</th><th>SOURCE</th><th>EVENT</th><th>STATUS</th></tr>
+      ${rows.map(e => `
+        <tr data-e="${e.id}" class="${sel === e.id ? 'sel' : ''}" onclick="sel=${e.id};tblUp();playSnd('click')">
+          <td>${e.t}</td>
+          <td ${c('user', e.user)} class="cy">${e.user}</td>
+          <td ${c('host', e.host)} class="cy">${e.host}</td>
+          <td ${c('ip', e.ip)} class="cy">${e.ip}</td>
+          <td ${c('src', e.src)}>${e.src}</td>
+          <td>${e.type}</td>
+          <td class="${sc(e.status)}">${e.status}</td>
+        </tr>
+      `).join('')}
+    </table>
+  `;
+  $('siemD').innerHTML = fields(E[sel - 1]);
+  apply();
+}
+
+function S3() {
+  siem();
+}
+
+/* Stage 04 — DETECTION ENGINEERING (Section 9) */
+function S4() {
+  const SG = `title: Suspicious Account Activity Sequence
+id: demo-0001-synthetic
+status: experimental
+logsource:
+  category: authentication, process_creation, network
+  product: windows (simulated)
+detection:
+  failed_logins:
+    category: authentication
+    count: '>10'
+  success:
+    outcome: success
+  priv:
+    action: group-member-added
+  proc:
+    name: powershell.exe
+    marker: suspicious
+  net:
+    category: network
+    dest: unusual
+  condition: failed_logins and success and priv and proc and net
+level: high`;
+
+  W('sigma', 'Sigma-style Rule Editor (simulated)', `
+    <div style="font-size:10px;margin-bottom:3px;display:flex;justify-content:space-between">
+      <span>RULE METADATA | ID: demo-0001-synthetic</span>
+      <span class="gn">SYNTAX: VALID</span>
+    </div>
+    <div class="term" style="height:calc(100% - 24px);white-space:pre;color:#E8E8E8;font-size:10px">${SG}<span class="cur"></span></div>
+  `, 29, 2, 34, 62, '', '<span>File</span><span>Edit</span><span>Validate</span>', 'RULE: demo-0001-synthetic | LEVEL: HIGH');
+  
+  const C = [
+    'Failed login threshold',
+    'Successful login',
+    'Privilege change',
+    'Suspicious process',
+    'Unusual outbound connection'
+  ];
+  
+  W('det', 'Detection Rules — Live Evaluation', `
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <b>DETECTION ENGINE: CHECK PROGRESSION</b>
+      <span class="tag a">EVALUATING STREAM</span>
+    </div>
+    <div id="chk" class="term" style="margin-top:6px;line-height:2.0;font-size:11px"></div>
+    <div id="dres" class="term am" style="margin-top:6px;display:none"></div>
+  `, 64, 2, 35, 62, '', '<span>Engine</span><span>Log</span>', 'EVALUATING 5 DETECTION CHECKS');
+  
+  C.forEach((c, i) => {
+    later(() => {
+      $('chk').insertAdjacentHTML('beforeend', `<div id="c${i}">CHECK 0${i + 1} ${c} ........ <span class="mu">EVALUATING</span></div>`);
+      playSnd('beep');
+    }, 300 + i * 700);
+    later(() => {
+      $('c' + i).lastElementChild.outerHTML = '<span class="am" style="font-weight:bold">DETECTED</span>';
+      playSnd('chirp');
+    }, 750 + i * 700);
+  });
+  
+  later(() => {
+    const dr = $('dres');
+    dr.style.display = 'block';
+    dr.innerHTML = `
+      <b class="gn">DETECTION CONDITION SATISFIED</b><br>
+      <span class="am">ANALYST INVESTIGATION REQUIRED</span><br><br>
+      <span class="mu" style="font-size:11px">FOUNDATIONAL AXIOM: <b>DETECTION ≠ PROOF</b></span>
+    `;
+    if ($('det-sb')) $('det-sb').textContent = 'CONDITION SATISFIED | ALERT PROMOTED';
+    playSnd('alert');
+  }, 4200);
+}
+
+/* ---------------- HERO STAGE: Stage 05 — EVENT CORRELATION (Sections 10, 11, 12) ---------------- */
+function updateCorrVisualHighlights() {
+  document.querySelectorAll('.corr-line').forEach(l => l.classList.remove('active'));
+  document.querySelectorAll('.corr-node').forEach(n => n.classList.remove('active'));
+  
+  if (!hlst) {
+    document.querySelectorAll('.corr-node').forEach(n => n.classList.add('active'));
+    document.querySelectorAll('.corr-line').forEach(l => l.classList.add('active'));
+    return;
+  }
+  
+  if (hlst.k === 'user') {
+    $('node-usr').classList.add('active');
+    $('line-usr-1').classList.add('active');
+    $('line-usr-2').classList.add('active');
+    $('line-usr-3').classList.add('active');
+    $('line-usr-4').classList.add('active');
+    $('line-usr-5').classList.add('active');
+  } else if (hlst.k === 'host') {
+    $('node-hst').classList.add('active');
+    $('line-hst-3').classList.add('active');
+    $('line-hst-4').classList.add('active');
+    $('line-hst-5').classList.add('active');
+  } else if (hlst.k === 'ip') {
+    $('node-ip').classList.add('active');
+    $('line-ip-1').classList.add('active');
+    $('line-ip-2').classList.add('active');
+    $('line-ip-5').classList.add('active');
+  }
+}
+
+function S5() {
+  const F = [
+    ['SAME IDENTITY', 'demo.user'],
+    ['SAME HOST', 'WS-01'],
+    ['SAME SOURCE IP', '203.0.113.45'],
+    ['TEMPORAL PROXIMITY', '10:01 → 10:08 (7 min)'],
+    ['ORDERED SEQUENCE', 'AUTH → PRIVILEGE → PROCESS → NETWORK'],
+    ['CROSS-SOURCE CONTEXT', 'VPN + AD + EDR + FIREWALL/DNS']
+  ];
+  
+  const L = [
+    {id:1, t:'10:01', name:'15 FAILED LOGINS', src:'VPN'},
+    {id:2, t:'10:03', name:'SUCCESSFUL LOGIN', src:'VPN'},
+    {id:3, t:'10:04', name:'PRIVILEGE CHANGE', src:'Active Directory'},
+    {id:4, t:'10:06', name:'POWERSHELL EXECUTION', src:'Sysmon/EDR'},
+    {id:5, t:'10:08', name:'OUTBOUND CONNECTION', src:'Firewall/DNS'}
+  ];
+  
+  const corrHtml = `
+    <!-- Top Status Banner -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <b>CORRELATION MATRIX — MULTI-DIMENSIONAL CONVERGENCE</b>
+      <span class="tag a" id="corr-status-tag">EVALUATING CORRELATION ENGINE...</span>
+    </div>
+    
+    <!-- Hero Visualization Centerpiece (Dual View: Kill Chain + Relational Hub) -->
+    <div id="corr-diagram-container">
+      <svg id="corr-svg" viewBox="0 0 700 310" preserveAspectRatio="none">
+        <!-- Lines connecting Hubs to Events -->
+        <!-- Identity Hub Lines -->
+        <line id="line-usr-1" class="corr-line" x1="260" y1="36" x2="180" y2="36"/>
+        <line id="line-usr-2" class="corr-line" x1="260" y1="36" x2="180" y2="96"/>
+        <line id="line-usr-3" class="corr-line" x1="260" y1="36" x2="180" y2="156"/>
+        <line id="line-usr-4" class="corr-line" x1="260" y1="36" x2="180" y2="216"/>
+        <line id="line-usr-5" class="corr-line" x1="260" y1="36" x2="180" y2="276"/>
+        
+        <!-- Host Hub Lines -->
+        <line id="line-hst-3" class="corr-line" x1="260" y1="101" x2="180" y2="156"/>
+        <line id="line-hst-4" class="corr-line" x1="260" y1="101" x2="180" y2="216"/>
+        <line id="line-hst-5" class="corr-line" x1="260" y1="101" x2="180" y2="276"/>
+        
+        <!-- IP Hub Lines -->
+        <line id="line-ip-1" class="corr-line" x1="260" y1="166" x2="180" y2="36"/>
+        <line id="line-ip-2" class="corr-line" x1="260" y1="166" x2="180" y2="96"/>
+        <line id="line-ip-5" class="corr-line" x1="260" y1="166" x2="180" y2="276"/>
+
+        <!-- Convergence lines to Correlation Core -->
+        <line id="line-core-1" class="corr-line" x1="430" y1="36" x2="510" y2="130"/>
+        <line id="line-core-2" class="corr-line" x1="430" y1="101" x2="510" y2="140"/>
+        <line id="line-core-3" class="corr-line" x1="430" y1="166" x2="510" y2="150"/>
+        <line id="line-core-4" class="corr-line" x1="430" y1="231" x2="510" y2="160"/>
+        <line id="line-core-5" class="corr-line" x1="430" y1="284" x2="510" y2="170"/>
+      </svg>
+      
+      <!-- Chronological Kill Chain Sequence (Left Column) -->
+      <div style="position:absolute;left:10px;top:8px;width:170px;z-index:2">
+        <div style="font-size:9px;color:#8a9aa8;margin-bottom:3px;font-weight:bold">TEMPORAL SEQUENCE:</div>
+        ${L.map((l, i) => `
+          <div class="box" id="b${i}" data-e="${l.id}" style="cursor:pointer" onclick="evD(${l.id})">
+            <b>${l.t}</b> ${l.name}<br>
+            <span class="mu">[${l.src}]</span>
+          </div>
+          ${i < 4 ? '<div class="ar">▼</div>' : ''}
+        `).join('')}
+      </div>
+      
+      <!-- Relational Dimension Hubs (Center Column) -->
+      <div id="node-usr" class="corr-node hub" style="left:260px;top:20px;width:170px" onclick="fac(0)">
+        SAME IDENTITY: <b class="cy">demo.user</b>
+      </div>
+      <div id="node-hst" class="corr-node hub" style="left:260px;top:85px;width:170px" onclick="fac(1)">
+        SAME HOST: <b class="cy">WS-01</b>
+      </div>
+      <div id="node-ip" class="corr-node hub" style="left:260px;top:150px;width:170px" onclick="fac(2)">
+        SAME SOURCE IP: <b class="cy">203.0.113.45</b>
+      </div>
+      <div id="node-time" class="corr-node" style="left:260px;top:215px;width:170px" onclick="fac(3)">
+        TEMPORAL PROXIMITY: <b class="am">10:01 → 10:08</b>
+      </div>
+      <div id="node-cross" class="corr-node" style="left:260px;top:268px;width:170px" onclick="fac(5)">
+        CROSS-SOURCE: <b class="gn">VPN+AD+EDR+FW</b>
+      </div>
+
+      <!-- Central Correlation Engine Core (Right Column) -->
+      <div id="node-engine" class="corr-node hub" style="left:510px;top:100px;width:170px;text-align:center;padding:12px;border-color:#00A6A6">
+        <span class="mu" style="font-size:9px">CORRELATION ENGINE</span><br>
+        <b style="font-size:11px" id="engine-label">EVALUATING...</b><br>
+        <span class="am" style="font-size:9px" id="engine-sub">CONVERGING SIGNALS</span>
+      </div>
+    </div>
+    
+    <!-- Interactive Correlation Factor Cards (Section 10) -->
+    <div class="g3" style="margin-top:6px" id="facs"></div>
+    <div id="facx" class="term" style="margin-top:4px;font-size:11px;color:#FFB000">
+      Click any correlation factor above to see why the events are related.
+    </div>
+    
+    <div id="cres" class="term" style="margin-top:4px;display:none;background:#251a00;border-color:#FFB000">
+      <b class="am">CORRELATION RESULT</b><br>
+      Related events form a coherent suspicious sequence across identity, host, source, time and telemetry.<br>
+      <span class="mu">Correlation increases investigative confidence and provides context for analyst review.</span>
+    </div>
+  `;
+  
+  W('corr', 'Correlation Engine — Multi-Source Relationship Graph', corrHtml, 29, 2, 47, 72, '', '<span>View</span><span>Graph</span><span>Export</span>', 'CORRELATING TELEMETRY ACROSS 4 SOURCES');
+  
+  $('facs').innerHTML = F.map(([a, b], i) => `
+    <div class="fac" id="fac-btn-${i}" onclick="fac(${i})">
+      <b>${a}</b>
+      <span class="val" style="display:block;border:none;background:transparent;padding:0">${b}</span>
+    </div>
+  `).join('');
+  
+  // Right window: correlation_rule.txt (Section 12)
+  const R = [
+    ['GROUP BY', 'user, host, source_ip'],
+    ['WITHIN', '15 MINUTES'],
+    ['IF', 'failed_logins > threshold'],
+    ['AND', 'successful_login == true'],
+    ['AND', 'privilege_change == true'],
+    ['AND', 'suspicious_process == true'],
+    ['THEN', 'raise high-priority alert'],
+    ['FOR', 'analyst investigation']
+  ];
+  
+  W('rule', 'correlation_rule.txt', `
+    <div class="term" style="height:calc(100% - 36px);font-size:10px" id="rl"></div>
+    <div class="mu" style="margin-top:4px;font-size:10px">
+      Illustrative correlation logic — not a production-ready rule.
+    </div>
+  `, 77, 2, 22, 72, '', '<span>Logic</span>', 'RULE EVALUATION: IN PROGRESS');
+  
+  // Choreographed Sequential Animation (Section 11)
+  L.forEach((l, i) => later(() => {
+    $('b' + i).classList.add('on');
+    playSnd('chirp');
+  }, 250 + i * 450));
+  
+  R.forEach(([k, v], i) => later(() => {
+    $('rl').insertAdjacentHTML('beforeend', `
+      <div><span class="am">${k}</span> ${v} ${i >= 2 && i <= 5 ? '<span class="gn">... TRUE</span>' : ''}</div>
+    `);
+    playSnd('beep');
+  }, 350 + i * 400));
+  
+  later(() => {
+    // 6. Identity relationship illuminates (cyan to amber)
+    $('node-usr').classList.add('active');
+    $('line-usr-1').classList.add('active');
+    $('line-usr-2').classList.add('active');
+    $('line-usr-3').classList.add('active');
+    $('line-usr-4').classList.add('active');
+    $('line-usr-5').classList.add('active');
+    playSnd('beep');
+  }, 2500);
+  
+  later(() => {
+    // 7. Host relationship illuminates
+    $('node-hst').classList.add('active');
+    $('line-hst-3').classList.add('active');
+    $('line-hst-4').classList.add('active');
+    $('line-hst-5').classList.add('active');
+    playSnd('beep');
+  }, 2900);
+  
+  later(() => {
+    // 8. Source-IP relationship illuminates
+    $('node-ip').classList.add('active');
+    $('line-ip-1').classList.add('active');
+    $('line-ip-2').classList.add('active');
+    $('line-ip-5').classList.add('active');
+    playSnd('beep');
+  }, 3300);
+  
+  later(() => {
+    // 9. Time relationship illuminates & 10. Cross-source relationship illuminates
+    $('node-time').classList.add('active');
+    $('node-cross').classList.add('active');
+    // 11. Correlation engine processes them
+    $('line-core-1').classList.add('active');
+    $('line-core-2').classList.add('active');
+    $('line-core-3').classList.add('active');
+    $('line-core-4').classList.add('active');
+    $('line-core-5').classList.add('active');
+    $('node-engine').classList.add('active');
+    $('engine-label').textContent = 'PATTERN MATCHED';
+    $('engine-sub').textContent = 'ELEVATING TO ALERT';
+    $('corr-status-tag').textContent = 'CONVERGENCE VERIFIED';
+    // 12. Result appears
+    $('cres').style.display = 'block';
+    if ($('corr-sb')) $('corr-sb').textContent = 'CORRELATION VERIFIED | CONFIDENCE: HIGH';
+    if ($('rule-sb')) $('rule-sb').textContent = 'RULE SATISFIED | ALERT DISPATCHED';
+    playSnd('alert');
+  }, 3800);
+}
+
+function fac(i) {
+  const X = [
+    'All five events carry user.name = demo.user.',
+    'All five events map to host WS-01.',
+    'Session source IP 203.0.113.45 appears on every event after enrichment.',
+    'All events fall within 7 minutes, inside the 15-minute window.',
+    'Order matches AUTH → PRIVILEGE → PROCESS → NETWORK.',
+    'Four independent telemetry sources agree.'
+  ];
+  $('facx').textContent = X[i];
+  document.querySelectorAll('.fac').forEach((el, idx) => el.classList.toggle('active', idx === i));
+  hlst = i < 3 ? { k: ['user', 'host', 'ip'][i], v: E[0][['user', 'host', 'ip'][i]] } : null;
+  apply();
+  updateCorrVisualHighlights();
+  playSnd('click');
+}
+
+/* Stage 06 — HIGH-PRIORITY ALERT (Section 13) */
+function S6() {
+  // Pre-alert correlation summary
+  W('corr-sum', 'CORRELATION ENGINE', `
+    <div class="term" style="font-size:12px;line-height:1.8">
+      ANALYSIS COMPLETE<br><br>
+      EVENTS CORRELATED ........ <span class="cy">5</span><br>
+      TELEMETRY SOURCES ........ <span class="cy">4</span><br>
+      TIME WINDOW .............. <span class="am">7 MIN</span><br>
+      STATUS ................... <span class="rd" style="font-weight:bold">REVIEW REQUIRED</span>
+    </div>
+  `, 29, 6, 70, 36, '', '<span>Alert</span>', 'CORRELATION ENGINE: ANALYSIS COMPLETE');
+  
+  // Classic Windows Warning Dialog (Section 13)
+  const alertHtml = `
+    <div style="display:flex;gap:12px;align-items:flex-start">
+      <div style="font-size:28px;background:#D00000;color:#FFF;padding:4px 14px;border:2px solid #000;font-weight:bold;line-height:1.2">!</div>
+      <div>
+        <b style="font-size:13px;color:#D00000">RELATED SECURITY EVENTS DETECTED</b>
+      </div>
+    </div>
+    
+    <div style="margin:10px 0;background:#FFF;padding:6px;border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #FFF;border-bottom:2px solid #FFF">
+      <div class="row"><b>USER:</b><span class="val cy" style="background:#000">demo.user</span></div>
+      <div class="row"><b>HOST:</b><span class="val">WS-01</span></div>
+      <div class="row"><b>SOURCE:</b><span class="val">203.0.113.45</span></div>
+      <div class="row"><b>TIME WINDOW:</b><span class="val">10:01 — 10:08</span></div>
+      <div class="row"><b>EVENTS:</b><span class="val">5</span></div>
+      <div class="row"><b>PRIORITY:</b><span class="val rd" style="background:#000;font-weight:bold">HIGH</span></div>
+      <div class="row"><b>STATUS:</b><span class="val am" style="background:#000">INVESTIGATION REQUIRED</span></div>
+    </div>
+    
+    <div class="mu" style="font-size:11px;margin-bottom:8px">
+      An alert is not a confirmed incident.
+    </div>
+    
+    <div style="text-align:center;display:flex;gap:8px;justify-content:center">
+      <button class="btn" style="min-width:110px" onclick="evidence()">VIEW EVIDENCE</button>
+      <button class="btn big act-blue" style="min-width:120px" onclick="investigate()">INVESTIGATE</button>
+      <button class="btn" style="min-width:90px" onclick="closeW('alert');msg('Alert dismissed. It stays in the SIEM alert queue; press INVESTIGATE to review it.')">DISMISS</button>
+    </div>
+  `;
+  
+  W('alert', 'SECURITY ALERT', alertHtml, 36, 18, 42, 54, 'red', null, 'ALERT: REVIEW REQUIRED');
+  playSnd('alert');
+}
+
+/* Stage 07 — SOC INVESTIGATION WORKSPACE (Sections 14, 15, 16, 17, 20) */
+const tlBody = () => `
+  <div style="font-size:11px">
+    <div style="display:flex;gap:6px;overflow-x:auto">
+      ${E.map(e => `
+        <div class="tli ${sel === e.id ? 'sel' : ''}" data-e="${e.id}" onclick="tlClick(${e.id})" style="flex:1;min-width:110px">
+          <b class="am">${e.t}</b> <b>${e.desc}</b><br>
+          <span class="mu">${e.src}</span>
+        </div>
+      `).join('')}
+    </div>
+    <div id="tld" class="term" style="margin-top:6px;min-height:55px">
+      Click an event to open its evidence.
+    </div>
+    <div class="mu" style="margin-top:2px;font-size:10px">
+      Investigation is the process of connecting evidence, not merely reading one log.
+    </div>
+  </div>
+`;
+
+function tlClick(id) {
+  sel = id;
+  const e = E[id - 1];
+  $('tld').innerHTML = `
+    EVENT: ${e.desc} | SOURCE: ${e.src} | USER: ${e.user} | HOST: ${e.host} | SOURCE IP: ${e.ip}<br>
+    <b class="am">CONTEXT:</b> ${CTX[id]}
+  `;
+  document.querySelectorAll('.tli').forEach(x => x.classList.toggle('sel', x.dataset.e == id));
+  
+  const k = EVK[id];
+  if ($(k)) flash(k);
+  else W(k, TT[k], EVB[k](), 29, 34, 23, 34);
+  
+  hl('user', e.user);
+  playSnd('click');
+}
+
+function S7() {
+  // Top: SIEM TIMELINE (spanning across)
+  W('tl', 'SIEM_TIMELINE.exe', tlBody(), 29, 2, 70, 30, '', '<span>Timeline</span>', '5 CORRELATED EVENTS');
+  
+  // Middle Row: AUTH LOG | EDR VIEW | NETWORK VIEW
+  W('auth', TT.auth, evAuth(), 29, 34, 23, 34, '', '<span>Auth</span>', 'AUTHENTICATION MONITOR');
+  W('edr', TT.edr, evEdr(), 52.5, 34, 23, 34, '', '<span>Process</span>', 'EDR / SYSMON');
+  W('net', TT.net, evNet(), 76, 34, 23, 34, '', '<span>Packets</span>', 'ZEEK / WIRESHARK');
+  
+  // Bottom Row: ATT&CK CONTEXT | CASE NOTES
+  attWin();
+  $('att').style.left = '29%';
+  $('att').style.top = '70%';
+  $('att').style.width = '34.5%';
+  $('att').style.height = '27%';
+  
+  W('notes', 'CASE_NOTES.exe', `
+    <textarea style="width:100%;height:100%;font:11px 'Courier New',monospace;resize:none;background:#000;color:#00D7FF;border:none" spellcheck="false">CASE SOC-DEMO-2026-001
+- 15 failures then success, same source
+- Privilege change on same account
+- PowerShell marker on WS-01
+- Outbound connection to synthetic dest
+Open: intent? legitimate admin work?</textarea>
+  `, 64.5, 70, 34.5, 27, '', '<span>File</span><span>Notes</span>', 'CASE JOURNAL ACTIVE');
+}
+
+/* Stage 08 — TIMELINE RECONSTRUCTION & ANALYST QUESTIONS (Section 18) */
+const QS = [
+  ['Are the events associated with the same identity?', 'Yes — user.name = demo.user in VPN, AD, Sysmon and firewall records.'],
+  ['Do they involve the same host?', 'Yes — WS-01 appears in the endpoint, directory and network records.'],
+  ['Do they share a source IP?', 'Yes — 203.0.113.45 is on the authentication events and enriched onto later ones.'],
+  ['Did they occur within a meaningful time window?', 'Yes — 10:01 to 10:08, inside the 15-minute window.'],
+  ['Is the event sequence suspicious enough to investigate?', 'Yes — but "worth investigating" is not "confirmed malicious".'],
+  ['What evidence supports the hypothesis?', '15 failures then success, privilege change, PowerShell marker, unusual outbound connection.'],
+  ['What remains uncertain?', 'Intent, whether the admin change was legitimate, whether the destination is malicious. Data is synthetic.']
+];
+
+function qc(i) {
+  const el = $('qa' + i);
+  el.innerHTML = QS[i][1];
+  el.style.display = 'block';
+  playSnd('click');
+  
+  if (i < 3) {
+    hl(['user', 'host', 'ip'][i], E[0][['user', 'host', 'ip'][i]]);
+  } else {
+    hlst = null;
+    apply();
+  }
+}
+
+function S8() {
+  W('tl', 'SIEM_TIMELINE.exe', tlBody(), 29, 2, 32, 60, '', '<span>Timeline</span>', 'RECONSTRUCTING TIMELINE');
+  
+  const qHtml = `
+    <div style="font-size:11px">
+      <div style="margin-bottom:6px"><b>ANALYST INVESTIGATION QUESTIONS:</b></div>
+      ${QS.map((s, i) => `
+        <div style="margin-bottom:5px;border-bottom:1px solid #DFDFDF;padding-bottom:3px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <b>${i + 1}. ${s[0]}</b>
+            <button class="btn" style="min-width:60px" onclick="qc(${i})">CHECK</button>
+          </div>
+          <div id="qa${i}" class="term" style="display:none;margin-top:4px;color:#4de38a;font-size:10px"></div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  
+  W('qd', 'Analyst Investigation', qHtml, 62, 2, 37, 60, '', '<span>Inquiry</span>', '7 INVESTIGATION QUESTIONS');
+  W('evi', TT.auth, evAuth(), 29, 64, 35, 33, '', null, 'PRIMARY EVIDENCE RECORD');
+  tlClick(1);
+}
+
+/* Stage 09 — INCIDENT ASSESSMENT & CONCLUSION (Section 21) */
+function S9() {
+  const assessHtml = `
+    <div style="font-size:11px">
+      <div class="row"><b>CASE:</b><span class="val">SOC-DEMO-2026-001</span></div>
+      
+      <div style="margin:8px 0">
+        <b>ASSESSMENT:</b>
+        <div class="term am" style="margin-top:2px;font-size:12px;font-weight:bold;padding:8px">
+          SUSPICIOUS ACTIVITY REQUIRES INVESTIGATION
+        </div>
+      </div>
+      
+      <b>EVIDENCE:</b>
+      <div class="term" style="margin:2px 0 6px 0;line-height:1.6">
+        <span class="gn">✓</span> Authentication anomalies (15 failed logins then success)<br>
+        <span class="gn">✓</span> Successful authentication from same source IP<br>
+        <span class="gn">✓</span> Privilege change (Administrators synthetic group)<br>
+        <span class="gn">✓</span> Endpoint activity (PowerShell marker on WS-01)<br>
+        <span class="gn">✓</span> Network activity (Outbound TCP/443 to synthetic dest)<br>
+        <span class="gn">✓</span> Cross-source correlation across 4 independent feeds
+      </div>
+      
+      <b>UNCERTAINTIES:</b>
+      <div class="term mu" style="margin-top:2px;line-height:1.5;font-size:10px">
+        • Intent unknown<br>
+        • Synthetic dataset<br>
+        • No real endpoint compromise established<br>
+        • No malicious destination established
+      </div>
+    </div>
+  `;
+  
+  W('assess', 'SECURITY INCIDENT ASSESSMENT', assessHtml, 29, 2, 38, 94, '', '<span>Report</span><span>Export</span>', 'INCIDENT ASSESSMENT: READY');
+  
+  const conclHtml = `
+    <div style="font-size:11px">
+      <div class="term" style="font-size:13px;color:#FFB000;text-align:center;padding:12px;margin-bottom:8px;border-color:#FFB000">
+        <b>"THE OBSERVED EVENTS FORM A COHERENT SUSPICIOUS SEQUENCE AND WARRANT FURTHER INVESTIGATION."</b>
+      </div>
+      
+      <p style="margin:6px 0"><b>This simulation demonstrates how:</b></p>
+      <div class="term" style="text-align:center;line-height:1.7;font-size:11px">
+        <b class="cy">RAW EVENTS</b><br>
+        <span class="mu">become</span><br>
+        <b class="cy">SEARCHABLE SECURITY DATA</b><br>
+        <span class="mu">which becomes</span><br>
+        <b class="cy">DETECTION</b><br>
+        <span class="mu">which becomes</span><br>
+        <b class="am">CORRELATED CONTEXT</b><br>
+        <span class="mu">which enables</span><br>
+        <b class="cy">INVESTIGATION</b><br>
+        <span class="mu">which supports</span><br>
+        <b class="gn">ANALYST DECISION</b>
+      </div>
+      
+      <div class="tag a" style="margin-top:8px;display:block;text-align:center;padding:4px">
+        LOG ≠ ALERT ≠ INCIDENT &nbsp;·&nbsp; DETECTION ≠ PROOF &nbsp;·&nbsp; CORRELATION ≠ PROOF
+      </div>
+    </div>
+  `;
+  
+  W('concl', 'CASE CONCLUSION', conclHtml, 68, 2, 31, 94, '', '<span>Summary</span>', 'CONCLUSION APPROVED');
+}
+
+/* Stage 10 — RESPONSE / NEXT ACTION (Section 10) */
+const RA = {
+  'PRESERVE EVIDENCE': '[SIM] Evidence snapshot marked for retention.',
+  'REVIEW ACCOUNT ACTIVITY': '[SIM] Reviewing demo.user sign-in history.',
+  'VALIDATE PRIVILEGE CHANGE': '[SIM] Asking directory owner to confirm the group change.',
+  'CHECK ENDPOINT TELEMETRY': '[SIM] Pulling additional WS-01 process telemetry.',
+  'REVIEW NETWORK ACTIVITY': '[SIM] Reviewing other traffic to the synthetic destination.',
+  'ESCALATE FOR CONTAINMENT': '[SIM] Escalation ticket drafted. No system was isolated.'
+};
+
+function S10() {
+  const respHtml = `
+    <div style="font-size:11px">
+      <div style="margin-bottom:6px"><b>RECOMMENDED ACTIONS:</b></div>
+      <div class="g2" style="margin-bottom:6px">
+        ${Object.keys(RA).map(k => `
+          <button class="btn" onclick="execResponse('${k}')">${k}</button>
+        `).join('')}
+      </div>
+      <div style="margin-top:4px"><b>RESPONSE LOG:</b></div>
+      <div id="rlog" class="term" style="height:calc(100% - 130px);font-size:10px;line-height:1.6">
+        Simulated actions only — nothing on this computer is changed.<br>
+      </div>
+    </div>
+  `;
+  
+  W('resp', 'Incident Response Recommendation', respHtml, 29, 2, 41, 60, '', '<span>Response</span>', 'RESPONSE WORKBENCH');
+  
+  const finHtml = `
+    <div style="font-size:11px;line-height:1.8">
+      CASE: <span class="cy">SOC-DEMO-2026-001</span><br>
+      EVENTS ANALYZED: <span class="cy">5</span><br>
+      TELEMETRY SOURCES: <span class="cy">4</span><br>
+      CORRELATED: <span class="am">YES</span><br>
+      INVESTIGATION: <span class="gn">COMPLETED</span><br>
+      ASSESSMENT: <span class="am">SUSPICIOUS ACTIVITY REQUIRES FURTHER INVESTIGATION</span>
+      
+      <div style="text-align:center;margin:12px 0;display:flex;gap:6px;justify-content:center">
+        <button class="btn" onclick="resetSim()">RESET CASE</button>
+        <button class="btn act-blue" onclick="resetSim();startSim()">RUN AGAIN</button>
+        <button class="btn" onclick="togglePres()">PRESENTATION MODE</button>
+      </div>
+      
+      <div class="mu" style="font-size:10px;text-align:center">
+        Synthetic demonstration — no real systems accessed.
+      </div>
+    </div>
+  `;
+  
+  W('fin', 'SECURITY INVESTIGATION COMPLETE', finHtml, 71, 2, 28, 60, '', '<span>Audit</span>', 'WORKSTATION CASE CLOSED');
+}
+
+function execResponse(k) {
+  const rl = $('rlog');
+  if (!rl) return;
+  rl.insertAdjacentHTML('beforeend', `<div>${RA[k]}</div>`);
+  rl.scrollTop = rl.scrollHeight;
+  playSnd('chirp');
+}
+
+/* ---------------- Menus, Dialogs & Desktop Tool Handlers ---------------- */
+function openArchiveDialog() {
+  const content = `
+    <div style="font-size:11px">
+      <b>HISTORICAL TELEMETRY REPOSITORY:</b>
+      <div class="term" style="margin-top:6px;max-height:220px">
+        ${E.map(e => `
+          <div style="margin-bottom:6px">
+            <span class="cy">[RAW RECORD ${e.id}]</span> ${e.raw}<br>
+            <span class="mu">Source: ${e.src} | Time: ${e.ts}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  W('archive', 'LOG_ARCHIVE.EXE — Raw Ingestion Repository', content, 32, 16, 42, 50, '', null, 'ARCHIVE: 5 RECORDS');
+  playSnd('click');
+}
+
+function openNetToolsDialog() {
+  const content = `
+    <div style="font-size:11px">
+      <b>NETWORK OPERATIONS CENTER UTILITIES:</b>
+      <table style="margin-top:6px">
+        <tr><th>Tool</th><th>Role in Security Monitoring</th><th>Status</th></tr>
+        <tr><td class="cy">Zeek</td><td>Protocol analysis & connection logging (conn.log, dns.log)</td><td class="gn">SIMULATED</td></tr>
+        <tr><td class="cy">Wireshark</td><td>Deep packet inspection and TLS handshake reconstruction</td><td class="gn">SIMULATED</td></tr>
+        <tr><td class="cy">Suricata/Snort</td><td>Network intrusion detection signatures</td><td class="mu">STANDBY</td></tr>
+      </table>
+      <div class="mu" style="margin-top:8px;font-size:10px">
+        Notice: Network diagnostic interfaces are simulated locally using synthetic data. No promiscuous capture or network traffic is generated.
+      </div>
+    </div>
+  `;
+  W('nettools', 'NETWORK_TOOLS.EXE — Protocol Diagnostics', content, 34, 18, 40, 48, '', null, 'NET-DIAG READY');
+  playSnd('click');
+}
+
+function openIncidentsDialog() {
+  const content = `
+    <div style="font-size:11px">
+      <b>ACTIVE SOC INCIDENTS DATABASE:</b>
+      <table style="margin-top:6px">
+        <tr><th>Incident ID</th><th>Title</th><th>Subject</th><th>Severity</th><th>Status</th></tr>
+        <tr class="sel"><td>SOC-2026-001</td><td>Suspicious Account Activity</td><td>demo.user</td><td class="rd">HIGH</td><td>UNDER REVIEW</td></tr>
+        <tr><td>SOC-2026-000</td><td>Scheduled Baseline Training</td><td>system</td><td class="gn">LOW</td><td>CLOSED</td></tr>
+      </table>
+    </div>
+  `;
+  W('incidents', 'INCIDENTS.EXE — Incident Triage Database', content, 36, 20, 38, 44, '', null, 'DATABASE: 1 ACTIVE CASE');
+  playSnd('click');
+}
+
+function openAboutDialog() {
+  msg(
+    '<b>SECURITY MONITORING &amp; LOG ANALYSIS — LIVE SOC SIMULATOR</b><br><br>' +
+    'An authentic Windows 98-themed Security Operations Center simulation workstation designed for interactive cybersecurity seminars.<br><br>' +
+    'Demonstrates the end-to-end lifecycle: Telemetry Ingestion → Normalization → SIEM Querying → Sigma Detection → Multi-Source Correlation → SOC Investigation → Timeline Reconstruction → Incident Assessment &amp; Response.<br><br>' +
+    'All events, hosts, IP addresses, and commands are 100% synthetic demonstration data.',
+    'About Live SOC Simulator'
+  );
+}
+
+function openAxiomsDialog() {
+  msg(
+    '<b>FOUNDATIONAL CYBERSECURITY DISTINCTIONS (Section 28):</b><br><br>' +
+    '• <b>LOG ≠ ALERT</b> (A log records an event; an alert flags potential concern)<br>' +
+    '• <b>ALERT ≠ INCIDENT</b> (An alert prompts investigation; an incident is a verified security event)<br>' +
+    '• <b>MONITORING ≠ DETECTION</b> (Monitoring gathers telemetry; detection identifies patterns)<br>' +
+    '• <b>DETECTION ≠ PROOF</b> (Detection logic flags matches; it does not prove malicious intent)<br>' +
+    '• <b>CORRELATION ≠ PROOF</b> (Correlation establishes context and confidence, not definitive compromise)<br>' +
+    '• <b>SIEM ≠ JUST LOG STORAGE</b> (A SIEM normalizes, aggregates, correlates, and analyzes)<br>' +
+    '• <b>MITRE ATT&amp;CK ≠ DETECTION ENGINE</b> (ATT&CK is a taxonomic framework, not an automated detector)<br>' +
+    '• <b>SIGMA ≠ SIEM</b> (Sigma is an open signature specification language, not a SIEM platform)<br>' +
+    '• <b>SPL / KQL ≠ SECURITY PRODUCTS</b> (They are query languages, not self-contained security solutions)',
+    'Cybersecurity Principles &amp; Distinctions'
+  );
+}
+
+/* Master Menu Bar Definitions */
+const MN = {
+  File: [
+    ['Start Simulation', startSim],
+    ['Next Pipeline Step', nextStep],
+    ['Reset Workstation Case', resetSim],
+    ['Run Again', () => { resetSim(); startSim(); }],
+    ['---', null],
+    ['Exit Workstation', () => msg('Workstation lock is enabled during live seminar presentation.')]
+  ],
+  Edit: [
+    ['Clear Filter & Highlight', () => { hlst = null; if ($('siemT')) tblUp(); apply(); if (stage === 5) updateCorrVisualHighlights(); }],
+    ['Reset SIEM Search', () => { q = ''; if ($('q')) $('q').value = ''; if ($('siemT')) tblUp(); }]
+  ],
+  Search: [
+    ['Filter by user: demo.user', () => hl('user', 'demo.user')],
+    ['Filter by host: WS-01', () => hl('host', 'WS-01')],
+    ['Filter by IP: 203.0.113.45', () => hl('ip', '203.0.113.45')],
+    ['Show All Telemetry', () => { hlst = null; if ($('siemT')) tblUp(); apply(); }]
+  ],
+  View: [
+    ['Presentation Mode', togglePres],
+    ['Show Evidence Windows', showEv],
+    ['Casefile Manager (CASEFILE.EXE)', openCasefile],
+    ['Raw Log Archive', openArchiveDialog],
+    ['Tools Used in Demonstration', () => flash('tools')]
+  ],
+  Tools: [
+    ['MITRE ATT&CK Context Matrix', attWin],
+    ['Network Diagnostic Utilities', openNetToolsDialog],
+    ['Active Incidents Database', openIncidentsDialog],
+    ['Correlation Engine', () => { if (stage < 5) msg('Correlation Engine initializes at Stage 05.'); else go(5); }]
+  ],
+  Help: [
+    ['About SOC Simulator', openAboutDialog],
+    ['Core Distinctions & Axioms', openAxiomsDialog],
+    ['Synthetic Data Disclaimer', () => msg('All IP addresses (203.0.113.45, 198.51.100.25), usernames, and logs are synthetic educational models conforming to RFC 5737. No external servers or real systems are contacted.')]
+  ]
+};
+
+$('menu').innerHTML = Object.keys(MN).map(k => `
+  <span onclick="openMenu('${k}', this, event)">${k}</span>
+`).join('');
+
+function openMenu(k, el, ev) {
+  ev.stopPropagation();
+  playSnd('click');
+  const d = $('dd');
+  d.innerHTML = MN[k].map(m => {
+    if (m[0] === '---') return '<hr>';
+    return `<div onclick="MN['${k}'].find(x => x[0] === '${m[0]}')[1](); $('dd').style.display='none';">${m[0]}</div>`;
+  }).join('');
+  d.style.left = el.offsetLeft + 4 + 'px';
+  d.style.top = '42px';
+  d.style.display = 'block';
+}
+
+document.onclick = () => {
+  $('dd').style.display = 'none';
+  const sm = $('start-menu');
+  if (sm && sm.style.display === 'flex') {
+    sm.style.display = 'none';
+    $('start-btn').classList.remove('pressed');
+  }
+};
+
+/* Real-Time Clock */
+setInterval(() => {
+  $('clk').textContent = new Date().toLocaleTimeString();
+}, 1000);
+
+/* Initial Setup */
+W('console', 'SOC Investigation Console', consBody(), 1, 2, 27, 60, '', '<span>Sim</span><span>Stage</span><span>Help</span>', 'CASE: SOC-DEMO-2026-001 | READY');
+W('tools', 'TOOLS USED IN THIS DEMO', `
+  <div class="term" style="height:100%;font-size:10px;line-height:1.6">
+    <span class="am">TELEMETRY:</span> Sysmon (EventID 1), Active Directory (4728), VPN/IPsec, Firewall/DNS<br>
+    <span class="am">SIEM:</span> Splunk SPL &amp; Microsoft Sentinel KQL (simulated query views)<br>
+    <span class="am">DETECTION:</span> Sigma YAML Rules &amp; Multi-Factor Correlation Engine<br>
+    <span class="am">NETWORK:</span> Zeek (conn.log, dns.log) &amp; Wireshark packet reconstruction<br>
+    <span class="am">FRAMEWORK:</span> MITRE ATT&amp;CK Matrix mapping<br>
+    <div style="border-top:1px solid #303030;margin-top:4px;padding-top:2px">
+      <span class="cy">AXIOMS:</span> LOG ≠ ALERT · ALERT ≠ INCIDENT · DETECTION ≠ PROOF · CORRELATION ≠ PROOF
+    </div>
+    <span class="mu">Zero external libraries · 100% self-contained demonstration</span>
+  </div>
+`, 1, 64, 27, 33, '', null, 'SIMULATED ENVIRONMENTS');
+
+openCasefile();
 resetSim();
-</script></body></html>
+</script>
+</body>
+</html>
