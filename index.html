@@ -23,7 +23,7 @@ body {
 /* Color Semantics:
    #C0C0C0: Win98 Surface | #FFFFFF: Highlight | #808080: Mid Grey | #404040: Dark Bevel
    #000080 -> #1084D0: Active Navy Title | #808080: Inactive Title
-   #00D7FF: Telemetry Cyan | #00A6A6: Connection Teal | #FFB000: Detection Amber
+   #FFB000: Telemetry Cyan | #00A6A6: Connection Teal | #FFB000: Detection Amber
    #D00000 / #4A0000: Alert Red | #4de38a: Healthy Green | #000000 / #E8E8E8: Terminal
 */
 
@@ -106,7 +106,7 @@ body {
 }
 .pipe-step:hover {
   background: #182028;
-  color: #00D7FF;
+  color: #FFB000;
 }
 .pipe-step.done {
   color: #4de38a;
@@ -222,7 +222,7 @@ body {
   padding: 2px;
 }
 .d-icon:hover {
-  outline: 1px dotted #00D7FF;
+  outline: 1px dotted #FFB000;
 }
 .d-icon.selected {
   outline: 1px dotted #FFF;
@@ -349,7 +349,7 @@ body {
   font-size: 10px;
   border: 1px solid #808080;
   background: #000;
-  color: #00D7FF;
+  color: #FFB000;
   cursor: pointer;
 }
 .tray-badge.green { color: #4de38a; }
@@ -488,7 +488,7 @@ body {
 }
 .sim-tag {
   font: 9px "Courier New", monospace;
-  color: #00D7FF;
+  color: #FFB000;
   margin-left: auto;
   font-weight: normal;
   padding: 0 4px;
@@ -523,7 +523,7 @@ body {
 /* Inset Sunken Panels / Terminals */
 .term {
   background: #000000;
-  color: #00D7FF;
+  color: #FFB000;
   font: 11px/1.35 "Courier New", monospace;
   padding: 6px;
   border-top: 2px solid #808080;
@@ -611,7 +611,7 @@ body {
 }
 .val.dark {
   background: #000;
-  color: #00D7FF;
+  color: #FFB000;
 }
 
 /* Tables */
@@ -652,7 +652,7 @@ tr:hover td {
 }
 
 /* Semantics */
-.cy { color: #00D7FF; }
+.cy { color: #FFB000; }
 .am { color: #FFB000; }
 .rd { color: #ff4040; }
 .gn { color: #4de38a; }
@@ -660,7 +660,7 @@ tr:hover td {
 
 .tag {
   background: #000;
-  color: #00D7FF;
+  color: #FFB000;
   font: 10px "Courier New", monospace;
   padding: 1px 5px;
   border: 1px solid #00A6A6;
@@ -699,8 +699,8 @@ tr:hover td {
   vertical-align: middle;
 }
 .led.on {
-  background: #00D7FF;
-  box-shadow: 0 0 6px #00D7FF;
+  background: #FFB000;
+  box-shadow: 0 0 6px #FFB000;
 }
 
 /* Highlights & Selection */
@@ -716,7 +716,7 @@ tr:hover td {
   display: inline-block;
   width: 8px;
   height: 13px;
-  background: #00D7FF;
+  background: #FFB000;
   vertical-align: middle;
   animation: curBlink 1s steps(2) infinite;
 }
@@ -782,7 +782,7 @@ tr:hover td {
 .box {
   background: #000;
   border: 1px solid #00A6A6;
-  color: #00D7FF;
+  color: #FFB000;
   padding: 4px 8px;
   margin: 2px 0;
   font: 11px "Courier New", monospace;
@@ -854,7 +854,7 @@ tr:hover td {
   padding: 3px 6px;
   background: #081420;
   border: 1px solid #00A6A6;
-  color: #00D7FF;
+  color: #FFB000;
   font: 10px "Courier New", monospace;
   border-radius: 2px;
   transition: all 0.3s ease;
@@ -862,8 +862,8 @@ tr:hover td {
   cursor: pointer;
 }
 .corr-node:hover {
-  border-color: #00D7FF;
-  box-shadow: 0 0 6px #00D7FF;
+  border-color: #FFB000;
+  box-shadow: 0 0 6px #FFB000;
 }
 .corr-node.active {
   border-color: #FFB000;
@@ -968,7 +968,7 @@ tr:hover td {
   <div id="top-tb">
     <div class="title-left">
       <svg class="icon-shield" viewBox="0 0 16 16" fill="none">
-        <path d="M8 1L2 3V7C2 11 5 14 8 15C11 14 14 11 14 7V3L8 1Z" fill="#00D7FF" stroke="#FFF" stroke-width="1"/>
+        <path d="M8 1L2 3V7C2 11 5 14 8 15C11 14 14 11 14 7V3L8 1Z" fill="#FFB000" stroke="#FFF" stroke-width="1"/>
       </svg>
       <span>SECURITY MONITORING &amp; LOG ANALYSIS — LIVE SOC SIMULATOR</span>
     </div>
@@ -1013,7 +1013,7 @@ tr:hover td {
 <div id="desk">
   <!-- Subtle Network Topology Canvas in Background -->
   <svg id="desk-topo" viewBox="0 0 1200 700">
-    <g stroke="#00D7FF" stroke-width="1" fill="none">
+    <g stroke="#FFB000" stroke-width="1" fill="none">
       <path d="M 120 180 L 260 180" stroke-dasharray="4,4"/>
       <rect x="260" y="160" width="100" height="40" stroke="#00A6A6"/>
       <text x="310" y="184" fill="#00A6A6" font-family="Courier New" font-size="10" text-anchor="middle">FIREWALL</text>
@@ -1024,8 +1024,8 @@ tr:hover td {
       <rect x="680" y="160" width="100" height="40" stroke="#00A6A6"/>
       <text x="730" y="184" fill="#00A6A6" font-family="Courier New" font-size="10" text-anchor="middle">CORE SWITCH</text>
       <path d="M 730 200 L 730 280 L 840 280"/>
-      <rect x="840" y="260" width="120" height="40" stroke="#00D7FF"/>
-      <text x="900" y="284" fill="#00D7FF" font-family="Courier New" font-size="10" text-anchor="middle">HOST: WS-01</text>
+      <rect x="840" y="260" width="120" height="40" stroke="#FFB000"/>
+      <text x="900" y="284" fill="#FFB000" font-family="Courier New" font-size="10" text-anchor="middle">HOST: WS-01</text>
       <path d="M 730 200 L 730 360 L 840 360"/>
       <rect x="840" y="340" width="120" height="40" stroke="#00A6A6"/>
       <text x="900" y="364" fill="#00A6A6" font-family="Courier New" font-size="10" text-anchor="middle">ACTIVE DIRECTORY</text>
@@ -1049,7 +1049,7 @@ tr:hover td {
         <rect x="2" y="3" width="28" height="20" fill="#C0C0C0" stroke="#000" stroke-width="1.5"/>
         <rect x="5" y="6" width="22" height="14" fill="#000080"/>
         <path d="M10 24 L22 24 L24 28 L8 28 Z" fill="#808080" stroke="#000"/>
-        <path d="M12 9 L15 13 L20 8" stroke="#00D7FF" stroke-width="1.5" fill="none"/>
+        <path d="M12 9 L15 13 L20 8" stroke="#FFB000" stroke-width="1.5" fill="none"/>
       </svg>
       <span>SECURITY_MONITORING.EXE</span>
     </div>
@@ -1077,8 +1077,8 @@ tr:hover td {
 
     <div class="d-icon" onclick="openNetToolsDialog()" ondblclick="openNetToolsDialog()">
       <svg viewBox="0 0 32 32">
-        <circle cx="8" cy="8" r="5" fill="#00D7FF" stroke="#000"/>
-        <circle cx="24" cy="8" r="5" fill="#00D7FF" stroke="#000"/>
+        <circle cx="8" cy="8" r="5" fill="#FFB000" stroke="#000"/>
+        <circle cx="24" cy="8" r="5" fill="#FFB000" stroke="#000"/>
         <circle cx="16" cy="24" r="5" fill="#FFB000" stroke="#000"/>
         <line x1="8" y1="8" x2="16" y2="24" stroke="#FFF" stroke-width="1.5"/>
         <line x1="24" y1="8" x2="16" y2="24" stroke="#FFF" stroke-width="1.5"/>
@@ -1274,7 +1274,7 @@ function W(id, title, body, x, y, w, h, cls, menuHtml, sbText) {
     el.innerHTML = `
       <div class="tb">
         <div class="tb-title">
-          <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="2" width="14" height="12" fill="#00D7FF" stroke="#FFF"/></svg>
+          <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="2" width="14" height="12" fill="#FFB000" stroke="#FFF"/></svg>
           <span class="win-title-text">${title}</span>
         </div>
         <span class="sim-tag">SIMULATED INTERFACE</span>
@@ -1990,7 +1990,7 @@ function siemBody() {
       ${SRC.map(s => `
         <tr>
           <td>${s}</td><td>${cnt(s)}</td>
-          <td><div style="background:#00D7FF;height:9px;width:${cnt(s) * 65}px;border:1px solid #000"></div></td>
+          <td><div style="background:#FFB000;height:9px;width:${cnt(s) * 65}px;border:1px solid #000"></div></td>
         </tr>
       `).join('')}
     </table>
@@ -2523,7 +2523,7 @@ function S7() {
   $('att').style.height = '27%';
   
   W('notes', 'CASE_NOTES.exe', `
-    <textarea style="width:100%;height:100%;font:11px 'Courier New',monospace;resize:none;background:#000;color:#00D7FF;border:none" spellcheck="false">CASE SOC-DEMO-2026-001
+    <textarea style="width:100%;height:100%;font:11px 'Courier New',monospace;resize:none;background:#000;color:#FFB000;border:none" spellcheck="false">CASE SOC-DEMO-2026-001
 - 15 failures then success, same source
 - Privilege change on same account
 - PowerShell marker on WS-01
