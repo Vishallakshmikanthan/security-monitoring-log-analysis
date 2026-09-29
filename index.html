@@ -6,13 +6,13 @@
 <title>SECURITY MONITORING & LOG ANALYSIS — LIVE SOC SIMULATOR</title>
 <style>
 /* ==========================================================================
-   AUTHENTIC WINDOWS 98 / SOC WORKSTATION DESIGN SYSTEM
+   AUTHENTIC WINDOWS 98 / SOC WORKSTATION DESIGN SYSTEM (CLASSROOM-ENLARGED)
    ========================================================================== */
 * { box-sizing: border-box; }
 body {
   margin: 0;
   background: #08121B;
-  font: 11px Tahoma, "MS Sans Serif", Arial, sans-serif;
+  font: 12px Tahoma, "MS Sans Serif", Arial, sans-serif;
   color: #000;
   overflow: hidden;
   height: 100vh;
@@ -23,7 +23,7 @@ body {
 /* Color Semantics:
    #C0C0C0: Win98 Surface | #FFFFFF: Highlight | #808080: Mid Grey | #404040: Dark Bevel
    #000080 -> #1084D0: Active Navy Title | #808080: Inactive Title
-   #FFB000: Telemetry Cyan | #00A6A6: Connection Teal | #FFB000: Detection Amber
+   #FFB000: Telemetry Amber | #00A6A6: Connection Teal | #FFB000: Detection Amber
    #D00000 / #4A0000: Alert Red | #4de38a: Healthy Green | #000000 / #E8E8E8: Terminal
 */
 
@@ -31,7 +31,7 @@ body {
 #top {
   position: absolute;
   left: 0; right: 0; top: 0;
-  height: 84px;
+  height: 90px;
   background: #C0C0C0;
   border-bottom: 2px solid #000;
   box-shadow: inset 0 -1px 0 #808080;
@@ -41,12 +41,12 @@ body {
 }
 
 #top-tb {
-  height: 20px;
+  height: 22px;
   background: linear-gradient(90deg, #000080, #1084D0);
   color: #FFF;
   font-weight: bold;
-  font-size: 11px;
-  padding: 2px 4px;
+  font-size: 12px;
+  padding: 2px 6px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -55,22 +55,22 @@ body {
 #top-tb .title-left {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 #top-tb .icon-shield {
   display: inline-block;
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   vertical-align: middle;
 }
 
 #menu {
   display: flex;
-  gap: 2px;
-  padding: 1px 4px;
+  gap: 4px;
+  padding: 2px 6px;
   border-bottom: 1px solid #808080;
   background: #C0C0C0;
-  font-size: 11px;
+  font-size: 12px;
 }
 #menu span {
   padding: 2px 8px;
@@ -85,24 +85,25 @@ body {
 #pipeline-ribbon {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
   padding: 2px 6px;
   background: #181E24;
   border-bottom: 1px solid #404040;
   overflow-x: auto;
-  font: 10px "Courier New", monospace;
+  font: 11px "Courier New", monospace;
   white-space: nowrap;
 }
 .pipe-step {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 1px 6px;
+  padding: 2px 7px;
   background: #101418;
-  color: #708090;
+  color: #8898A8;
   border: 1px solid #303840;
   cursor: pointer;
   transition: all 0.2s;
+  font-size: 11px;
 }
 .pipe-step:hover {
   background: #182028;
@@ -117,11 +118,11 @@ body {
   color: #FFB000;
   border-color: #FFB000;
   font-weight: bold;
-  box-shadow: inset 0 0 4px rgba(255, 176, 0, 0.4);
+  box-shadow: inset 0 0 5px rgba(255, 176, 0, 0.45);
 }
 .pipe-step .arrow {
-  color: #404850;
-  font-size: 9px;
+  color: #505860;
+  font-size: 10px;
   pointer-events: none;
 }
 
@@ -132,7 +133,7 @@ body {
   align-items: center;
   padding: 3px 6px;
   background: #C0C0C0;
-  font-size: 11px;
+  font-size: 12px;
   flex: 1;
 }
 
@@ -147,10 +148,10 @@ body {
   border-bottom: 2px solid #000;
   box-shadow: inset 1px 1px 0 #DFDFDF, inset -1px -1px 0 #808080, 4px 4px 0 rgba(0,0,0,0.5);
   display: none;
-  font-size: 11px;
+  font-size: 12px;
 }
 #dd div {
-  padding: 4px 24px 4px 14px;
+  padding: 5px 26px 5px 16px;
   cursor: pointer;
   white-space: nowrap;
 }
@@ -159,7 +160,7 @@ body {
   color: #FFF;
 }
 #dd hr {
-  margin: 2px 0;
+  margin: 3px 0;
   border: 0;
   border-top: 1px solid #808080;
   border-bottom: 1px solid #FFF;
@@ -169,7 +170,7 @@ body {
 #desk {
   position: absolute;
   left: 0; right: 0;
-  top: 84px; bottom: 30px;
+  top: 90px; bottom: 32px;
   background: #071018;
   background-image:
     linear-gradient(#0c1b28 1px, transparent 1px),
@@ -191,13 +192,13 @@ body {
 /* Workstation Telemetry Badge in Desktop Corner */
 #desk-badge {
   position: absolute;
-  right: 12px;
+  right: 14px;
   bottom: 8px;
   background: rgba(10, 20, 30, 0.75);
   border: 1px solid #1a334a;
-  padding: 4px 8px;
-  color: #4a6a8a;
-  font: 10px "Courier New", monospace;
+  padding: 4px 10px;
+  color: #6a8aaa;
+  font: 11px "Courier New", monospace;
   pointer-events: none;
   z-index: 1;
 }
@@ -209,17 +210,17 @@ body {
   top: 14px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
   z-index: 2;
 }
 .d-icon {
-  width: 76px;
+  width: 82px;
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor: pointer;
   text-align: center;
-  padding: 2px;
+  padding: 3px;
 }
 .d-icon:hover {
   outline: 1px dotted #FFB000;
@@ -229,16 +230,17 @@ body {
   background: rgba(0, 0, 128, 0.45);
 }
 .d-icon svg {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   filter: drop-shadow(1px 1px 0 #000);
 }
 .d-icon span {
-  margin-top: 4px;
+  margin-top: 5px;
   color: #FFF;
-  font-size: 10px;
+  font-size: 11px;
+  font-weight: bold;
   line-height: 1.2;
-  text-shadow: 1px 1px 1px #000, -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000;
+  text-shadow: 1px 1px 2px #000, -1px -1px 2px #000, 1px -1px 2px #000, -1px 1px 2px #000;
   word-break: break-all;
 }
 
@@ -246,31 +248,31 @@ body {
 #task {
   position: absolute;
   left: 0; right: 0; bottom: 0;
-  height: 30px;
+  height: 32px;
   background: #C0C0C0;
   border-top: 2px solid #FFF;
   box-shadow: inset 0 1px 0 #DFDFDF;
   display: flex;
   gap: 4px;
   align-items: center;
-  padding: 2px 4px;
+  padding: 2px 6px;
   z-index: 5000;
 }
 
 #start-btn {
-  height: 24px;
+  height: 26px;
   background: #C0C0C0;
   border-top: 2px solid #FFF;
   border-left: 2px solid #FFF;
   border-right: 2px solid #000;
   border-bottom: 2px solid #000;
   box-shadow: inset 1px 1px 0 #DFDFDF, inset -1px -1px 0 #808080;
-  padding: 1px 6px;
+  padding: 2px 8px;
   font: bold 12px Tahoma, sans-serif;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
 }
 #start-btn:active, #start-btn.pressed {
   border-top: 2px solid #000;
@@ -278,7 +280,7 @@ body {
   border-right: 2px solid #FFF;
   border-bottom: 2px solid #FFF;
   box-shadow: inset 1px 1px 0 #808080;
-  padding: 2px 5px 0 7px;
+  padding: 3px 7px 1px 9px;
 }
 #start-btn svg {
   width: 16px;
@@ -287,10 +289,10 @@ body {
 
 .task-divider {
   width: 2px;
-  height: 20px;
+  height: 22px;
   border-left: 1px solid #808080;
   border-right: 1px solid #FFF;
-  margin: 0 2px;
+  margin: 0 3px;
 }
 
 #task-wins {
@@ -298,24 +300,24 @@ body {
   gap: 3px;
   flex: 1;
   overflow-x: auto;
-  height: 24px;
+  height: 26px;
 }
 .twin-btn {
-  height: 22px;
-  max-width: 170px;
-  min-width: 90px;
+  height: 24px;
+  max-width: 180px;
+  min-width: 95px;
   background: #C0C0C0;
   border-top: 2px solid #FFF;
   border-left: 2px solid #FFF;
   border-right: 2px solid #000;
   border-bottom: 2px solid #000;
   box-shadow: inset 1px 1px 0 #DFDFDF, inset -1px -1px 0 #808080;
-  padding: 1px 6px;
-  font: 11px Tahoma, sans-serif;
+  padding: 1px 8px;
+  font: 12px Tahoma, sans-serif;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -334,19 +336,20 @@ body {
 #task-tray {
   display: flex;
   align-items: center;
-  gap: 4px;
-  height: 24px;
+  gap: 6px;
+  height: 26px;
   border-top: 1px solid #808080;
   border-left: 1px solid #808080;
   border-right: 1px solid #FFF;
   border-bottom: 1px solid #FFF;
-  padding: 1px 6px;
-  font: 11px "Courier New", monospace;
+  padding: 1px 8px;
+  font: 12px "Courier New", monospace;
   background: #C0C0C0;
 }
 .tray-badge {
-  padding: 1px 4px;
-  font-size: 10px;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: bold;
   border: 1px solid #808080;
   background: #000;
   color: #FFB000;
@@ -359,8 +362,8 @@ body {
 #start-menu {
   position: absolute;
   left: 2px;
-  bottom: 30px;
-  width: 220px;
+  bottom: 32px;
+  width: 230px;
   background: #C0C0C0;
   border-top: 2px solid #FFF;
   border-left: 2px solid #FFF;
@@ -372,30 +375,30 @@ body {
   flex-direction: row;
 }
 #sm-side {
-  width: 28px;
+  width: 30px;
   background: linear-gradient(180deg, #000080, #1084D0);
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   color: #FFF;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 15px;
   letter-spacing: 2px;
-  padding: 8px 4px;
+  padding: 10px 4px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
 }
 #sm-items {
   flex: 1;
-  padding: 2px;
+  padding: 3px;
 }
 .sm-item {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 5px 8px;
+  padding: 6px 10px;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 12px;
 }
 .sm-item:hover {
   background: #000080;
@@ -413,7 +416,7 @@ body {
   box-shadow: inset 1px 1px 0 #DFDFDF, inset -1px -1px 0 #808080, 5px 5px 0 rgba(0,0,0,0.55);
   display: flex;
   flex-direction: column;
-  min-width: 200px;
+  min-width: 220px;
   user-select: none;
 }
 .win.red {
@@ -423,15 +426,15 @@ body {
   background: linear-gradient(90deg, #000080, #1084D0);
   color: #FFF;
   font-weight: bold;
-  font-size: 11px;
-  padding: 2px 3px;
+  font-size: 12px;
+  padding: 2px 4px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 6px;
   cursor: move;
   user-select: none;
-  height: 22px;
+  height: 24px;
 }
 .win.inactive .tb {
   background: #808080;
@@ -443,28 +446,28 @@ body {
 .tb-title {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .tb-title svg {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
 }
 .tb-btns {
   display: flex;
-  gap: 2px;
+  gap: 3px;
   flex-shrink: 0;
 }
 .wb {
-  width: 16px;
-  height: 14px;
+  width: 18px;
+  height: 16px;
   background: #C0C0C0;
   color: #000;
   font-family: Tahoma, sans-serif;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: bold;
   border-top: 1px solid #FFF;
   border-left: 1px solid #FFF;
@@ -487,24 +490,24 @@ body {
   padding: 1px 0 0 1px;
 }
 .sim-tag {
-  font: 9px "Courier New", monospace;
+  font: 10px "Courier New", monospace;
   color: #FFB000;
   margin-left: auto;
-  font-weight: normal;
-  padding: 0 4px;
-  background: rgba(0,0,0,0.3);
+  font-weight: bold;
+  padding: 1px 5px;
+  background: rgba(0,0,0,0.35);
 }
 
 .win-menu {
   display: flex;
-  gap: 2px;
-  padding: 1px 4px;
+  gap: 3px;
+  padding: 2px 6px;
   border-bottom: 1px solid #808080;
   background: #C0C0C0;
-  font-size: 11px;
+  font-size: 12px;
 }
 .win-menu span {
-  padding: 1px 6px;
+  padding: 2px 7px;
   cursor: pointer;
 }
 .win-menu span:hover {
@@ -515,17 +518,18 @@ body {
 .body {
   flex: 1;
   overflow: auto;
-  padding: 6px;
+  padding: 8px;
   min-height: 0;
   background: #C0C0C0;
+  font-size: 12px;
 }
 
 /* Inset Sunken Panels / Terminals */
 .term {
   background: #000000;
   color: #FFB000;
-  font: 11px/1.35 "Courier New", monospace;
-  padding: 6px;
+  font: 12.5px/1.4 "Courier New", monospace;
+  padding: 7px;
   border-top: 2px solid #808080;
   border-left: 2px solid #808080;
   border-right: 2px solid #FFFFFF;
@@ -537,11 +541,11 @@ body {
 /* Windows 98 Status Bar */
 .sb-bar {
   display: flex;
-  gap: 3px;
+  gap: 4px;
   background: #C0C0C0;
-  padding: 2px;
+  padding: 3px;
   border-top: 1px solid #808080;
-  font-size: 10px;
+  font-size: 11px;
   font-family: Tahoma, sans-serif;
   color: #000;
 }
@@ -550,7 +554,7 @@ body {
   border-left: 1px solid #808080;
   border-right: 1px solid #FFFFFF;
   border-bottom: 1px solid #FFFFFF;
-  padding: 1px 5px;
+  padding: 2px 6px;
   white-space: nowrap;
 }
 
@@ -562,14 +566,14 @@ body {
   border-right: 2px solid #000000;
   border-bottom: 2px solid #000000;
   box-shadow: inset 1px 1px 0 #DFDFDF, inset -1px -1px 0 #808080;
-  padding: 3px 8px;
-  font: bold 11px Tahoma, sans-serif;
+  padding: 4px 10px;
+  font: bold 12px Tahoma, sans-serif;
   cursor: pointer;
   color: #000;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 5px;
 }
 .btn:active, .btn.pressed {
   border-top: 2px solid #000000;
@@ -577,11 +581,11 @@ body {
   border-right: 2px solid #FFFFFF;
   border-bottom: 2px solid #FFFFFF;
   box-shadow: inset 1px 1px 0 #808080;
-  padding: 4px 7px 2px 9px;
+  padding: 5px 9px 3px 11px;
 }
 .btn.big {
-  font-size: 12px;
-  padding: 5px 12px;
+  font-size: 13px;
+  padding: 6px 14px;
   outline: 1px dotted #000;
   outline-offset: -5px;
 }
@@ -591,11 +595,11 @@ body {
   border-color: #4040FF #000040 #000040 #4040FF;
 }
 
-.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
-.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; }
 
-.row { display: flex; gap: 6px; margin: 2px 0; align-items: center; }
-.row b { min-width: 96px; font-size: 11px; }
+.row { display: flex; gap: 6px; margin: 3px 0; align-items: center; }
+.row b { min-width: 105px; font-size: 12px; }
 
 /* Inset Value Box */
 .val {
@@ -605,9 +609,9 @@ body {
   border-right: 2px solid #FFFFFF;
   border-bottom: 2px solid #FFFFFF;
   background: #FFF;
-  padding: 1px 4px;
+  padding: 2px 6px;
   font-family: "Courier New", monospace;
-  font-size: 11px;
+  font-size: 12px;
 }
 .val.dark {
   background: #000;
@@ -618,7 +622,7 @@ body {
 table {
   border-collapse: collapse;
   width: 100%;
-  font: 11px "Courier New", monospace;
+  font: 12px "Courier New", monospace;
   background: #000;
   color: #E8E8E8;
 }
@@ -630,18 +634,19 @@ th {
   border-right: 1px solid #404040;
   border-bottom: 1px solid #404040;
   text-align: left;
-  padding: 2px 5px;
+  padding: 3px 6px;
   position: sticky;
   top: 0;
   font-family: Tahoma, sans-serif;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: bold;
 }
 td {
-  padding: 2px 6px;
+  padding: 3px 7px;
   white-space: nowrap;
   cursor: pointer;
   border-bottom: 1px solid #202020;
+  font-size: 12px;
 }
 tr.sel td {
   background: #000080 !important;
@@ -656,13 +661,14 @@ tr:hover td {
 .am { color: #FFB000; }
 .rd { color: #ff4040; }
 .gn { color: #4de38a; }
-.mu { color: #8a9aa8; }
+.mu { color: #9aa8b8; }
 
 .tag {
   background: #000;
   color: #FFB000;
-  font: 10px "Courier New", monospace;
-  padding: 1px 5px;
+  font: 11px "Courier New", monospace;
+  font-weight: bold;
+  padding: 2px 6px;
   border: 1px solid #00A6A6;
   display: inline-block;
 }
@@ -672,7 +678,7 @@ tr:hover td {
 
 /* Segmented Progress Bar */
 .pb {
-  height: 16px;
+  height: 18px;
   border-top: 2px solid #808080;
   border-left: 2px solid #808080;
   border-right: 2px solid #FFFFFF;
@@ -691,8 +697,8 @@ tr:hover td {
 
 .led {
   display: inline-block;
-  width: 9px;
-  height: 9px;
+  width: 10px;
+  height: 10px;
   background: #303030;
   border: 1px solid #000;
   border-radius: 50%;
@@ -714,8 +720,8 @@ tr:hover td {
 
 .cur {
   display: inline-block;
-  width: 8px;
-  height: 13px;
+  width: 9px;
+  height: 14px;
   background: #FFB000;
   vertical-align: middle;
   animation: curBlink 1s steps(2) infinite;
@@ -725,27 +731,27 @@ tr:hover td {
 /* Classic Property Sheet Tabs */
 .tabs-header {
   display: flex;
-  gap: 2px;
+  gap: 3px;
   margin-bottom: -2px;
   z-index: 1;
   position: relative;
 }
 .tab {
   display: inline-block;
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-top: 2px solid #FFF;
   border-left: 2px solid #FFF;
   border-right: 2px solid #000;
   border-bottom: none;
   background: #B0B0B0;
   cursor: pointer;
-  font: 11px Tahoma, sans-serif;
+  font: 12px Tahoma, sans-serif;
   border-radius: 2px 2px 0 0;
 }
 .tab.on {
   background: #C0C0C0;
   font-weight: bold;
-  padding-bottom: 5px;
+  padding-bottom: 6px;
   border-bottom: 2px solid #C0C0C0;
 }
 .tab-content {
@@ -754,21 +760,21 @@ tr:hover td {
   border-right: 2px solid #000;
   border-bottom: 2px solid #000;
   background: #C0C0C0;
-  padding: 6px;
+  padding: 7px;
 }
 
 .st {
   display: flex;
   flex-wrap: wrap;
-  gap: 3px;
-  margin: 4px 0;
+  gap: 4px;
+  margin: 5px 0;
 }
 .st div {
   background: #000;
-  color: #8a9aa8;
+  color: #9aa8b8;
   border: 1px solid #404040;
-  padding: 3px 8px;
-  font: 11px "Courier New", monospace;
+  padding: 4px 9px;
+  font: 12px "Courier New", monospace;
   opacity: 0.6;
 }
 .st div.on {
@@ -783,9 +789,9 @@ tr:hover td {
   background: #000;
   border: 1px solid #00A6A6;
   color: #FFB000;
-  padding: 4px 8px;
-  margin: 2px 0;
-  font: 11px "Courier New", monospace;
+  padding: 5px 9px;
+  margin: 3px 0;
+  font: 12px "Courier New", monospace;
   opacity: 0.4;
   transition: all 0.3s;
 }
@@ -796,9 +802,9 @@ tr:hover td {
 }
 .ar {
   text-align: center;
-  color: #00A6A6;
-  font-size: 10px;
-  line-height: 10px;
+  color: #FFB000;
+  font-size: 11px;
+  line-height: 12px;
 }
 .fac {
   background: #C0C0C0;
@@ -807,8 +813,9 @@ tr:hover td {
   border-right: 2px solid #000;
   border-bottom: 2px solid #000;
   box-shadow: inset 1px 1px 0 #DFDFDF, inset -1px -1px 0 #808080;
-  padding: 4px 6px;
+  padding: 5px 8px;
   cursor: pointer;
+  font-size: 11.5px;
 }
 .fac:hover { background: #D0D0D0; }
 .fac.active {
@@ -820,7 +827,7 @@ tr:hover td {
 }
 .fac b {
   display: block;
-  font-size: 10px;
+  font-size: 11px;
   color: #000080;
 }
 
@@ -828,9 +835,9 @@ tr:hover td {
   background: #000;
   color: #E8E8E8;
   border: 1px solid #00A6A6;
-  padding: 4px 8px;
+  padding: 5px 9px;
   cursor: pointer;
-  font: 11px "Courier New", monospace;
+  font: 12px "Courier New", monospace;
 }
 .tli.sel {
   background: #000080 !important;
@@ -845,17 +852,18 @@ tr:hover td {
   border-right: 2px solid #FFF;
   border-bottom: 2px solid #FFF;
   padding: 4px;
-  height: 310px;
+  height: 330px;
   position: relative;
   overflow: hidden;
 }
 .corr-node {
   position: absolute;
-  padding: 3px 6px;
+  padding: 4px 8px;
   background: #081420;
   border: 1px solid #00A6A6;
   color: #FFB000;
-  font: 10px "Courier New", monospace;
+  font: 11.5px "Courier New", monospace;
+  font-weight: bold;
   border-radius: 2px;
   transition: all 0.3s ease;
   z-index: 2;
@@ -921,19 +929,24 @@ tr:hover td {
   justify-content: center;
 }
 
-/* ---------------- Presentation Mode (Section 23) ---------------- */
+/* ---------------- Presentation Mode (Section 23 - Projector Ready) ---------------- */
 .pres .win:not(.act):not(#console):not(#casefile) { display: none !important; }
 .pres #tools { display: none !important; }
 .pres #desk-badge { display: none !important; }
 .pres #desktop-icons { display: none !important; }
 .pres .win {
-  font-size: 13px !important;
+  font-size: 14px !important;
 }
 .pres .term, .pres table, .pres .box, .pres .tli, .pres .val {
-  font-size: 13px !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+.pres td, .pres th {
+  font-size: 13.5px !important;
+  padding: 4px 8px !important;
 }
 .pres #top {
-  height: 88px;
+  height: 94px;
 }
 
 /* Custom Retro Scrollbars */
@@ -994,11 +1007,11 @@ tr:hover td {
     <button class="btn" onclick="pauseSim()" title="Pause automated playback">PAUSE ⏸</button>
     <button class="btn" onclick="resetSim()" title="Restore initial clean workstation state">RESET ↺</button>
     
-    <div style="height:18px;width:1px;background:#808080;border-right:1px solid #FFF;margin:0 4px"></div>
+    <div style="height:20px;width:1px;background:#808080;border-right:1px solid #FFF;margin:0 4px"></div>
 
-    <b>STAGE: <span id="tst" style="font-family:'Courier New',monospace">00 / 10</span> — <span id="tnm" class="am">SYSTEM READY</span></b>
+    <b style="font-size:13px">STAGE: <span id="tst" style="font-family:'Courier New',monospace;font-size:14px;color:#000080">00 / 10</span> — <span id="tnm" class="am" style="font-size:13px">SYSTEM READY</span></b>
     
-    <div class="pb" style="width:190px" title="Pipeline Progress Indicator"><i id="tpb"></i></div>
+    <div class="pb" style="width:200px" title="Pipeline Progress Indicator"><i id="tpb"></i></div>
 
     <button class="btn" id="presBtn" onclick="togglePres()">PRESENTATION MODE</button>
     <button class="btn" id="sndBtn" onclick="toggleSound()">SOUND: OFF</button>
@@ -1016,24 +1029,24 @@ tr:hover td {
     <g stroke="#FFB000" stroke-width="1" fill="none">
       <path d="M 120 180 L 260 180" stroke-dasharray="4,4"/>
       <rect x="260" y="160" width="100" height="40" stroke="#00A6A6"/>
-      <text x="310" y="184" fill="#00A6A6" font-family="Courier New" font-size="10" text-anchor="middle">FIREWALL</text>
+      <text x="310" y="184" fill="#00A6A6" font-family="Courier New" font-size="11" text-anchor="middle">FIREWALL</text>
       <path d="M 360 180 L 460 180"/>
       <rect x="460" y="160" width="110" height="40" stroke="#00A6A6"/>
-      <text x="515" y="184" fill="#00A6A6" font-family="Courier New" font-size="10" text-anchor="middle">VPN GATEWAY</text>
+      <text x="515" y="184" fill="#00A6A6" font-family="Courier New" font-size="11" text-anchor="middle">VPN GATEWAY</text>
       <path d="M 570 180 L 680 180"/>
       <rect x="680" y="160" width="100" height="40" stroke="#00A6A6"/>
-      <text x="730" y="184" fill="#00A6A6" font-family="Courier New" font-size="10" text-anchor="middle">CORE SWITCH</text>
+      <text x="730" y="184" fill="#00A6A6" font-family="Courier New" font-size="11" text-anchor="middle">CORE SWITCH</text>
       <path d="M 730 200 L 730 280 L 840 280"/>
       <rect x="840" y="260" width="120" height="40" stroke="#FFB000"/>
-      <text x="900" y="284" fill="#FFB000" font-family="Courier New" font-size="10" text-anchor="middle">HOST: WS-01</text>
+      <text x="900" y="284" fill="#FFB000" font-family="Courier New" font-size="11" text-anchor="middle">HOST: WS-01</text>
       <path d="M 730 200 L 730 360 L 840 360"/>
       <rect x="840" y="340" width="120" height="40" stroke="#00A6A6"/>
-      <text x="900" y="364" fill="#00A6A6" font-family="Courier New" font-size="10" text-anchor="middle">ACTIVE DIRECTORY</text>
+      <text x="900" y="364" fill="#00A6A6" font-family="Courier New" font-size="11" text-anchor="middle">ACTIVE DIRECTORY</text>
       <path d="M 730 200 L 730 440 L 840 440"/>
       <rect x="840" y="420" width="120" height="40" stroke="#FFB000"/>
-      <text x="900" y="444" fill="#FFB000" font-family="Courier New" font-size="10" text-anchor="middle">SIEM COLLECTOR</text>
+      <text x="900" y="444" fill="#FFB000" font-family="Courier New" font-size="11" text-anchor="middle">SIEM COLLECTOR</text>
       <circle cx="80" cy="180" r="24" stroke="#ff4040"/>
-      <text x="80" y="184" fill="#ff4040" font-family="Courier New" font-size="9" text-anchor="middle">203.0.113.45</text>
+      <text x="80" y="184" fill="#ff4040" font-family="Courier New" font-size="10" text-anchor="middle">203.0.113.45</text>
     </g>
   </svg>
 
@@ -1135,7 +1148,7 @@ tr:hover td {
     <span class="tray-badge" id="sndTray" onclick="toggleSound()">SND: OFF</span>
     <span class="tray-badge green">NET: ON</span>
     <span class="tray-badge amber" id="tk2">READY</span>
-    <span style="font-size:10px" id="tk1">CASE: 2026-001</span>
+    <span style="font-size:11px" id="tk1">CASE: 2026-001</span>
     <span style="font-weight:bold;margin-left:4px" id="clk">10:00:00</span>
   </div>
 </div>
@@ -1413,14 +1426,14 @@ function msg(t, title = 'Security Monitoring & Log Analysis') {
   const o = $('ovl');
   o.style.display = 'flex';
   o.innerHTML = `
-    <div class="win" style="position:relative;width:420px;max-width:90%">
+    <div class="win" style="position:relative;width:440px;max-width:92%">
       <div class="tb"><span>${title}</span></div>
       <div class="body" style="display:flex;gap:14px;align-items:center;padding:16px">
-        <b style="font-size:24px;background:#FFB000;color:#000;padding:2px 12px;border:2px solid #000;line-height:1.2">!</b>
-        <span style="flex:1;font-size:12px;line-height:1.4">${t}</span>
+        <b style="font-size:26px;background:#FFB000;color:#000;padding:2px 14px;border:2px solid #000;line-height:1.2">!</b>
+        <span style="flex:1;font-size:13px;line-height:1.5">${t}</span>
       </div>
       <div style="text-align:center;padding:8px;background:#C0C0C0;border-top:1px solid #808080">
-        <button class="btn" style="width:84px" onclick="$('ovl').style.display='none';playSnd('click')">OK</button>
+        <button class="btn" style="width:90px;font-size:12px" onclick="$('ovl').style.display='none';playSnd('click')">OK</button>
       </div>
     </div>
   `;
@@ -1489,7 +1502,7 @@ function hl(k, v) {
 const fields = e => `
   <table>
     ${[['TIMESTAMP', e.ts], ['USER', e.user], ['SOURCE_IP', e.ip], ['HOST', e.host], ['SOURCE', e.src], ['EVENT', e.type.toUpperCase()], ['STATUS', e.status], ...Object.entries(e.x)].map(([k,v]) => `
-      <tr><td class="cy">${k}</td><td>${v}</td></tr>
+      <tr><td class="cy" style="font-weight:bold">${k}</td><td>${v}</td></tr>
     `).join('')}
   </table>
 `;
@@ -1520,7 +1533,7 @@ const consBody = () => `
   <div class="row"><b>STAGE STATUS:</b><span class="val dark am" id="cs">READY</span></div>
   <div class="row"><b>TELEMETRY:</b><span class="val">4 Heterogeneous Log Feeds</span></div>
   
-  <div class="g2" style="margin:6px 0">
+  <div class="g2" style="margin:8px 0">
     <button class="btn" onclick="startSim()">START SIMULATION</button>
     <button class="btn big act-blue" onclick="nextStep()">NEXT STEP ▶</button>
     <button class="btn" onclick="autoPlay()">AUTO PLAY ⏯</button>
@@ -1531,14 +1544,14 @@ const consBody = () => `
     <button class="btn" onclick="genConc()">CONCLUSION 📋</button>
   </div>
   
-  <div class="term" id="cl" style="height:calc(100% - 200px);min-height:150px"></div>
+  <div class="term" id="cl" style="height:calc(100% - 215px);min-height:160px;font-size:12.5px;line-height:1.55"></div>
 `;
 
 function status() {
   if ($('cs')) $('cs').textContent = paused ? 'PAUSED' : ST[stage];
   if ($('cl')) {
     $('cl').innerHTML = NM.map((n, i) => `
-      <div class="${i === stage ? 'am' : i < stage ? 'mu' : ''}" style="cursor:pointer;padding:1px 0" onclick="go(${i})">
+      <div class="${i === stage ? 'am' : i < stage ? 'mu' : ''}" style="cursor:pointer;padding:2px 0" onclick="go(${i})">
         ${i < stage ? '[✓]' : i === stage ? '[▶]' : '[ ]'} STAGE ${String(i).padStart(2, '0')} ${n}
       </div>
     `).join('');
@@ -1556,16 +1569,16 @@ function status() {
 /* ---------------- Persistent CASEFILE.EXE (Section 19) ---------------- */
 function casefileBody() {
   return `
-    <div style="font-size:11px">
-      <div class="row"><b>CASE ID:</b><span class="val cy" style="background:#000">SOC-DEMO-2026-001</span></div>
+    <div style="font-size:12px">
+      <div class="row"><b>CASE ID:</b><span class="val cy" style="background:#000;font-weight:bold">SOC-DEMO-2026-001</span></div>
       <div class="row"><b>SUBJECT:</b><span class="val" onclick="hl('user','demo.user')" style="cursor:pointer">demo.user</span></div>
       <div class="row"><b>TARGET HOST:</b><span class="val" onclick="hl('host','WS-01')" style="cursor:pointer">WS-01</span></div>
       <div class="row"><b>ORIGIN IP:</b><span class="val" onclick="hl('ip','203.0.113.45')" style="cursor:pointer">203.0.113.45</span></div>
       <div class="row"><b>EVENTS COUNT:</b><span class="val">5 Correlated</span></div>
       <div class="row"><b>SOURCES:</b><span class="val">VPN, AD, Sysmon, FW</span></div>
       <div class="row"><b>TIME WINDOW:</b><span class="val">10:01 → 10:08 (7 min)</span></div>
-      <div class="row"><b>CASE STATUS:</b><span class="val am" id="cf-status" style="background:#000">${ST[stage]}</span></div>
-      <div class="mu" style="margin-top:6px;font-size:10px">Click attributes above to highlight across all open monitors.</div>
+      <div class="row"><b>CASE STATUS:</b><span class="val am" id="cf-status" style="background:#000;font-weight:bold">${ST[stage]}</span></div>
+      <div class="mu" style="margin-top:6px;font-size:11px">Click attributes above to highlight across all open monitors.</div>
     </div>
   `;
 }
@@ -1705,21 +1718,21 @@ function togglePres() {
 
 /* ---------------- Evidence Windows & MITRE ATT&CK (Sections 15, 16, 17, 20) ---------------- */
 const evAuth = () => `
-  <div style="font-size:11px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
-      <b class="cy">Authentication Monitor [VPN-AUTH]</b>
+  <div style="font-size:12px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+      <b class="cy" style="font-size:12px">Authentication Monitor [VPN-AUTH]</b>
       <span class="tag">UDP/500 IPsec</span>
     </div>
-    <div class="term" style="margin-bottom:6px">
+    <div class="term" style="margin-bottom:7px;font-size:12px">
       <div data-e="1" onclick="evD(1)" style="cursor:pointer">10:01:12 <span class="am">FAILED LOGIN x15</span> user=<span class="cy">demo.user</span> src=<span class="am">203.0.113.45</span></div>
-      <div data-e="2" onclick="evD(2)" style="cursor:pointer;margin-top:2px">10:03:27 <span class="gn">SUCCESS LOGIN</span> user=<span class="cy">demo.user</span> src=<span class="am">203.0.113.45</span></div>
+      <div data-e="2" onclick="evD(2)" style="cursor:pointer;margin-top:3px">10:03:27 <span class="gn">SUCCESS LOGIN</span> user=<span class="cy">demo.user</span> src=<span class="am">203.0.113.45</span></div>
     </div>
     
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
-      <b class="cy">Directory Audit [Active Directory]</b>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+      <b class="cy" style="font-size:12px">Directory Audit [Active Directory]</b>
       <span class="tag">EventID 4728</span>
     </div>
-    <div class="term">
+    <div class="term" style="font-size:12px">
       <div data-e="3" onclick="evD(3)" style="cursor:pointer">
         10:04:55 <span class="am">GROUP_MEMBER_ADDED</span><br>
         Target Account: <span class="cy">demo.user</span><br>
@@ -1727,16 +1740,16 @@ const evAuth = () => `
         Domain Controller: <span class="mu">AD-DC01</span> | Host: <span class="cy">WS-01</span>
       </div>
     </div>
-    <div class="mu" style="margin-top:4px;font-size:10px">Synthetic directory telemetry — no real domain accessed.</div>
+    <div class="mu" style="margin-top:5px;font-size:11px">Synthetic directory telemetry — no real domain accessed.</div>
   </div>
 `;
 
 const evEdr = () => `
-  <div style="font-size:11px">
-    <b class="cy">Endpoint Detection &amp; Response (Process Tree)</b>
-    <div class="term" style="margin:3px 0 6px 0">
+  <div style="font-size:12px">
+    <b class="cy" style="font-size:12px">Endpoint Detection &amp; Response (Process Tree)</b>
+    <div class="term" style="margin:4px 0 7px 0;font-size:12px">
       <div>HOST: <span class="cy">WS-01</span> | USER: <span class="cy">demo.user</span></div>
-      <div data-e="4" style="margin-top:4px">
+      <div data-e="4" style="margin-top:5px">
         10:06:41 <span class="rd">PROCESS CREATION</span><br>
         explorer.exe (PID: 1420)<br>
         &nbsp;│<br>
@@ -1745,8 +1758,8 @@ const evEdr = () => `
       </div>
     </div>
     
-    <b class="cy">Sysmon Event Viewer (Simulated)</b>
-    <table data-e="4" style="margin-top:3px">
+    <b class="cy" style="font-size:12px">Sysmon Event Viewer (Simulated)</b>
+    <table data-e="4" style="margin-top:4px">
       <tr><td class="cy">EventID</td><td>1 (Process Create)</td></tr>
       <tr><td class="cy">UtcTime</td><td>2026-09-29 10:06:41.312</td></tr>
       <tr><td class="cy">ProcessId</td><td>3892</td></tr>
@@ -1758,25 +1771,25 @@ const evEdr = () => `
 `;
 
 const evNet = () => `
-  <div style="font-size:11px">
+  <div style="font-size:12px">
     <div style="display:flex;justify-content:space-between;align-items:center">
-      <b class="cy">Zeek-style conn.log</b>
+      <b class="cy" style="font-size:12px">Zeek-style conn.log</b>
       <span class="tag">NETWORK TELEMETRY</span>
     </div>
-    <table data-e="5" style="margin:2px 0 4px 0">
+    <table data-e="5" style="margin:3px 0 5px 0">
       <tr><th>ts</th><th>orig_h</th><th>resp_h</th><th>port</th><th>proto</th><th>service</th></tr>
       <tr><td>10:08:51</td><td>10.10.1.21 (WS-01)</td><td>198.51.100.25</td><td>443</td><td>tcp</td><td>ssl</td></tr>
     </table>
-    <div class="mu" style="font-size:10px">SYNTHETIC DESTINATION (RFC 5737 documentation prefix) — not contacted.</div>
+    <div class="mu" style="font-size:11px">SYNTHETIC DESTINATION (RFC 5737 documentation prefix) — not contacted.</div>
 
-    <b class="cy" style="margin-top:4px;display:block">Zeek-style dns.log</b>
-    <table style="margin:2px 0 4px 0">
+    <b class="cy" style="margin-top:5px;display:block;font-size:12px">Zeek-style dns.log</b>
+    <table style="margin:3px 0 5px 0">
       <tr><th>ts</th><th>query</th><th>qtype</th><th>answer</th></tr>
       <tr><td>10:08:50</td><td>update-check.example.test</td><td>A</td><td>198.51.100.25</td></tr>
     </table>
 
-    <b class="cy">Wireshark-inspired Packet View</b>
-    <table data-e="5" style="margin-top:2px">
+    <b class="cy" style="font-size:12px">Wireshark-inspired Packet View</b>
+    <table data-e="5" style="margin-top:3px">
       <tr><th>No</th><th>Time</th><th>Source</th><th>Destination</th><th>Proto</th><th>Info</th></tr>
       <tr><td>1</td><td>10:08:50</td><td>10.10.1.21</td><td>10.10.1.2 (DNS)</td><td>DNS</td><td>Standard query A update-check.example.test</td></tr>
       <tr><td>2</td><td>10:08:50</td><td>10.10.1.2 (DNS)</td><td>10.10.1.21</td><td>DNS</td><td>Response: 198.51.100.25</td></tr>
@@ -1784,7 +1797,7 @@ const evNet = () => `
       <tr><td>4</td><td>10:08:51</td><td>198.51.100.25</td><td>10.10.1.21</td><td>TCP</td><td>443 → 52140 [SYN, ACK]</td></tr>
       <tr><td>5</td><td>10:08:51</td><td>10.10.1.21</td><td>198.51.100.25</td><td>TLS</td><td>Client Hello (TLS 1.3)</td></tr>
     </table>
-    <div class="mu" style="margin-top:3px;font-size:10px">No packets are captured or sent over any physical interface.</div>
+    <div class="mu" style="margin-top:4px;font-size:11px">No packets are captured or sent over any physical interface.</div>
   </div>
 `;
 
@@ -1806,14 +1819,14 @@ function evidence() {
 }
 
 const attBody = () => `
-  <div class="term" style="font-size:11px">
+  <div class="term" style="font-size:12px;line-height:1.55">
     ${[
       ['Credential Access', 'T1110 - Brute Force', '15 failed logins followed by success'],
       ['Privilege Escalation', 'T1078 - Valid Accounts / T1098 - Account Manipulation', 'Group membership change to Administrators'],
       ['Execution / Command and Scripting Interpreter', 'T1059.001 - PowerShell', 'PowerShell process creation pattern marker'],
       ['Command and Control', 'T1071.001 - Web Protocols', 'Outbound connection over TCP 443 to unusual destination']
     ].map(([tac, tech, ev]) => `
-      <div style="margin-bottom:6px">
+      <div style="margin-bottom:7px">
         <span class="am" style="font-weight:bold">${tac}</span><br>
         <span class="cy">${tech}</span><br>
         <span class="mu">Evidence: ${ev}</span>
@@ -1821,7 +1834,7 @@ const attBody = () => `
     `).join('')}
     <div class="mu" style="border-top:1px solid #303030;padding-top:4px">Discovery / Lateral Movement: No supporting telemetry observed in this sequence.</div>
   </div>
-  <div class="tag a" style="margin-top:4px;display:block">Conceptual ATT&amp;CK context for demonstration — no technique is confirmed.</div>
+  <div class="tag a" style="margin-top:5px;display:block">Conceptual ATT&amp;CK context for demonstration — no technique is confirmed.</div>
 `;
 
 const attWin = () => W('att', 'MITRE ATT&CK Context Matrix', attBody(), 29, 2, 23, 48, '', '<span>View</span><span>Matrix</span>', 'MAPPING: 4 TACTICS ALIGNED');
@@ -1831,7 +1844,7 @@ const attWin = () => W('att', 'MITRE ATT&CK Context Matrix', attBody(), 29, 2, 2
 /* Stage 00 — SYSTEM READY (Section 7) */
 function S0() {
   W('sys', 'SECURITY MONITORING SYSTEM', `
-    <div class="term" style="height:100%;font-size:13px;line-height:1.75">
+    <div class="term" style="height:100%;font-size:15px;line-height:1.85">
       SYSTEM STATUS ................ <span class="gn">[READY]</span><br>
       TELEMETRY SOURCES ............ <span class="gn">[ONLINE]</span> (VPN, AD, Sysmon, FW)<br>
       LOG COLLECTOR ................ <span class="gn">[READY]</span><br>
@@ -1840,26 +1853,26 @@ function S0() {
       CORRELATION ENGINE ........... <span class="gn">[READY]</span><br>
       SOC ANALYST WORKSTATION ...... <span class="gn">[READY]</span><br>
       ACTIVE CASE .................. SOC-DEMO-2026-001<br><br>
-      <span class="am">WAITING FOR SECURITY TELEMETRY</span><span class="cur"></span><br><br>
-      <div class="mu" style="font-size:11px">
+      <span class="am" style="font-size:16px">WAITING FOR SECURITY TELEMETRY</span><span class="cur"></span><br><br>
+      <div class="mu" style="font-size:12px">
         Press <b>START SIMULATION</b> or <b>NEXT STEP</b> to begin receiving telemetry streams.
       </div>
     </div>
-  `, 32, 8, 38, 56, '', '<span>System</span><span>Diagnostics</span><span>Help</span>', 'SYSTEM ONLINE | READY FOR TELEMETRY');
+  `, 31, 6, 44, 68, '', '<span>System</span><span>Diagnostics</span><span>Help</span>', 'SYSTEM ONLINE | READY FOR TELEMETRY');
 }
 
 /* Stage 01 — LOG COLLECTION (Section 7: EVENT COLLECTOR atop 3 SOURCE MONITORS) */
 function mon(n) {
   const ev = E.slice(0, n);
   const R = (ids, t, id, x) => W(id, t, `
-    <div class="term" style="height:100%">
+    <div class="term" style="height:100%;font-size:12px">
       ${ev.filter(e => ids.includes(e.id)).map(e => `
-        <div data-e="${e.id}" style="cursor:pointer;padding:1px 0" onclick="evD(${e.id})">
+        <div data-e="${e.id}" style="cursor:pointer;padding:2px 0" onclick="evD(${e.id})">
           ${e.t} <span class="${sc(e.status)}">[${e.status}]</span> <b>${e.desc}</b>
         </div>
       `).join('') || '<span class="mu">Waiting for source events...</span>'}
     </div>
-  `, x, 50, 23, 47, '', null, `ACTIVE: ${ev.filter(e=>ids.includes(e.id)).length} EVENTS`);
+  `, x, 51, 23, 46, '', null, `ACTIVE: ${ev.filter(e=>ids.includes(e.id)).length} EVENTS`);
 
   R([1, 2, 3], 'Authentication Log', 'mAuth', 29);
   R([4], 'Endpoint Monitor', 'mEnd', 52.5);
@@ -1868,22 +1881,22 @@ function mon(n) {
 
 function S1() {
   W('coll', 'Event Collector — Ingestion Stream', `
-    <div>COLLECTOR STATUS: <b id="cst" class="cy">RECEIVING INCOMING TELEMETRY...</b></div>
-    <div style="margin:6px 0;display:flex;gap:12px;align-items:center">
+    <div style="font-size:13px">COLLECTOR STATUS: <b id="cst" class="cy">RECEIVING INCOMING TELEMETRY...</b></div>
+    <div style="margin:7px 0;display:flex;gap:14px;align-items:center">
       ${SRC.map((s, i) => `
-        <span style="font-size:10px"><span class="led" id="led${i}"></span> ${s.toUpperCase()}</span>
+        <span style="font-size:11px;font-weight:bold"><span class="led" id="led${i}"></span> ${s.toUpperCase()}</span>
       `).join('')}
     </div>
     <div class="pb"><i id="pbar"></i></div>
-    <div id="evl" class="term" style="height:calc(100% - 84px);margin-top:6px"></div>
-  `, 29, 2, 70, 46, '', '<span>File</span><span>Stream</span>', 'INGESTING TELEMETRY (0/5)');
+    <div id="evl" class="term" style="height:calc(100% - 90px);margin-top:6px;font-size:12.5px;line-height:1.5"></div>
+  `, 29, 2, 70, 47, '', '<span>File</span><span>Stream</span>', 'INGESTING TELEMETRY (0/5)');
   
   mon(0);
   
   E.forEach((e, i) => {
     later(() => {
       $('evl').insertAdjacentHTML('beforeend', `
-        <div data-e="${e.id}" style="cursor:pointer;margin-bottom:3px;padding:2px 0" onclick="evD(${e.id})">
+        <div data-e="${e.id}" style="cursor:pointer;margin-bottom:4px;padding:2px 0" onclick="evD(${e.id})">
           <span class="am">[EVENT 0${e.id}]</span> ${e.t} <b>${e.desc}</b> 
           <span class="mu">[${e.src}]</span> <span class="tag a">SYNTHETIC</span>
         </div>
@@ -1903,7 +1916,7 @@ function S1() {
 }
 
 function evD(id) {
-  W('evd', 'Event Details — EVENT 0' + id, fields(E[id - 1]), 29, 62, 45, 36, '', '<span>View</span><span>Raw</span>', 'EVENT ID: ' + id + ' | ' + E[id-1].ts);
+  W('evd', 'Event Details — EVENT 0' + id, fields(E[id - 1]), 29, 60, 45, 38, '', '<span>View</span><span>Raw</span>', 'EVENT ID: ' + id + ' | ' + E[id-1].ts);
   playSnd('click');
 }
 
@@ -1912,23 +1925,23 @@ function S2() {
   const P = ['RAW LOGS', 'PARSER', 'FIELD EXTRACTION', 'NORMALIZATION', 'ENRICHMENT'];
   W('norm', 'Log Normalizer — Schema Transformer', `
     <div class="st" id="pipe">${P.map(p => `<div>${p}</div>`).join('')}</div>
-    <div style="margin:6px 0;font-weight:bold" class="cy">SCHEMA MAPPING MATRIX:</div>
+    <div style="margin:7px 0;font-weight:bold;font-size:12.5px" class="cy">SCHEMA MAPPING MATRIX:</div>
     <table>
       <tr><th>RAW FIELD</th><th>NORMALIZED</th><th>SAMPLE VALUE</th></tr>
-      <tr id="tr-ip"><td>src_ip / SRC_IP / source_ip</td><td class="cy">source.ip</td><td>203.0.113.45</td></tr>
-      <tr id="tr-usr"><td>user / username / account</td><td class="cy">user.name</td><td>demo.user</td></tr>
-      <tr id="tr-hst"><td>host / hostname / computer</td><td class="cy">host.name</td><td>WS-01</td></tr>
-      <tr id="tr-ts"><td>ts / EventTime / UtcTime</td><td class="cy">@timestamp</td><td>2026-09-29 10:xx:xx</td></tr>
+      <tr id="tr-ip"><td style="font-weight:bold">src_ip / SRC_IP / source_ip</td><td class="cy" style="font-weight:bold">source.ip</td><td>203.0.113.45</td></tr>
+      <tr id="tr-usr"><td style="font-weight:bold">user / username / account</td><td class="cy" style="font-weight:bold">user.name</td><td>demo.user</td></tr>
+      <tr id="tr-hst"><td style="font-weight:bold">host / hostname / computer</td><td class="cy" style="font-weight:bold">host.name</td><td>WS-01</td></tr>
+      <tr id="tr-ts"><td style="font-weight:bold">ts / EventTime / UtcTime</td><td class="cy" style="font-weight:bold">@timestamp</td><td>2026-09-29 10:xx:xx</td></tr>
     </table>
-    <p style="margin:6px 0">Different sources speak different log formats.</p>
-    <div id="nm" class="term" style="margin-top:6px;visibility:hidden;color:#FFB000">
+    <p style="margin:7px 0;font-size:12px">Different sources speak different log formats.</p>
+    <div id="nm" class="term" style="margin-top:6px;visibility:hidden;color:#FFB000;font-size:13px;line-height:1.5">
       <b>KEY SECURITY LESSON:</b> Normalization creates common fields so correlation can operate across disparate sources.
     </div>
-  `, 29, 2, 45, 58, '', '<span>Schema</span><span>Parsers</span>', 'PIPELINE: NORMALIZING 5 TELEMETRY SOURCES');
+  `, 29, 2, 45, 65, '', '<span>Schema</span><span>Parsers</span>', 'PIPELINE: NORMALIZING 5 TELEMETRY SOURCES');
   
   W('rawn', 'Raw → Normalized Stream', `
-    <div class="term" id="rn" style="height:100%;font-size:10px"></div>
-  `, 75, 2, 24, 58, '', '<span>Stream</span>', 'PARSING LIVE STREAM');
+    <div class="term" id="rn" style="height:100%;font-size:11.5px;line-height:1.45"></div>
+  `, 75, 2, 24, 65, '', '<span>Stream</span>', 'PARSING LIVE STREAM');
   
   P.forEach((p, i) => later(() => {
     $('pipe').children[i].classList.add('on');
@@ -1942,8 +1955,8 @@ function S2() {
   
   E.forEach((e, i) => later(() => {
     $('rn').insertAdjacentHTML('beforeend', `
-      <div class="mu" style="margin-bottom:2px">[RAW LOG] ${e.raw}</div>
-      <div class="cy" style="margin-bottom:6px">→ { "@timestamp": "${e.ts}", "user.name": "${e.user}", "host.name": "${e.host}", "source.ip": "${e.ip}", "event.type": "${e.type}" }</div>
+      <div class="mu" style="margin-bottom:3px">[RAW LOG] ${e.raw}</div>
+      <div class="cy" style="margin-bottom:7px;font-weight:bold">→ { "@timestamp": "${e.ts}", "user.name": "${e.user}", "host.name": "${e.host}", "source.ip": "${e.ip}", "event.type": "${e.type}" }</div>
     `);
     playSnd('beep');
   }, 400 + i * 450));
@@ -1957,12 +1970,12 @@ function siemBody() {
   
   const head = `
     <div class="tabs-header">${tabs}</div>
-    <div class="tab-content" style="margin-bottom:4px">
-      <div style="display:flex;justify-content:space-between;align-items:center;font-size:10px">
+    <div class="tab-content" style="margin-bottom:5px">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px">
         <span><b>INDEX:</b> security_demo | <b>RETENTION:</b> 30 DAYS</span>
         <span class="tag ${stage >= 6 ? 'r' : 'g'}">ALERT QUEUE: ${stage >= 6 ? '1 CRITICAL' : '0 PENDING'}</span>
       </div>
-      <div style="margin:4px 0;font-size:10px">
+      <div style="margin:5px 0;font-size:11.5px">
         ${SRC.map(s => `${s}: <b class="cy">${cnt(s)}</b>`).join(' | ')} | TOTAL INDEXED: <b class="am">${E.length}</b>
       </div>
     </div>
@@ -1970,15 +1983,15 @@ function siemBody() {
   
   if (siemTab === 0) {
     return head + `
-      <div style="display:flex;gap:4px;margin-bottom:4px">
+      <div style="display:flex;gap:5px;margin-bottom:5px">
         <input id="q" value="${q}" placeholder="Filter: demo.user / WS-01 / 203.0.113.45 / FAILED..." 
-               style="flex:1;font:11px 'Courier New',monospace;padding:2px 4px;border:2px solid;border-color:#808080 #FFF #FFF #808080" 
+               style="flex:1;font:12.5px 'Courier New',monospace;padding:3px 6px;border:2px solid;border-color:#808080 #FFF #FFF #808080" 
                oninput="q=this.value;tblUp()">
         <button class="btn" onclick="q='';$('q').value='';tblUp()">CLEAR</button>
       </div>
-      <div id="siemT" style="max-height:160px;overflow:auto"></div>
+      <div id="siemT" style="max-height:175px;overflow:auto"></div>
       <div id="siemD" style="margin-top:6px"></div>
-      <div class="mu" style="margin-top:4px;font-size:10px">
+      <div class="mu" style="margin-top:5px;font-size:11px">
         Click USER, HOST, or SOURCE IP to highlight matches across all open monitors; click SOURCE to filter.
       </div>
     `;
@@ -1990,7 +2003,7 @@ function siemBody() {
       ${SRC.map(s => `
         <tr>
           <td>${s}</td><td>${cnt(s)}</td>
-          <td><div style="background:#FFB000;height:9px;width:${cnt(s) * 65}px;border:1px solid #000"></div></td>
+          <td><div style="background:#FFB000;height:10px;width:${cnt(s) * 65}px;border:1px solid #000"></div></td>
         </tr>
       `).join('')}
     </table>
@@ -1998,36 +2011,36 @@ function siemBody() {
   
   if (siemTab === 1) {
     return head + `
-      <div class="tag a" style="margin-bottom:4px">SIMULATED / EDUCATIONAL QUERY VIEW — SPL (Splunk-style)</div>
-      <div class="term am" id="query-term" style="margin-bottom:4px">
+      <div class="tag a" style="margin-bottom:5px">SIMULATED / EDUCATIONAL QUERY VIEW — SPL (Splunk-style)</div>
+      <div class="term am" id="query-term" style="margin-bottom:5px;font-size:12.5px;line-height:1.5">
         index=security_demo user="demo.user" earliest="2026-09-29T10:00:00" latest="2026-09-29T10:15:00"<br>
         | stats count by source<br>
         | sort - count
       </div>
-      <div id="query-exec-anim" class="term" style="margin-bottom:4px;color:#4de38a;font-size:10px"></div>
+      <div id="query-exec-anim" class="term" style="margin-bottom:5px;color:#4de38a;font-size:11.5px"></div>
       <div id="query-res">
-        <b class="cy">AGGREGATION RESULTS:</b>
+        <b class="cy" style="font-size:12.5px">AGGREGATION RESULTS:</b>
         ${bars}
       </div>
     `;
   }
   
   return head + `
-    <div class="tag a" style="margin-bottom:4px">SIMULATED / EDUCATIONAL QUERY VIEW — KQL (Sentinel-style)</div>
-    <div class="term am" id="query-term" style="margin-bottom:4px">
+    <div class="tag a" style="margin-bottom:5px">SIMULATED / EDUCATIONAL QUERY VIEW — KQL (Sentinel-style)</div>
+    <div class="term am" id="query-term" style="margin-bottom:5px;font-size:12.5px;line-height:1.5">
       SecurityEvents<br>
       | where TimeGenerated between (datetime(2026-09-29 10:00) .. datetime(2026-09-29 10:15))<br>
       | where user_name == "demo.user"<br>
       | summarize TotalEvents=count(), DistinctSources=dcount(source) by host_name
     </div>
-    <div id="query-exec-anim" class="term" style="margin-bottom:4px;color:#4de38a;font-size:10px"></div>
+    <div id="query-exec-anim" class="term" style="margin-bottom:5px;color:#4de38a;font-size:11.5px"></div>
     <div id="query-res">
-      <b class="cy">AGGREGATION SUMMARY:</b>
+      <b class="cy" style="font-size:12.5px">AGGREGATION SUMMARY:</b>
       <table>
         <tr><th>host_name</th><th>TotalEvents</th><th>DistinctSources</th><th>Status</th></tr>
-        <tr><td>WS-01</td><td>5</td><td>4</td><td class="am">CORRELATED ANOMALY</td></tr>
+        <tr><td>WS-01</td><td>5</td><td>4</td><td class="am" style="font-weight:bold">CORRELATED ANOMALY</td></tr>
       </table>
-      <b class="cy" style="margin-top:6px;display:block">CORRELATED ROWS IN TIME WINDOW:</b>
+      <b class="cy" style="margin-top:6px;display:block;font-size:12.5px">CORRELATED ROWS IN TIME WINDOW:</b>
       <table>
         <tr><th>Timestamp</th><th>Source</th><th>Event Action</th></tr>
         ${E.map(e => `<tr><td>${e.ts}</td><td>${e.src}</td><td>${e.type}</td></tr>`).join('')}
@@ -2070,7 +2083,7 @@ function simulateQueryExecution() {
 }
 
 function siem() {
-  W('siem', 'SIEM Console — Enterprise Security Telemetry', siemBody(), 29, 2, 70, 60, '', '<span>File</span><span>Search</span><span>Views</span><span>Export</span>', 'INDEX: security_demo | 5 EVENTS');
+  W('siem', 'SIEM Console — Enterprise Security Telemetry', siemBody(), 29, 2, 70, 68, '', '<span>File</span><span>Search</span><span>Views</span><span>Export</span>', 'INDEX: security_demo | 5 EVENTS');
   if (siemTab === 0) tblUp();
 }
 
@@ -2085,13 +2098,13 @@ function tblUp() {
       <tr><th>TIME</th><th>USER</th><th>HOST</th><th>SOURCE IP</th><th>SOURCE</th><th>EVENT</th><th>STATUS</th></tr>
       ${rows.map(e => `
         <tr data-e="${e.id}" class="${sel === e.id ? 'sel' : ''}" onclick="sel=${e.id};tblUp();playSnd('click')">
-          <td>${e.t}</td>
-          <td ${c('user', e.user)} class="cy">${e.user}</td>
-          <td ${c('host', e.host)} class="cy">${e.host}</td>
-          <td ${c('ip', e.ip)} class="cy">${e.ip}</td>
+          <td style="font-weight:bold">${e.t}</td>
+          <td ${c('user', e.user)} class="cy" style="font-weight:bold">${e.user}</td>
+          <td ${c('host', e.host)} class="cy" style="font-weight:bold">${e.host}</td>
+          <td ${c('ip', e.ip)} class="cy" style="font-weight:bold">${e.ip}</td>
           <td ${c('src', e.src)}>${e.src}</td>
           <td>${e.type}</td>
-          <td class="${sc(e.status)}">${e.status}</td>
+          <td class="${sc(e.status)}" style="font-weight:bold">${e.status}</td>
         </tr>
       `).join('')}
     </table>
@@ -2130,12 +2143,12 @@ detection:
 level: high`;
 
   W('sigma', 'Sigma-style Rule Editor (simulated)', `
-    <div style="font-size:10px;margin-bottom:3px;display:flex;justify-content:space-between">
+    <div style="font-size:11px;margin-bottom:4px;display:flex;justify-content:space-between">
       <span>RULE METADATA | ID: demo-0001-synthetic</span>
-      <span class="gn">SYNTAX: VALID</span>
+      <span class="gn" style="font-weight:bold">SYNTAX: VALID</span>
     </div>
-    <div class="term" style="height:calc(100% - 24px);white-space:pre;color:#E8E8E8;font-size:10px">${SG}<span class="cur"></span></div>
-  `, 29, 2, 34, 62, '', '<span>File</span><span>Edit</span><span>Validate</span>', 'RULE: demo-0001-synthetic | LEVEL: HIGH');
+    <div class="term" style="height:calc(100% - 28px);white-space:pre;color:#E8E8E8;font-size:11.5px;line-height:1.4">${SG}<span class="cur"></span></div>
+  `, 29, 2, 34, 70, '', '<span>File</span><span>Edit</span><span>Validate</span>', 'RULE: demo-0001-synthetic | LEVEL: HIGH');
   
   const C = [
     'Failed login threshold',
@@ -2147,12 +2160,12 @@ level: high`;
   
   W('det', 'Detection Rules — Live Evaluation', `
     <div style="display:flex;justify-content:space-between;align-items:center">
-      <b>DETECTION ENGINE: CHECK PROGRESSION</b>
+      <b style="font-size:12.5px">DETECTION ENGINE: CHECK PROGRESSION</b>
       <span class="tag a">EVALUATING STREAM</span>
     </div>
-    <div id="chk" class="term" style="margin-top:6px;line-height:2.0;font-size:11px"></div>
-    <div id="dres" class="term am" style="margin-top:6px;display:none"></div>
-  `, 64, 2, 35, 62, '', '<span>Engine</span><span>Log</span>', 'EVALUATING 5 DETECTION CHECKS');
+    <div id="chk" class="term" style="margin-top:7px;line-height:2.1;font-size:12.5px"></div>
+    <div id="dres" class="term am" style="margin-top:7px;display:none;font-size:13px;line-height:1.6"></div>
+  `, 64, 2, 35, 70, '', '<span>Engine</span><span>Log</span>', 'EVALUATING 5 DETECTION CHECKS');
   
   C.forEach((c, i) => {
     later(() => {
@@ -2169,9 +2182,9 @@ level: high`;
     const dr = $('dres');
     dr.style.display = 'block';
     dr.innerHTML = `
-      <b class="gn">DETECTION CONDITION SATISFIED</b><br>
-      <span class="am">ANALYST INVESTIGATION REQUIRED</span><br><br>
-      <span class="mu" style="font-size:11px">FOUNDATIONAL AXIOM: <b>DETECTION ≠ PROOF</b></span>
+      <b class="gn" style="font-size:14px">DETECTION CONDITION SATISFIED</b><br>
+      <span class="am" style="font-weight:bold">ANALYST INVESTIGATION REQUIRED</span><br><br>
+      <span class="mu" style="font-size:12px">FOUNDATIONAL AXIOM: <b>DETECTION ≠ PROOF</b></span>
     `;
     if ($('det-sb')) $('det-sb').textContent = 'CONDITION SATISFIED | ALERT PROMOTED';
     playSnd('alert');
@@ -2229,43 +2242,43 @@ function S5() {
   
   const corrHtml = `
     <!-- Top Status Banner -->
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-      <b>CORRELATION MATRIX — MULTI-DIMENSIONAL CONVERGENCE</b>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+      <b style="font-size:13px">CORRELATION MATRIX — MULTI-DIMENSIONAL CONVERGENCE</b>
       <span class="tag a" id="corr-status-tag">EVALUATING CORRELATION ENGINE...</span>
     </div>
     
     <!-- Hero Visualization Centerpiece (Dual View: Kill Chain + Relational Hub) -->
     <div id="corr-diagram-container">
-      <svg id="corr-svg" viewBox="0 0 700 310" preserveAspectRatio="none">
+      <svg id="corr-svg" viewBox="0 0 700 330" preserveAspectRatio="none">
         <!-- Lines connecting Hubs to Events -->
         <!-- Identity Hub Lines -->
         <line id="line-usr-1" class="corr-line" x1="260" y1="36" x2="180" y2="36"/>
-        <line id="line-usr-2" class="corr-line" x1="260" y1="36" x2="180" y2="96"/>
-        <line id="line-usr-3" class="corr-line" x1="260" y1="36" x2="180" y2="156"/>
-        <line id="line-usr-4" class="corr-line" x1="260" y1="36" x2="180" y2="216"/>
-        <line id="line-usr-5" class="corr-line" x1="260" y1="36" x2="180" y2="276"/>
+        <line id="line-usr-2" class="corr-line" x1="260" y1="36" x2="180" y2="100"/>
+        <line id="line-usr-3" class="corr-line" x1="260" y1="36" x2="180" y2="164"/>
+        <line id="line-usr-4" class="corr-line" x1="260" y1="36" x2="180" y2="228"/>
+        <line id="line-usr-5" class="corr-line" x1="260" y1="36" x2="180" y2="292"/>
         
         <!-- Host Hub Lines -->
-        <line id="line-hst-3" class="corr-line" x1="260" y1="101" x2="180" y2="156"/>
-        <line id="line-hst-4" class="corr-line" x1="260" y1="101" x2="180" y2="216"/>
-        <line id="line-hst-5" class="corr-line" x1="260" y1="101" x2="180" y2="276"/>
+        <line id="line-hst-3" class="corr-line" x1="260" y1="105" x2="180" y2="164"/>
+        <line id="line-hst-4" class="corr-line" x1="260" y1="105" x2="180" y2="228"/>
+        <line id="line-hst-5" class="corr-line" x1="260" y1="105" x2="180" y2="292"/>
         
         <!-- IP Hub Lines -->
-        <line id="line-ip-1" class="corr-line" x1="260" y1="166" x2="180" y2="36"/>
-        <line id="line-ip-2" class="corr-line" x1="260" y1="166" x2="180" y2="96"/>
-        <line id="line-ip-5" class="corr-line" x1="260" y1="166" x2="180" y2="276"/>
+        <line id="line-ip-1" class="corr-line" x1="260" y1="174" x2="180" y2="36"/>
+        <line id="line-ip-2" class="corr-line" x1="260" y1="174" x2="180" y2="100"/>
+        <line id="line-ip-5" class="corr-line" x1="260" y1="174" x2="180" y2="292"/>
 
         <!-- Convergence lines to Correlation Core -->
-        <line id="line-core-1" class="corr-line" x1="430" y1="36" x2="510" y2="130"/>
-        <line id="line-core-2" class="corr-line" x1="430" y1="101" x2="510" y2="140"/>
-        <line id="line-core-3" class="corr-line" x1="430" y1="166" x2="510" y2="150"/>
-        <line id="line-core-4" class="corr-line" x1="430" y1="231" x2="510" y2="160"/>
-        <line id="line-core-5" class="corr-line" x1="430" y1="284" x2="510" y2="170"/>
+        <line id="line-core-1" class="corr-line" x1="440" y1="36" x2="510" y2="135"/>
+        <line id="line-core-2" class="corr-line" x1="440" y1="105" x2="510" y2="145"/>
+        <line id="line-core-3" class="corr-line" x1="440" y1="174" x2="510" y2="155"/>
+        <line id="line-core-4" class="corr-line" x1="440" y1="243" x2="510" y2="165"/>
+        <line id="line-core-5" class="corr-line" x1="440" y1="295" x2="510" y2="175"/>
       </svg>
       
       <!-- Chronological Kill Chain Sequence (Left Column) -->
       <div style="position:absolute;left:10px;top:8px;width:170px;z-index:2">
-        <div style="font-size:9px;color:#8a9aa8;margin-bottom:3px;font-weight:bold">TEMPORAL SEQUENCE:</div>
+        <div style="font-size:10px;color:#9aa8b8;margin-bottom:3px;font-weight:bold">TEMPORAL SEQUENCE:</div>
         ${L.map((l, i) => `
           <div class="box" id="b${i}" data-e="${l.id}" style="cursor:pointer" onclick="evD(${l.id})">
             <b>${l.t}</b> ${l.name}<br>
@@ -2276,44 +2289,44 @@ function S5() {
       </div>
       
       <!-- Relational Dimension Hubs (Center Column) -->
-      <div id="node-usr" class="corr-node hub" style="left:260px;top:20px;width:170px" onclick="fac(0)">
+      <div id="node-usr" class="corr-node hub" style="left:260px;top:20px;width:180px" onclick="fac(0)">
         SAME IDENTITY: <b class="cy">demo.user</b>
       </div>
-      <div id="node-hst" class="corr-node hub" style="left:260px;top:85px;width:170px" onclick="fac(1)">
+      <div id="node-hst" class="corr-node hub" style="left:260px;top:88px;width:180px" onclick="fac(1)">
         SAME HOST: <b class="cy">WS-01</b>
       </div>
-      <div id="node-ip" class="corr-node hub" style="left:260px;top:150px;width:170px" onclick="fac(2)">
+      <div id="node-ip" class="corr-node hub" style="left:260px;top:156px;width:180px" onclick="fac(2)">
         SAME SOURCE IP: <b class="cy">203.0.113.45</b>
       </div>
-      <div id="node-time" class="corr-node" style="left:260px;top:215px;width:170px" onclick="fac(3)">
+      <div id="node-time" class="corr-node" style="left:260px;top:224px;width:180px" onclick="fac(3)">
         TEMPORAL PROXIMITY: <b class="am">10:01 → 10:08</b>
       </div>
-      <div id="node-cross" class="corr-node" style="left:260px;top:268px;width:170px" onclick="fac(5)">
+      <div id="node-cross" class="corr-node" style="left:260px;top:280px;width:180px" onclick="fac(5)">
         CROSS-SOURCE: <b class="gn">VPN+AD+EDR+FW</b>
       </div>
 
       <!-- Central Correlation Engine Core (Right Column) -->
-      <div id="node-engine" class="corr-node hub" style="left:510px;top:100px;width:170px;text-align:center;padding:12px;border-color:#00A6A6">
-        <span class="mu" style="font-size:9px">CORRELATION ENGINE</span><br>
-        <b style="font-size:11px" id="engine-label">EVALUATING...</b><br>
-        <span class="am" style="font-size:9px" id="engine-sub">CONVERGING SIGNALS</span>
+      <div id="node-engine" class="corr-node hub" style="left:510px;top:105px;width:180px;text-align:center;padding:12px;border-color:#00A6A6">
+        <span class="mu" style="font-size:10px">CORRELATION ENGINE</span><br>
+        <b style="font-size:12px" id="engine-label">EVALUATING...</b><br>
+        <span class="am" style="font-size:10px" id="engine-sub">CONVERGING SIGNALS</span>
       </div>
     </div>
     
     <!-- Interactive Correlation Factor Cards (Section 10) -->
     <div class="g3" style="margin-top:6px" id="facs"></div>
-    <div id="facx" class="term" style="margin-top:4px;font-size:11px;color:#FFB000">
+    <div id="facx" class="term" style="margin-top:5px;font-size:12.5px;line-height:1.5;color:#FFB000">
       Click any correlation factor above to see why the events are related.
     </div>
     
-    <div id="cres" class="term" style="margin-top:4px;display:none;background:#251a00;border-color:#FFB000">
+    <div id="cres" class="term" style="margin-top:5px;display:none;background:#251a00;border-color:#FFB000;font-size:13px;line-height:1.5">
       <b class="am">CORRELATION RESULT</b><br>
       Related events form a coherent suspicious sequence across identity, host, source, time and telemetry.<br>
       <span class="mu">Correlation increases investigative confidence and provides context for analyst review.</span>
     </div>
   `;
   
-  W('corr', 'Correlation Engine — Multi-Source Relationship Graph', corrHtml, 29, 2, 47, 72, '', '<span>View</span><span>Graph</span><span>Export</span>', 'CORRELATING TELEMETRY ACROSS 4 SOURCES');
+  W('corr', 'Correlation Engine — Multi-Source Relationship Graph', corrHtml, 29, 2, 47, 80, '', '<span>View</span><span>Graph</span><span>Export</span>', 'CORRELATING TELEMETRY ACROSS 4 SOURCES');
   
   $('facs').innerHTML = F.map(([a, b], i) => `
     <div class="fac" id="fac-btn-${i}" onclick="fac(${i})">
@@ -2335,11 +2348,11 @@ function S5() {
   ];
   
   W('rule', 'correlation_rule.txt', `
-    <div class="term" style="height:calc(100% - 36px);font-size:10px" id="rl"></div>
-    <div class="mu" style="margin-top:4px;font-size:10px">
+    <div class="term" style="height:calc(100% - 40px);font-size:11.5px;line-height:1.55" id="rl"></div>
+    <div class="mu" style="margin-top:4px;font-size:11px">
       Illustrative correlation logic — not a production-ready rule.
     </div>
-  `, 77, 2, 22, 72, '', '<span>Logic</span>', 'RULE EVALUATION: IN PROGRESS');
+  `, 77, 2, 22, 80, '', '<span>Logic</span>', 'RULE EVALUATION: IN PROGRESS');
   
   // Choreographed Sequential Animation (Section 11)
   L.forEach((l, i) => later(() => {
@@ -2426,64 +2439,64 @@ function fac(i) {
 function S6() {
   // Pre-alert correlation summary
   W('corr-sum', 'CORRELATION ENGINE', `
-    <div class="term" style="font-size:12px;line-height:1.8">
+    <div class="term" style="font-size:13px;line-height:1.9">
       ANALYSIS COMPLETE<br><br>
-      EVENTS CORRELATED ........ <span class="cy">5</span><br>
-      TELEMETRY SOURCES ........ <span class="cy">4</span><br>
-      TIME WINDOW .............. <span class="am">7 MIN</span><br>
+      EVENTS CORRELATED ........ <span class="cy" style="font-weight:bold">5</span><br>
+      TELEMETRY SOURCES ........ <span class="cy" style="font-weight:bold">4</span><br>
+      TIME WINDOW .............. <span class="am" style="font-weight:bold">7 MIN</span><br>
       STATUS ................... <span class="rd" style="font-weight:bold">REVIEW REQUIRED</span>
     </div>
   `, 29, 6, 70, 36, '', '<span>Alert</span>', 'CORRELATION ENGINE: ANALYSIS COMPLETE');
   
   // Classic Windows Warning Dialog (Section 13)
   const alertHtml = `
-    <div style="display:flex;gap:12px;align-items:flex-start">
-      <div style="font-size:28px;background:#D00000;color:#FFF;padding:4px 14px;border:2px solid #000;font-weight:bold;line-height:1.2">!</div>
+    <div style="display:flex;gap:14px;align-items:flex-start">
+      <div style="font-size:32px;background:#D00000;color:#FFF;padding:4px 16px;border:2px solid #000;font-weight:bold;line-height:1.2">!</div>
       <div>
-        <b style="font-size:13px;color:#D00000">RELATED SECURITY EVENTS DETECTED</b>
+        <b style="font-size:15px;color:#D00000">RELATED SECURITY EVENTS DETECTED</b>
       </div>
     </div>
     
-    <div style="margin:10px 0;background:#FFF;padding:6px;border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #FFF;border-bottom:2px solid #FFF">
-      <div class="row"><b>USER:</b><span class="val cy" style="background:#000">demo.user</span></div>
-      <div class="row"><b>HOST:</b><span class="val">WS-01</span></div>
-      <div class="row"><b>SOURCE:</b><span class="val">203.0.113.45</span></div>
+    <div style="margin:12px 0;background:#FFF;padding:8px;border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #FFF;border-bottom:2px solid #FFF">
+      <div class="row"><b>USER:</b><span class="val cy" style="background:#000;font-weight:bold">demo.user</span></div>
+      <div class="row"><b>HOST:</b><span class="val" style="font-weight:bold">WS-01</span></div>
+      <div class="row"><b>SOURCE:</b><span class="val" style="font-weight:bold">203.0.113.45</span></div>
       <div class="row"><b>TIME WINDOW:</b><span class="val">10:01 — 10:08</span></div>
       <div class="row"><b>EVENTS:</b><span class="val">5</span></div>
       <div class="row"><b>PRIORITY:</b><span class="val rd" style="background:#000;font-weight:bold">HIGH</span></div>
-      <div class="row"><b>STATUS:</b><span class="val am" style="background:#000">INVESTIGATION REQUIRED</span></div>
+      <div class="row"><b>STATUS:</b><span class="val am" style="background:#000;font-weight:bold">INVESTIGATION REQUIRED</span></div>
     </div>
     
-    <div class="mu" style="font-size:11px;margin-bottom:8px">
+    <div class="mu" style="font-size:12px;margin-bottom:10px">
       An alert is not a confirmed incident.
     </div>
     
-    <div style="text-align:center;display:flex;gap:8px;justify-content:center">
-      <button class="btn" style="min-width:110px" onclick="evidence()">VIEW EVIDENCE</button>
-      <button class="btn big act-blue" style="min-width:120px" onclick="investigate()">INVESTIGATE</button>
-      <button class="btn" style="min-width:90px" onclick="closeW('alert');msg('Alert dismissed. It stays in the SIEM alert queue; press INVESTIGATE to review it.')">DISMISS</button>
+    <div style="text-align:center;display:flex;gap:10px;justify-content:center">
+      <button class="btn" style="min-width:120px;font-size:13px" onclick="evidence()">VIEW EVIDENCE</button>
+      <button class="btn big act-blue" style="min-width:130px;font-size:13px" onclick="investigate()">INVESTIGATE</button>
+      <button class="btn" style="min-width:100px;font-size:13px" onclick="closeW('alert');msg('Alert dismissed. It stays in the SIEM alert queue; press INVESTIGATE to review it.')">DISMISS</button>
     </div>
   `;
   
-  W('alert', 'SECURITY ALERT', alertHtml, 36, 18, 42, 54, 'red', null, 'ALERT: REVIEW REQUIRED');
+  W('alert', 'SECURITY ALERT', alertHtml, 35, 18, 44, 58, 'red', null, 'ALERT: REVIEW REQUIRED');
   playSnd('alert');
 }
 
 /* Stage 07 — SOC INVESTIGATION WORKSPACE (Sections 14, 15, 16, 17, 20) */
 const tlBody = () => `
-  <div style="font-size:11px">
+  <div style="font-size:12px">
     <div style="display:flex;gap:6px;overflow-x:auto">
       ${E.map(e => `
-        <div class="tli ${sel === e.id ? 'sel' : ''}" data-e="${e.id}" onclick="tlClick(${e.id})" style="flex:1;min-width:110px">
+        <div class="tli ${sel === e.id ? 'sel' : ''}" data-e="${e.id}" onclick="tlClick(${e.id})" style="flex:1;min-width:115px">
           <b class="am">${e.t}</b> <b>${e.desc}</b><br>
           <span class="mu">${e.src}</span>
         </div>
       `).join('')}
     </div>
-    <div id="tld" class="term" style="margin-top:6px;min-height:55px">
+    <div id="tld" class="term" style="margin-top:6px;min-height:60px;font-size:12.5px;line-height:1.5">
       Click an event to open its evidence.
     </div>
-    <div class="mu" style="margin-top:2px;font-size:10px">
+    <div class="mu" style="margin-top:3px;font-size:11px">
       Investigation is the process of connecting evidence, not merely reading one log.
     </div>
   </div>
@@ -2523,7 +2536,7 @@ function S7() {
   $('att').style.height = '27%';
   
   W('notes', 'CASE_NOTES.exe', `
-    <textarea style="width:100%;height:100%;font:11px 'Courier New',monospace;resize:none;background:#000;color:#FFB000;border:none" spellcheck="false">CASE SOC-DEMO-2026-001
+    <textarea style="width:100%;height:100%;font:12px 'Courier New',monospace;resize:none;background:#000;color:#FFB000;border:none;line-height:1.45" spellcheck="false">CASE SOC-DEMO-2026-001
 - 15 failures then success, same source
 - Privilege change on same account
 - PowerShell marker on WS-01
@@ -2558,53 +2571,53 @@ function qc(i) {
 }
 
 function S8() {
-  W('tl', 'SIEM_TIMELINE.exe', tlBody(), 29, 2, 32, 60, '', '<span>Timeline</span>', 'RECONSTRUCTING TIMELINE');
+  W('tl', 'SIEM_TIMELINE.exe', tlBody(), 29, 2, 32, 62, '', '<span>Timeline</span>', 'RECONSTRUCTING TIMELINE');
   
   const qHtml = `
-    <div style="font-size:11px">
-      <div style="margin-bottom:6px"><b>ANALYST INVESTIGATION QUESTIONS:</b></div>
+    <div style="font-size:12px">
+      <div style="margin-bottom:7px;font-size:12.5px"><b>ANALYST INVESTIGATION QUESTIONS:</b></div>
       ${QS.map((s, i) => `
-        <div style="margin-bottom:5px;border-bottom:1px solid #DFDFDF;padding-bottom:3px">
+        <div style="margin-bottom:6px;border-bottom:1px solid #DFDFDF;padding-bottom:4px">
           <div style="display:flex;justify-content:space-between;align-items:center">
             <b>${i + 1}. ${s[0]}</b>
-            <button class="btn" style="min-width:60px" onclick="qc(${i})">CHECK</button>
+            <button class="btn" style="min-width:65px;font-size:11.5px" onclick="qc(${i})">CHECK</button>
           </div>
-          <div id="qa${i}" class="term" style="display:none;margin-top:4px;color:#4de38a;font-size:10px"></div>
+          <div id="qa${i}" class="term" style="display:none;margin-top:4px;color:#4de38a;font-size:11.5px;line-height:1.45"></div>
         </div>
       `).join('')}
     </div>
   `;
   
-  W('qd', 'Analyst Investigation', qHtml, 62, 2, 37, 60, '', '<span>Inquiry</span>', '7 INVESTIGATION QUESTIONS');
-  W('evi', TT.auth, evAuth(), 29, 64, 35, 33, '', null, 'PRIMARY EVIDENCE RECORD');
+  W('qd', 'Analyst Investigation', qHtml, 62, 2, 37, 62, '', '<span>Inquiry</span>', '7 INVESTIGATION QUESTIONS');
+  W('evi', TT.auth, evAuth(), 29, 66, 35, 32, '', null, 'PRIMARY EVIDENCE RECORD');
   tlClick(1);
 }
 
 /* Stage 09 — INCIDENT ASSESSMENT & CONCLUSION (Section 21) */
 function S9() {
   const assessHtml = `
-    <div style="font-size:11px">
-      <div class="row"><b>CASE:</b><span class="val">SOC-DEMO-2026-001</span></div>
+    <div style="font-size:12px">
+      <div class="row"><b>CASE:</b><span class="val" style="font-weight:bold">SOC-DEMO-2026-001</span></div>
       
-      <div style="margin:8px 0">
+      <div style="margin:10px 0">
         <b>ASSESSMENT:</b>
-        <div class="term am" style="margin-top:2px;font-size:12px;font-weight:bold;padding:8px">
+        <div class="term am" style="margin-top:4px;font-size:13.5px;font-weight:bold;padding:10px">
           SUSPICIOUS ACTIVITY REQUIRES INVESTIGATION
         </div>
       </div>
       
-      <b>EVIDENCE:</b>
-      <div class="term" style="margin:2px 0 6px 0;line-height:1.6">
-        <span class="gn">✓</span> Authentication anomalies (15 failed logins then success)<br>
-        <span class="gn">✓</span> Successful authentication from same source IP<br>
-        <span class="gn">✓</span> Privilege change (Administrators synthetic group)<br>
-        <span class="gn">✓</span> Endpoint activity (PowerShell marker on WS-01)<br>
-        <span class="gn">✓</span> Network activity (Outbound TCP/443 to synthetic dest)<br>
-        <span class="gn">✓</span> Cross-source correlation across 4 independent feeds
+      <b style="font-size:12.5px">EVIDENCE:</b>
+      <div class="term" style="margin:4px 0 8px 0;line-height:1.65;font-size:12.5px">
+        <span class="gn" style="font-weight:bold">✓</span> Authentication anomalies (15 failed logins then success)<br>
+        <span class="gn" style="font-weight:bold">✓</span> Successful authentication from same source IP<br>
+        <span class="gn" style="font-weight:bold">✓</span> Privilege change (Administrators synthetic group)<br>
+        <span class="gn" style="font-weight:bold">✓</span> Endpoint activity (PowerShell marker on WS-01)<br>
+        <span class="gn" style="font-weight:bold">✓</span> Network activity (Outbound TCP/443 to synthetic dest)<br>
+        <span class="gn" style="font-weight:bold">✓</span> Cross-source correlation across 4 independent feeds
       </div>
       
-      <b>UNCERTAINTIES:</b>
-      <div class="term mu" style="margin-top:2px;line-height:1.5;font-size:10px">
+      <b style="font-size:12.5px">UNCERTAINTIES:</b>
+      <div class="term mu" style="margin-top:4px;line-height:1.55;font-size:12px">
         • Intent unknown<br>
         • Synthetic dataset<br>
         • No real endpoint compromise established<br>
@@ -2613,16 +2626,16 @@ function S9() {
     </div>
   `;
   
-  W('assess', 'SECURITY INCIDENT ASSESSMENT', assessHtml, 29, 2, 38, 94, '', '<span>Report</span><span>Export</span>', 'INCIDENT ASSESSMENT: READY');
+  W('assess', 'SECURITY INCIDENT ASSESSMENT', assessHtml, 29, 2, 38, 95, '', '<span>Report</span><span>Export</span>', 'INCIDENT ASSESSMENT: READY');
   
   const conclHtml = `
-    <div style="font-size:11px">
-      <div class="term" style="font-size:13px;color:#FFB000;text-align:center;padding:12px;margin-bottom:8px;border-color:#FFB000">
+    <div style="font-size:12px">
+      <div class="term" style="font-size:14px;color:#FFB000;text-align:center;padding:14px;margin-bottom:10px;border-color:#FFB000;line-height:1.5">
         <b>"THE OBSERVED EVENTS FORM A COHERENT SUSPICIOUS SEQUENCE AND WARRANT FURTHER INVESTIGATION."</b>
       </div>
       
-      <p style="margin:6px 0"><b>This simulation demonstrates how:</b></p>
-      <div class="term" style="text-align:center;line-height:1.7;font-size:11px">
+      <p style="margin:8px 0;font-size:12.5px"><b>This simulation demonstrates how:</b></p>
+      <div class="term" style="text-align:center;line-height:1.8;font-size:12.5px">
         <b class="cy">RAW EVENTS</b><br>
         <span class="mu">become</span><br>
         <b class="cy">SEARCHABLE SECURITY DATA</b><br>
@@ -2636,13 +2649,13 @@ function S9() {
         <b class="gn">ANALYST DECISION</b>
       </div>
       
-      <div class="tag a" style="margin-top:8px;display:block;text-align:center;padding:4px">
+      <div class="tag a" style="margin-top:10px;display:block;text-align:center;padding:6px;font-size:12px">
         LOG ≠ ALERT ≠ INCIDENT &nbsp;·&nbsp; DETECTION ≠ PROOF &nbsp;·&nbsp; CORRELATION ≠ PROOF
       </div>
     </div>
   `;
   
-  W('concl', 'CASE CONCLUSION', conclHtml, 68, 2, 31, 94, '', '<span>Summary</span>', 'CONCLUSION APPROVED');
+  W('concl', 'CASE CONCLUSION', conclHtml, 68, 2, 31, 95, '', '<span>Summary</span>', 'CONCLUSION APPROVED');
 }
 
 /* Stage 10 — RESPONSE / NEXT ACTION (Section 10) */
@@ -2657,50 +2670,50 @@ const RA = {
 
 function S10() {
   const respHtml = `
-    <div style="font-size:11px">
-      <div style="margin-bottom:6px"><b>RECOMMENDED ACTIONS:</b></div>
-      <div class="g2" style="margin-bottom:6px">
+    <div style="font-size:12px">
+      <div style="margin-bottom:7px;font-size:12.5px"><b>RECOMMENDED ACTIONS:</b></div>
+      <div class="g2" style="margin-bottom:7px">
         ${Object.keys(RA).map(k => `
-          <button class="btn" onclick="execResponse('${k}')">${k}</button>
+          <button class="btn" style="font-size:12px;padding:6px 10px" onclick="execResponse('${k}')">${k}</button>
         `).join('')}
       </div>
-      <div style="margin-top:4px"><b>RESPONSE LOG:</b></div>
-      <div id="rlog" class="term" style="height:calc(100% - 130px);font-size:10px;line-height:1.6">
+      <div style="margin-top:5px"><b>RESPONSE LOG:</b></div>
+      <div id="rlog" class="term" style="height:calc(100% - 140px);font-size:12px;line-height:1.6">
         Simulated actions only — nothing on this computer is changed.<br>
       </div>
     </div>
   `;
   
-  W('resp', 'Incident Response Recommendation', respHtml, 29, 2, 41, 60, '', '<span>Response</span>', 'RESPONSE WORKBENCH');
+  W('resp', 'Incident Response Recommendation', respHtml, 29, 2, 41, 65, '', '<span>Response</span>', 'RESPONSE WORKBENCH');
   
   const finHtml = `
-    <div style="font-size:11px;line-height:1.8">
-      CASE: <span class="cy">SOC-DEMO-2026-001</span><br>
-      EVENTS ANALYZED: <span class="cy">5</span><br>
-      TELEMETRY SOURCES: <span class="cy">4</span><br>
-      CORRELATED: <span class="am">YES</span><br>
-      INVESTIGATION: <span class="gn">COMPLETED</span><br>
-      ASSESSMENT: <span class="am">SUSPICIOUS ACTIVITY REQUIRES FURTHER INVESTIGATION</span>
+    <div style="font-size:12.5px;line-height:1.9">
+      CASE: <span class="cy" style="font-weight:bold">SOC-DEMO-2026-001</span><br>
+      EVENTS ANALYZED: <span class="cy" style="font-weight:bold">5</span><br>
+      TELEMETRY SOURCES: <span class="cy" style="font-weight:bold">4</span><br>
+      CORRELATED: <span class="am" style="font-weight:bold">YES</span><br>
+      INVESTIGATION: <span class="gn" style="font-weight:bold">COMPLETED</span><br>
+      ASSESSMENT: <span class="am" style="font-weight:bold">SUSPICIOUS ACTIVITY REQUIRES FURTHER INVESTIGATION</span>
       
-      <div style="text-align:center;margin:12px 0;display:flex;gap:6px;justify-content:center">
-        <button class="btn" onclick="resetSim()">RESET CASE</button>
-        <button class="btn act-blue" onclick="resetSim();startSim()">RUN AGAIN</button>
-        <button class="btn" onclick="togglePres()">PRESENTATION MODE</button>
+      <div style="text-align:center;margin:14px 0;display:flex;gap:8px;justify-content:center">
+        <button class="btn" style="font-size:12px" onclick="resetSim()">RESET CASE</button>
+        <button class="btn act-blue" style="font-size:12px" onclick="resetSim();startSim()">RUN AGAIN</button>
+        <button class="btn" style="font-size:12px" onclick="togglePres()">PRESENTATION MODE</button>
       </div>
       
-      <div class="mu" style="font-size:10px;text-align:center">
+      <div class="mu" style="font-size:11px;text-align:center">
         Synthetic demonstration — no real systems accessed.
       </div>
     </div>
   `;
   
-  W('fin', 'SECURITY INVESTIGATION COMPLETE', finHtml, 71, 2, 28, 60, '', '<span>Audit</span>', 'WORKSTATION CASE CLOSED');
+  W('fin', 'SECURITY INVESTIGATION COMPLETE', finHtml, 71, 2, 28, 65, '', '<span>Audit</span>', 'WORKSTATION CASE CLOSED');
 }
 
 function execResponse(k) {
   const rl = $('rlog');
   if (!rl) return;
-  rl.insertAdjacentHTML('beforeend', `<div>${RA[k]}</div>`);
+  rl.insertAdjacentHTML('beforeend', `<div style="margin-bottom:3px">${RA[k]}</div>`);
   rl.scrollTop = rl.scrollHeight;
   playSnd('chirp');
 }
@@ -2708,53 +2721,53 @@ function execResponse(k) {
 /* ---------------- Menus, Dialogs & Desktop Tool Handlers ---------------- */
 function openArchiveDialog() {
   const content = `
-    <div style="font-size:11px">
+    <div style="font-size:12px">
       <b>HISTORICAL TELEMETRY REPOSITORY:</b>
-      <div class="term" style="margin-top:6px;max-height:220px">
+      <div class="term" style="margin-top:6px;max-height:240px;font-size:12px;line-height:1.5">
         ${E.map(e => `
-          <div style="margin-bottom:6px">
-            <span class="cy">[RAW RECORD ${e.id}]</span> ${e.raw}<br>
+          <div style="margin-bottom:7px">
+            <span class="cy" style="font-weight:bold">[RAW RECORD ${e.id}]</span> ${e.raw}<br>
             <span class="mu">Source: ${e.src} | Time: ${e.ts}</span>
           </div>
         `).join('')}
       </div>
     </div>
   `;
-  W('archive', 'LOG_ARCHIVE.EXE — Raw Ingestion Repository', content, 32, 16, 42, 50, '', null, 'ARCHIVE: 5 RECORDS');
+  W('archive', 'LOG_ARCHIVE.EXE — Raw Ingestion Repository', content, 32, 16, 44, 52, '', null, 'ARCHIVE: 5 RECORDS');
   playSnd('click');
 }
 
 function openNetToolsDialog() {
   const content = `
-    <div style="font-size:11px">
+    <div style="font-size:12px">
       <b>NETWORK OPERATIONS CENTER UTILITIES:</b>
-      <table style="margin-top:6px">
+      <table style="margin-top:7px">
         <tr><th>Tool</th><th>Role in Security Monitoring</th><th>Status</th></tr>
-        <tr><td class="cy">Zeek</td><td>Protocol analysis & connection logging (conn.log, dns.log)</td><td class="gn">SIMULATED</td></tr>
-        <tr><td class="cy">Wireshark</td><td>Deep packet inspection and TLS handshake reconstruction</td><td class="gn">SIMULATED</td></tr>
-        <tr><td class="cy">Suricata/Snort</td><td>Network intrusion detection signatures</td><td class="mu">STANDBY</td></tr>
+        <tr><td class="cy" style="font-weight:bold">Zeek</td><td>Protocol analysis & connection logging (conn.log, dns.log)</td><td class="gn" style="font-weight:bold">SIMULATED</td></tr>
+        <tr><td class="cy" style="font-weight:bold">Wireshark</td><td>Deep packet inspection and TLS handshake reconstruction</td><td class="gn" style="font-weight:bold">SIMULATED</td></tr>
+        <tr><td class="cy" style="font-weight:bold">Suricata/Snort</td><td>Network intrusion detection signatures</td><td class="mu">STANDBY</td></tr>
       </table>
-      <div class="mu" style="margin-top:8px;font-size:10px">
+      <div class="mu" style="margin-top:10px;font-size:11px">
         Notice: Network diagnostic interfaces are simulated locally using synthetic data. No promiscuous capture or network traffic is generated.
       </div>
     </div>
   `;
-  W('nettools', 'NETWORK_TOOLS.EXE — Protocol Diagnostics', content, 34, 18, 40, 48, '', null, 'NET-DIAG READY');
+  W('nettools', 'NETWORK_TOOLS.EXE — Protocol Diagnostics', content, 34, 18, 42, 50, '', null, 'NET-DIAG READY');
   playSnd('click');
 }
 
 function openIncidentsDialog() {
   const content = `
-    <div style="font-size:11px">
+    <div style="font-size:12px">
       <b>ACTIVE SOC INCIDENTS DATABASE:</b>
-      <table style="margin-top:6px">
+      <table style="margin-top:7px">
         <tr><th>Incident ID</th><th>Title</th><th>Subject</th><th>Severity</th><th>Status</th></tr>
-        <tr class="sel"><td>SOC-2026-001</td><td>Suspicious Account Activity</td><td>demo.user</td><td class="rd">HIGH</td><td>UNDER REVIEW</td></tr>
+        <tr class="sel"><td>SOC-2026-001</td><td>Suspicious Account Activity</td><td>demo.user</td><td class="rd" style="font-weight:bold">HIGH</td><td>UNDER REVIEW</td></tr>
         <tr><td>SOC-2026-000</td><td>Scheduled Baseline Training</td><td>system</td><td class="gn">LOW</td><td>CLOSED</td></tr>
       </table>
     </div>
   `;
-  W('incidents', 'INCIDENTS.EXE — Incident Triage Database', content, 36, 20, 38, 44, '', null, 'DATABASE: 1 ACTIVE CASE');
+  W('incidents', 'INCIDENTS.EXE — Incident Triage Database', content, 36, 20, 40, 46, '', null, 'DATABASE: 1 ACTIVE CASE');
   playSnd('click');
 }
 
@@ -2837,7 +2850,7 @@ function openMenu(k, el, ev) {
     return `<div onclick="MN['${k}'].find(x => x[0] === '${m[0]}')[1](); $('dd').style.display='none';">${m[0]}</div>`;
   }).join('');
   d.style.left = el.offsetLeft + 4 + 'px';
-  d.style.top = '42px';
+  d.style.top = '45px';
   d.style.display = 'block';
 }
 
@@ -2856,9 +2869,9 @@ setInterval(() => {
 }, 1000);
 
 /* Initial Setup */
-W('console', 'SOC Investigation Console', consBody(), 1, 2, 27, 60, '', '<span>Sim</span><span>Stage</span><span>Help</span>', 'CASE: SOC-DEMO-2026-001 | READY');
+W('console', 'SOC Investigation Console', consBody(), 1, 2, 27, 61, '', '<span>Sim</span><span>Stage</span><span>Help</span>', 'CASE: SOC-DEMO-2026-001 | READY');
 W('tools', 'TOOLS USED IN THIS DEMO', `
-  <div class="term" style="height:100%;font-size:10px;line-height:1.6">
+  <div class="term" style="height:100%;font-size:11px;line-height:1.65">
     <span class="am">TELEMETRY:</span> Sysmon (EventID 1), Active Directory (4728), VPN/IPsec, Firewall/DNS<br>
     <span class="am">SIEM:</span> Splunk SPL &amp; Microsoft Sentinel KQL (simulated query views)<br>
     <span class="am">DETECTION:</span> Sigma YAML Rules &amp; Multi-Factor Correlation Engine<br>
