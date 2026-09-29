@@ -18,3 +18,9 @@ ehthumbs_vista.db
 
 # Logs
 *.log
+
+# Vercel
+.vercel
+
+
+.vercel
