@@ -462,9 +462,29 @@ body {
   flex-direction: column;
   min-width: 220px;
   user-select: none;
+  transition: transform 0.16s ease, opacity 0.16s ease;
+}
+.win.minimizing {
+  transform: scale(0.2) translateY(280px);
+  opacity: 0;
+  pointer-events: none;
+}
+.win.restoring {
+  animation: winRestore 0.16s ease;
+}
+@keyframes winRestore {
+  from { transform: scale(0.2) translateY(280px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
 }
 .win.red {
   border-color: #FFA0A0 #400000 #400000 #FFA0A0;
+  animation: alertShake 0.45s ease-in-out;
+  box-shadow: inset 1px 1px 0 #DFDFDF, inset -1px -1px 0 #808080, 0 0 18px rgba(208, 0, 0, 0.7);
+}
+@keyframes alertShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
 }
 .tb {
   background: linear-gradient(90deg, #000080, #1084D0);
@@ -935,26 +955,68 @@ tr:hover td {
   pointer-events: none;
   z-index: 1;
 }
+@keyframes flowDash {
+  to { stroke-dashoffset: -20; }
+}
 .corr-line {
-  stroke: #004455;
+  stroke: #003344;
   stroke-width: 1.5;
   stroke-dasharray: 4, 3;
   transition: stroke 0.4s ease, stroke-width 0.4s ease;
 }
 .corr-line.active {
   stroke: #FFB000;
-  stroke-width: 2;
-  stroke-dasharray: none;
+  stroke-width: 2.5;
+  stroke-dasharray: 6, 4;
+  animation: flowDash 0.8s linear infinite;
+  filter: drop-shadow(0 0 3px rgba(255, 176, 0, 0.7));
 }
 
-/* ---------------- CRT Scanline Effect Overlay ---------------- */
+/* ---------------- CRT Scanline Effect Overlay (Refined & Authentic) ---------------- */
 #crt {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 9000;
-  background: repeating-linear-gradient(0deg, rgba(0,0,0,0.12) 0, rgba(0,0,0,0.12) 1px, transparent 1px, transparent 3px);
-  box-shadow: inset 0 0 100px rgba(0,0,0,0.45);
+  background: 
+    radial-gradient(circle at center, transparent 72%, rgba(0, 0, 0, 0.32) 100%),
+    repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0, rgba(0,0,0,0.08) 1px, transparent 1px, transparent 3px);
+  box-shadow: inset 0 0 70px rgba(0,0,0,0.45);
+  animation: crtFlicker 8s infinite alternate;
+}
+@keyframes crtFlicker {
+  0% { opacity: 0.985; }
+  50% { opacity: 0.96; }
+  100% { opacity: 1; }
+}
+body.no-crt #crt {
+  display: none !important;
+}
+
+/* Presenter Cue & Row Ingestion Animation */
+@keyframes cuePulse {
+  0%, 100% {
+    box-shadow: 0 0 0 2px #FFB000, 0 0 10px rgba(255, 176, 0, 0.85);
+  }
+  50% {
+    box-shadow: 0 0 0 1px #FFF, 0 0 3px rgba(255, 176, 0, 0.3);
+  }
+}
+.cue {
+  animation: cuePulse 1.6s ease-in-out infinite !important;
+}
+
+body.busy, body.busy * {
+  cursor: wait !important;
+}
+
+@keyframes rowDrop {
+  0% { background: #3B2800 !important; transform: translateX(-8px); opacity: 0.2; }
+  50% { background: #553A00 !important; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+.fl-row {
+  animation: rowDrop 0.35s ease-out;
 }
 
 /* ---------------- Modal Dialog Overlay ---------------- */
@@ -1302,8 +1364,77 @@ function playSnd(type) {
       gain.gain.setValueAtTime(0.05, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
       osc.start(now); osc.stop(now + 0.04);
+    } else if (type === 'tick') {
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(1200, now);
+      osc.frequency.exponentialRampToValueAtTime(300, now + 0.01);
+      gain.gain.setValueAtTime(0.04, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.01);
+      osc.start(now); osc.stop(now + 0.01);
+    } else if (type === 'type') {
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(650, now);
+      osc.frequency.exponentialRampToValueAtTime(180, now + 0.012);
+      gain.gain.setValueAtTime(0.035, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.012);
+      osc.start(now); osc.stop(now + 0.012);
     }
   } catch(e) {}
+}
+
+/* ---------------- Presentation Cues, Count-ups & Effects ---------------- */
+function setPresenterCue(active) {
+  const btn = document.querySelector('#tool .act-blue');
+  if (btn) {
+    if (active) btn.classList.add('cue');
+    else btn.classList.remove('cue');
+  }
+}
+
+function setBusy(busy) {
+  if (busy) document.body.classList.add('busy');
+  else document.body.classList.remove('busy');
+}
+
+function countUp(el, target, duration = 600, prefix = '', suffix = '') {
+  if (typeof el === 'string') el = $(el);
+  if (!el) return;
+  const steps = Math.min(15, Math.max(5, target));
+  const stepTime = duration / steps;
+  let currentStep = 0;
+  const interval = setInterval(() => {
+    currentStep++;
+    const val = Math.round(target * (currentStep / steps));
+    el.textContent = `${prefix}${val}${suffix}`;
+    playSnd('tick');
+    if (currentStep >= steps) {
+      clearInterval(interval);
+      el.textContent = `${prefix}${target}${suffix}`;
+    }
+  }, stepTime);
+}
+
+function typeWriter(el, text, speed = 25, cb) {
+  if (typeof el === 'string') el = $(el);
+  if (!el) return;
+  el.textContent = '';
+  let i = 0;
+  function step() {
+    if (i < text.length) {
+      el.textContent += text[i];
+      if (text[i] !== ' ') playSnd('type');
+      i++;
+      setTimeout(step, speed);
+    } else if (cb) cb();
+  }
+  step();
+}
+
+let crtEnabled = true;
+function toggleCrt() {
+  crtEnabled = !crtEnabled;
+  document.body.classList.toggle('no-crt', !crtEnabled);
+  playSnd('click');
 }
 
 /* ---------------- Timers & Execution Safety ---------------- */
@@ -1388,9 +1519,13 @@ function closeW(id) {
 function minimizeW(id) {
   const e = $(id);
   if (!e) return;
-  e.style.display = 'none';
-  syncTaskbar();
+  e.classList.add('minimizing');
   playSnd('click');
+  setTimeout(() => {
+    e.style.display = 'none';
+    e.classList.remove('minimizing');
+    syncTaskbar();
+  }, 160);
 }
 
 function maximizeW(id) {
@@ -1505,7 +1640,9 @@ function taskbarWinClick(id) {
   playSnd('click');
   if (w.style.display === 'none') {
     w.style.display = 'flex';
+    w.classList.add('restoring');
     bringToFront(w);
+    setTimeout(() => w.classList.remove('restoring'), 160);
   } else if (activeWinId === id) {
     minimizeW(id);
   } else {
@@ -1642,11 +1779,15 @@ function go(n) {
   paused = false;
   closeAll();
   hlst = null;
+  setPresenterCue(false);
+  setBusy(true);
+  later(() => setBusy(false), 600);
   status();
   
   [S0, S1, S2, S3, S4, S5, S6, S7, S8, S9, S10][stage]();
   status();
   playSnd('beep');
+  later(() => setPresenterCue(true), 2600);
 }
 
 function startSim() {
@@ -1658,6 +1799,7 @@ function startSim() {
 }
 
 function nextStep() {
+  setPresenterCue(false);
   if (stage === 0) {
     startSim();
   } else if (stage >= 10) {
@@ -1923,7 +2065,10 @@ function mon(n) {
 
 function S1() {
   W('coll', 'Event Collector — Ingestion Stream', `
-    <div style="font-size:13px">COLLECTOR STATUS: <b id="cst" class="cy">RECEIVING INCOMING TELEMETRY...</b></div>
+    <div style="font-size:13px;display:flex;justify-content:space-between;align-items:center">
+      <div>COLLECTOR STATUS: <b id="cst" class="cy">RECEIVING INCOMING TELEMETRY...</b></div>
+      <div class="tag a" id="coll-live-counter" style="font-size:11px;font-weight:bold">EVENTS: 0 / 5</div>
+    </div>
     <div style="margin:7px 0;display:flex;gap:14px;align-items:center">
       ${SRC.map((s, i) => `
         <span style="font-size:11px;font-weight:bold"><span class="led" id="led${i}"></span> ${s.toUpperCase()}</span>
@@ -1945,15 +2090,19 @@ function S1() {
       `);
       $('led' + SRC.indexOf(e.src)).classList.add('on');
       $('pbar').style.width = ((i + 1) * 20) + '%';
+      if ($('coll-live-counter')) $('coll-live-counter').textContent = `EVENTS: ${i + 1} / 5`;
       if ($('coll-sb')) $('coll-sb').textContent = `INGESTING TELEMETRY (${i+1}/5 EVENTS)`;
       mon(i + 1);
-      playSnd('chirp');
+      playSnd('tick');
     }, 400 + i * 450);
   });
   
   later(() => {
     $('cst').textContent = '5 EVENTS COLLECTED — EACH STILL ISOLATED';
+    if ($('coll-live-counter')) $('coll-live-counter').textContent = 'EVENTS: 5 / 5 [COMPLETE]';
     if ($('coll-sb')) $('coll-sb').textContent = 'INGESTION COMPLETE | 5 ISOLATED LOGS';
+    setPresenterCue(true);
+    playSnd('chirp');
   }, 400 + 5 * 450);
 }
 
@@ -2155,8 +2304,55 @@ function tblUp() {
   apply();
 }
 
+function simulateSiemIngestion() {
+  const t = $('siemT');
+  if (!t) return;
+  t.innerHTML = `
+    <table>
+      <thead>
+        <tr><th>TIME</th><th>USER</th><th>HOST</th><th>SOURCE IP</th><th>SOURCE</th><th>EVENT</th><th>STATUS</th></tr>
+      </thead>
+      <tbody id="siem-tbody"></tbody>
+    </table>
+  `;
+  if ($('siemD')) $('siemD').innerHTML = '<div class="term mu" style="padding:10px">INGESTING AND NORMALIZING TELEMETRY STREAM...</div>';
+  if ($('siem-sb')) $('siem-sb').textContent = 'INDEXING STREAM (0 / 5 EVENTS LOADED)';
+  
+  E.forEach((e, i) => {
+    later(() => {
+      const tb = $('siem-tbody');
+      if (!tb) return;
+      const c = (k, v) => `onclick="event.stopPropagation();hl('${k}','${v}')"`;
+      const tr = document.createElement('tr');
+      tr.dataset.e = e.id;
+      tr.className = (sel === e.id ? 'sel ' : '') + 'fl-row';
+      tr.onclick = () => { sel = e.id; tblUp(); playSnd('click'); };
+      tr.innerHTML = `
+        <td style="font-weight:bold">${e.t}</td>
+        <td ${c('user', e.user)} class="cy" style="font-weight:bold">${e.user}</td>
+        <td ${c('host', e.host)} class="cy" style="font-weight:bold">${e.host}</td>
+        <td ${c('ip', e.ip)} class="cy" style="font-weight:bold">${e.ip}</td>
+        <td ${c('src', e.src)}>${e.src}</td>
+        <td>${e.type}</td>
+        <td class="${sc(e.status)}" style="font-weight:bold">${e.status}</td>
+      `;
+      tb.appendChild(tr);
+      playSnd('tick');
+      if (i === 0 && $('siemD')) $('siemD').innerHTML = fields(e);
+      if ($('siem-sb')) $('siem-sb').textContent = `INDEXED ${i + 1} / 5 TELEMETRY EVENTS | LIVE STREAM`;
+    }, 280 + i * 320);
+  });
+  
+  later(() => {
+    if ($('siem-sb')) $('siem-sb').textContent = 'INDEX: security_demo | 5 NORMALIZED EVENTS READY';
+    setPresenterCue(true);
+    playSnd('chirp');
+  }, 280 + 5 * 320 + 200);
+}
+
 function S3() {
   siem();
+  simulateSiemIngestion();
 }
 
 /* Stage 04 — DETECTION ENGINEERING (Section 9) */
@@ -2525,8 +2721,40 @@ function S6() {
 }
 
 /* Stage 07 — SOC INVESTIGATION WORKSPACE (Sections 14, 15, 16, 17, 20) */
+let replayTimer = null;
+let isReplaying = false;
+
+function replayTimeline() {
+  if (isReplaying) {
+    clearTimeout(replayTimer);
+    isReplaying = false;
+    if ($('replayBtn')) $('replayBtn').textContent = '▶ REPLAY TIMELINE';
+    return;
+  }
+  isReplaying = true;
+  if ($('replayBtn')) $('replayBtn').textContent = '⏸ PAUSE REPLAY';
+  let cur = 1;
+  function step() {
+    if (!isReplaying) return;
+    tlClick(cur);
+    cur++;
+    if (cur <= 5) {
+      replayTimer = setTimeout(step, 1400);
+    } else {
+      isReplaying = false;
+      if ($('replayBtn')) $('replayBtn').textContent = '↺ REPLAY TIMELINE';
+      setPresenterCue(true);
+    }
+  }
+  step();
+}
+
 const tlBody = () => `
   <div style="font-size:12px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+      <b style="font-size:11.5px;color:#000080">CHRONOLOGICAL EVENT CARDS:</b>
+      <button class="btn" style="font-size:11px;padding:2px 8px;font-weight:bold" id="replayBtn" onclick="replayTimeline()">▶ REPLAY TIMELINE</button>
+    </div>
     <div style="display:flex;gap:6px;overflow-x:auto">
       ${E.map(e => `
         <div class="tli ${sel === e.id ? 'sel' : ''}" data-e="${e.id}" onclick="tlClick(${e.id})" style="flex:1;min-width:115px">
@@ -2536,7 +2764,7 @@ const tlBody = () => `
       `).join('')}
     </div>
     <div id="tld" class="term" style="margin-top:6px;min-height:60px;font-size:12.5px;line-height:1.5">
-      Click an event to open its evidence.
+      Click an event above or press [▶ REPLAY TIMELINE] to walk through the evidence sequence.
     </div>
     <div class="mu" style="margin-top:3px;font-size:11px">
       Investigation is the process of connecting evidence, not merely reading one log.
@@ -2673,7 +2901,7 @@ function S9() {
   const conclHtml = `
     <div style="font-size:12px">
       <div class="term" style="font-size:14px;color:#FFB000;text-align:center;padding:14px;margin-bottom:10px;border-color:#FFB000;line-height:1.5">
-        <b>"THE OBSERVED EVENTS FORM A COHERENT SUSPICIOUS SEQUENCE AND WARRANT FURTHER INVESTIGATION."</b>
+        <b id="concl-quote">"THE OBSERVED EVENTS FORM A COHERENT SUSPICIOUS SEQUENCE AND WARRANT FURTHER INVESTIGATION."</b>
       </div>
       
       <p style="margin:8px 0;font-size:12.5px"><b>This simulation demonstrates how:</b></p>
@@ -2698,6 +2926,11 @@ function S9() {
   `;
   
   W('concl', 'CASE CONCLUSION', conclHtml, 68, 2, 31, 95, '', '<span>Summary</span>', 'CONCLUSION APPROVED');
+  const quote = '"THE OBSERVED EVENTS FORM A COHERENT SUSPICIOUS SEQUENCE AND WARRANT FURTHER INVESTIGATION."';
+  typeWriter('concl-quote', quote, 22, () => {
+    setPresenterCue(true);
+    playSnd('chirp');
+  });
 }
 
 /* Stage 10 — RESPONSE / NEXT ACTION (Section 10) */
@@ -2861,6 +3094,8 @@ const MN = {
   ],
   View: [
     ['Presentation Mode', togglePres],
+    ['Toggle CRT Monitor Effect', toggleCrt],
+    ['Toggle Sound Audio', toggleSound],
     ['Show Evidence Windows', showEv],
     ['Casefile Manager (CASEFILE.EXE)', openCasefile],
     ['Raw Log Archive', openArchiveDialog],
